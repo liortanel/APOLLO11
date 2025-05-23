@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\img\\despegue.mp4"
     },
     {
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\planetas.png",
+      "PackagePath": "staticwebassets\\img\\planetas.png"
+    },
+    {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

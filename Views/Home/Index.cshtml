@@ -251,7 +251,7 @@
   <div id="console"></div>
 
   <video autoplay muted id="myVideo">
-    <source src="/img/1seg.mp4" type="video/mp4" />
+    <source src="/img/despegue.mp4" type="video/mp4" />
     Your browser no soporta video HTML5.
   </video>
 
@@ -348,7 +348,7 @@ function mostrarTextoPostVideo() {
   consoleDiv.innerHTML = ""; // limpiamos todo antes
 
   const textoMisionPostVideo = `
-SALA 1 - MÓDULO DE COMANDO
+MÓDULO DE COMANDO
 
 La misión ha comenzado según lo planeado. A medida que el módulo de comando alcanza la órbita terrestre, los sistemas de navegación se ajustan automáticamente. Los astronautas se preparan para la transferencia hacia la órbita lunar, ajustando sus trajes, comprobando niveles de oxígeno y presión. Todo parece ir segun lo planeado...
 `;
@@ -364,7 +364,7 @@ setTimeout(() => {
   const boton = document.createElement("div");
   boton.className = "boton-jugar";
   boton.textContent = "EMPEZAR JUEGO";
-  boton.onclick = () => window.location.href = "/Home/Sala1";
+  boton.onclick = () => window.location.href = "/Home/Mapa";
 
   consoleDiv.appendChild(titulo);
   const contenedorFinal = document.createElement("div");

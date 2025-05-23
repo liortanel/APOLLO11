@@ -1,0 +1,297 @@
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    overflow: hidden;
+    font-family: monospace;
+    background: radial-gradient(ellipse at center, #000011 0%, #000000 80%);
+    color: white;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+  }
+  #introScreen {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    text-align: center;
+    z-index: 200;
+  }
+  #introScreen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  #introScreen p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+  }
+
+  /* Estilos de botones según tu clase */
+  .boton-jugar {
+    position: absolute;
+    font-size: 24px;
+    color: #ffffff;
+    background-color: #222;
+    border: 2px solid #00ffff;
+    padding: 12px 24px;
+    cursor: pointer;
+    text-align: center;
+    text-shadow: 0 0 5px #00ffff;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
+    animation: fadeIn 3s ease-out forwards;
+    text-decoration: none;
+    display: inline-block;
+    margin-top:15%;
+    user-select: none;
+  }
+  .boton-jugar:hover {
+    background-color: #00ffff;
+    color: #000;
+    transform: scale(1.05);
+  }
+
+  #gameContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background:
+      radial-gradient(2px 2px at 20% 30%, white, transparent),
+      radial-gradient(1.5px 1.5px at 40% 60%, white, transparent),
+      radial-gradient(2.5px 2.5px at 70% 80%, white, transparent),
+      radial-gradient(1px 1px at 85% 25%, white, transparent),
+      radial-gradient(1.8px 1.8px at 50% 50%, white, transparent),
+      #000011;
+    background-repeat: repeat;
+  }
+  .letter {
+    position: absolute;
+    top: 50%;
+    font-size: 36px;
+    font-weight: bold;
+    cursor: pointer;
+    transform: translateY(-50%);
+    animation-timing-function: linear;
+    user-select: none;
+    text-shadow:
+      0 0 5px #00ff00,
+      0 0 10px #00ff00;
+  }
+  .correct {
+    color: #00ff00;
+    text-shadow:
+      0 0 8px #00ff00,
+      0 0 15px #00ff00;
+  }
+  .incorrect {
+    color: #ff4444;
+    text-shadow:
+      0 0 8px #ff4444,
+      0 0 15px #ff4444;
+  }
+  #selectedLetters {
+    position: fixed;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 50px;
+    border: 2px solid #00ffff;
+    padding: 10px 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+    background: rgba(0,0,0,0.6);
+    border-radius: 10px;
+    width: auto;
+    max-width: 90vw;
+    justify-content: center;
+    z-index: 100;
+  }
+  .selected-letter {
+    background: #000000;
+    padding: 8px 14px;
+    border-radius: 8px;
+    user-select: none;
+    font-size: 36px;
+    font-weight: bold;
+    box-shadow: 0 0 6px #00ffff;
+  }
+  #btnSubmit {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 102;
+    position: absolute;
+  }
+  #statusMessage {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
+    font-weight: bold;
+    min-height: 30px;
+    color: #00ff00;
+    text-shadow: 0 0 8px #00ff00;
+    z-index: 103;
+    pointer-events: none;
+  }
+</style>
+
+<div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
+  <h1 id="introTitle">Escape Room - Neptuno</h1>
+  <p id="introDesc">En este planeta de vientos huracanados, las letras de la clave se dispersan.<br> Tenés que tocar las letras verdes en el orden correcto para formar la palabra clave y avanzar. <br>OJO! Si presionas una letra equivocada o una en el orden correcto se reinicia la secuencia.</p>
+  <button id="btnStart" class="boton-jugar" aria-label="Aceptar e iniciar el juego">Aceptar</button>
+</div>
+
+<div id="gameContainer" aria-label="Área del juego" aria-hidden="true"></div>
+
+<div id="selectedLetters" aria-label="Letras seleccionadas"></div>
+
+<button id="btnSubmit" class="boton-jugar" disabled>Enviar clave</button>
+<div id="statusMessage" aria-live="polite"></div>
+
+<script>
+
+  const introScreen = document.getElementById('introScreen');
+  const btnStart = document.getElementById('btnStart');
+  const gameContainer = document.getElementById('gameContainer');
+  const selectedLettersDiv = document.getElementById('selectedLetters');
+  const btnSubmit = document.getElementById('btnSubmit');
+  const statusMessage = document.getElementById('statusMessage');
+
+  const clave = "NEPTUNO";
+  const lettersPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lettersInClave = clave.split('');
+  let selectedLetters = [];
+  let gameActive = false;
+
+  btnStart.addEventListener('click', () => {
+    introScreen.style.display = 'none';
+    gameContainer.setAttribute('aria-hidden', 'false');
+    gameActive = true;
+    btnSubmit.disabled = false;
+  });
+
+function createFlyingLetter() {
+  if (!gameActive) return;
+
+  const letterElem = document.createElement('div');
+  letterElem.classList.add('letter');
+
+  const correctLeft = lettersInClave;
+
+  const isCorrect = Math.random() < 0.25 && correctLeft.length > 0;
+
+  let letter;
+  if (isCorrect) {
+    letter = correctLeft[Math.floor(Math.random() * correctLeft.length)];
+    letterElem.classList.add('correct');
+  } else {
+    do {
+      letter = lettersPool[Math.floor(Math.random() * lettersPool.length)];
+    } while (lettersInClave.includes(letter));
+    letterElem.classList.add('incorrect');
+  }
+
+    letterElem.textContent = letter;
+    letterElem.style.top = Math.random() * (gameContainer.clientHeight - 50) + 'px';
+    letterElem.style.left = gameContainer.clientWidth + 'px';
+
+    const duration = 6000 + Math.random() * 3000;
+    letterElem.style.transition = `left ${duration}ms linear`;
+    gameContainer.appendChild(letterElem);
+
+    setTimeout(() => {
+      letterElem.style.left = '-50px';
+    }, 50);
+
+    setTimeout(() => {
+      if (gameContainer.contains(letterElem)) {
+        gameContainer.removeChild(letterElem);
+      }
+    }, duration + 100);
+
+    letterElem.addEventListener('click', () => {
+      if (!gameActive) return;
+
+      if (letterElem.classList.contains('correct')) {
+        const nextLetter = lettersInClave[selectedLetters.length];
+        if (letter === nextLetter) {
+          selectedLetters.push(letter);
+          updateSelectedLetters();
+          gameContainer.removeChild(letterElem);
+          statusMessage.textContent = '';
+        } else {
+          statusMessage.textContent = '¡Letra incorrecta en el orden! Reiniciando la sala...';
+          setTimeout(resetGame, 2000);
+        }
+      } else {
+        statusMessage.textContent = 'Letra incorrecta, reiniciando la sala...';
+        setTimeout(resetGame, 2000);
+      }
+    });
+  }
+
+  function updateSelectedLetters() {
+    selectedLettersDiv.innerHTML = '';
+    selectedLetters.forEach(l => {
+      const span = document.createElement('div');
+      span.textContent = l;
+      span.classList.add('selected-letter');
+      selectedLettersDiv.appendChild(span);
+    });
+  }
+
+  btnSubmit.addEventListener('click', () => {
+  if (selectedLetters.join('') === clave) {
+    statusMessage.textContent = '¡Clave correcta!';
+    gameActive = false;
+    setTimeout(() => {
+      window.location.href = '/Home/Mapa'; 
+    }, 1000);
+  } else {
+    statusMessage.textContent = 'Clave incorrecta, reiniciando la sala...';
+    setTimeout(resetGame, 2000);
+  }
+});
+
+function resetGame() {
+  selectedLetters = [];
+  updateSelectedLetters();
+  statusMessage.textContent = '';
+  gameActive = true; 
+}
+setInterval(createFlyingLetter, 400);
+const token = '@antiforgery.GetAndStoreTokens(HttpContext).RequestToken';
+
+  function reportarVictoria() {
+    const data = { gano: true };
+
+    fetch('/Home/RegistrarVictoriaNeptuno', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': token
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(response => {
+      if(response.success) {
+        // Redirigir al mapa o donde quieras
+        window.location.href = '/Home/Mapa';
+      } else {
+        alert('Error al registrar victoria.');
+      }
+    })
+    .catch(err => console.error('Error:', err));
+  }
+</script>

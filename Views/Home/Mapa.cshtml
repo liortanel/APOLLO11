@@ -1,0 +1,109 @@
+@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Mapa";
+
+    // Leo la lista de planetas desbloqueados de la sesión (si no hay, solo Mercurio está desbloqueado)
+    var desbloqueados = Context.Session.GetString("NivelesCompletados")?.Split(',').ToList() ?? new List<string>() { "Mercurio" };
+
+    // Lista completa de planetas en orden
+    var planetas = new List<string> { "Mercurio", "Venus", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno" };
+
+    // Función para saber si un planeta está desbloqueado
+    bool EstaDesbloqueado(string planeta) => desbloqueados.Contains(planeta);
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>@ViewData["Title"]</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      background-color: black;
+    }
+
+    .mapa-contenedor {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('/img/planetas.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .boton-jugar {
+      position: absolute;
+      font-size: 16px;
+      color: #ffffff;
+      background-color: #222;
+      border: 2px solid #00ffff;
+      padding: 8px 16px;
+      cursor: pointer;
+      text-align: center;
+      text-shadow: 0 0 5px #00ffff;
+      border-radius: 8px;
+      transition: background 0.3s;
+      animation: fadeIn 3s ease-out forwards;
+      text-decoration: none;
+      display: inline-block;
+      user-select: none;
+      transform: translate(-50%, -50%);
+    }
+
+    .boton-jugar:hover {
+      background-color: #00ffff;
+      color: #000;
+    }
+
+    .boton-bloqueado {
+      position: absolute;
+      font-size: 16px;
+      color: #555555;
+      background-color: #222;
+      border: 2px solid red;
+      padding: 8px 16px;
+      cursor: not-allowed;
+      text-align: center;
+      text-shadow: none;
+      border-radius: 8px;
+      user-select: none;
+      font-family: 'Courier New', monospace;
+      transform: translate(-50%, -50%);
+    }
+
+    @@keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    #btnMercurio { top: 58%; left: 10.2%; }
+    #btnVenus    { top: 63%; left: 16.75%; }
+    #btnMarte    { top: 63%; left: 25.2%; }
+    #btnJupiter  { top: 70%; left: 45.3%; }
+    #btnSaturno  { top: 70%; left: 58.5%; }
+    #btnUrano    { top: 66%; left: 71.3%; }
+    #btnNeptuno  { top: 66%; left: 83%; }
+  </style>
+</head>
+<body>
+  <div class="mapa-contenedor">
+    @foreach (var planeta in planetas)
+    {
+        var idBoton = "btn" + planeta;
+        if (EstaDesbloqueado(planeta))
+        {
+            <a href="/Home/@planeta" class="boton-jugar" id="@idBoton">@planeta</a>
+        }
+        else
+        {
+            <button class="boton-bloqueado" id="@idBoton" disabled>@planeta</button>
+        }
+    }
+  </div>
+</body>
+</html>
