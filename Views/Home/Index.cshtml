@@ -2,7 +2,353 @@
     ViewData["Title"] = "Index";
 }
 
-<div>
-    <h1>Index</h1>
-    <p>Bienvenidos al sitio web de NombreProyecto</p>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>@ViewData["Title"]</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background-color: black;
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      overflow-x: hidden;
+    }
+
+    #console {
+      max-width: 800px;
+      padding: 20px;
+      white-space: pre-wrap;
+      /* text aligned left for console style */
+      text-align: left;
+    }
+
+    input {
+      background: black;
+      border: none;
+      border-bottom: 1px solid white;
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      outline: none;
+      width: 250px;
+      margin-top: 20px;
+    }
+
+    #myVideo {
+      display: none;
+      width: 100%;
+      height: auto;
+      margin-top: 20px;
+    }
+
+    .error {
+      color: red;
+      font-size: 36px;
+      font-weight: bold;
+      animation: shake 0.08s infinite, glitch 1s infinite;
+      position: relative;
+      user-select: none;
+      margin-bottom: 20px;
+      white-space: nowrap;
+    }
+
+    .error::before,
+    .error::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      right: 0;
+      opacity: 0.8;
+      clip: rect(0, 900px, 0, 0);
+    }
+    .error::before {
+      animation: glitch-anim1 1s infinite;
+      color: #ff3c3c;
+      z-index: -1;
+    }
+    .error::after {
+      animation: glitch-anim2 1s infinite;
+      color: #ffb3b3;
+      z-index: -2;
+    }
+
+   @@keyframes shake {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      20% { transform: translate(-5px, 5px) rotate(-1deg); }
+      40% { transform: translate(5px, -5px) rotate(1deg); }
+      60% { transform: translate(-5px, -5px) rotate(-1deg); }
+      80% { transform: translate(5px, 5px) rotate(1deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+   @@keyframes glitch {
+      0%, 100% {
+        clip: rect(0, 9999px, 0, 0);
+      }
+      10% {
+        clip: rect(5px, 9999px, 30px, 0);
+        transform: translate(-2px, -2px);
+      }
+      20% {
+        clip: rect(10px, 9999px, 25px, 0);
+        transform: translate(2px, 2px);
+      }
+      30% {
+        clip: rect(15px, 9999px, 20px, 0);
+        transform: translate(-2px, 2px);
+      }
+      40% {
+        clip: rect(10px, 9999px, 30px, 0);
+        transform: translate(2px, -2px);
+      }
+      50% {
+        clip: rect(0, 9999px, 0, 0);
+        transform: none;
+      }
+    }
+
+   @@keyframes glitch-anim1 {
+      0% {
+        clip: rect(0, 9999px, 0, 0);
+        transform: translate(0);
+      }
+      20% {
+        clip: rect(2px, 9999px, 24px, 0);
+        transform: translate(-3px, 0);
+      }
+      40% {
+        clip: rect(15px, 9999px, 20px, 0);
+        transform: translate(3px, 0);
+      }
+      60% {
+        clip: rect(8px, 9999px, 18px, 0);
+        transform: translate(-3px, 0);
+      }
+      80% {
+        clip: rect(3px, 9999px, 22px, 0);
+        transform: translate(3px, 0);
+      }
+      100% {
+        clip: rect(0, 9999px, 0, 0);
+        transform: translate(0);
+      }
+    }
+
+   @@keyframes glitch-anim2 {
+      0% {
+        clip: rect(0, 9999px, 0, 0);
+        transform: translate(0);
+      }
+      20% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: translate(3px, 0);
+      }
+      40% {
+        clip: rect(5px, 9999px, 25px, 0);
+        transform: translate(-3px, 0);
+      }
+      60% {
+        clip: rect(12px, 9999px, 18px, 0);
+        transform: translate(3px, 0);
+      }
+      80% {
+        clip: rect(7px, 9999px, 23px, 0);
+        transform: translate(-3px, 0);
+      }
+      100% {
+        clip: rect(0, 9999px, 0, 0);
+        transform: translate(0);
+      }
+    }
+
+    /* Fondo rojo intermitente para alerta */
+   @@keyframes alertBackground {
+      0%, 100% { background-color: black; }
+      50% { background-color: #660000; }
+    }
+
+    .alert-bg {
+      animation: alertBackground 0.5s infinite;
+    }
+
+    /* Fade-in para texto final */
+   @@keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .fade-in {
+      animation: fadeIn 3s ease forwards;
+      opacity: 0;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 20px;
+      color: #ff8c00;
+      text-shadow: 0 0 10px #ff8c00;
+      animation-delay: 1s;
+      animation-fill-mode: forwards;
+    }
+
+    /* Vibración final para texto */
+   @@keyframes finalShake {
+      0%, 100% { transform: translate(0, 0); }
+      20%, 60% { transform: translate(-3px, 3px); }
+      40%, 80% { transform: translate(3px, -3px); }
+    }
+
+    .final-shake {
+      animation: finalShake 0.2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div id="console"></div>
+
+  <video autoplay muted id="myVideo">
+    <source src="/img/1seg.mp4" type="video/mp4" />
+    Your browser no soporta video HTML5.
+  </video>
+
+  <!-- SONIDO DE CHOQUE -->
+  <audio id="errorSound">
+    <source src="/sonidos/choque.mp3" type="audio/mp3" />
+    <!-- 🔁 Reemplazá la línea de arriba con el path a tu archivo -->
+  </audio>
+
+  <script>
+    const introText = "Bienvenido a la misión Apollo11 astronauta ";
+    const consoleDiv = document.getElementById("console");
+    const video = document.getElementById("myVideo");
+    const errorSound = document.getElementById("errorSound");
+    let index = 0;
+
+    function typeIntro() {
+      if (index < introText.length) {
+        consoleDiv.innerHTML += introText.charAt(index);
+        index++;
+        setTimeout(typeIntro, 0.1); // tiempo original
+      } else {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Ingresa tu nombre";
+        consoleDiv.appendChild(input);
+        input.focus();
+
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" && input.value.trim() !== "") {
+            const name = input.value.trim();
+            const span = document.createElement("span");
+            span.textContent = name;
+            consoleDiv.removeChild(input);
+            consoleDiv.appendChild(span);
+
+            setTimeout(() => {
+              const story = `
+\n\nIniciando protocolo de misión...
+
+Astronauta ${name}, ha sido seleccionado para formar parte de la histórica misión Apollo 11.
+
+Objetivo principal: Aterrizar en la superficie de la Luna, recolectar muestras geológicas y regresar a la Tierra con información valiosa para el futuro de la exploración espacial.
+
+Tripulación asignada:
+- Comandante Neil Armstrong
+- Piloto del módulo de comando: Michael Collins
+- Piloto del módulo lunar: Edwin "Buzz" Aldrin
+
+Especialista de misión: ${name} (usted)
+
+Fecha de lanzamiento: 16 de julio de 1969
+Lugar: Centro Espacial Kennedy, Plataforma LC-39A
+
+Preparándose para iniciar la cuenta regresiva...
+`;
+typeText(story, 0, () => {
+iniciarCuentaRegresiva(5);
+});
+}, 500);
+}
+});
+}
+}
+
+function typeText(text, i = 0, callback) {
+  if (i < text.length) {
+    consoleDiv.innerHTML += text.charAt(i);
+    setTimeout(() => typeText(text, i + 1, callback), 0.1); // tiempo original
+  } else if (callback) {
+    callback();
+  }
+}
+
+function iniciarCuentaRegresiva(numero) {
+  if (numero > 0) {
+    consoleDiv.innerHTML += `\n${numero}...`;
+    setTimeout(() => iniciarCuentaRegresiva(numero - 1), 1000);
+  } else {
+    consoleDiv.innerHTML += "\n¡Despegue!";
+    setTimeout(() => {
+      video.style.display = "block";
+      video.play();
+      video.onended = mostrarTextoPostVideo;
+    }, 1000);
+  }
+}
+
+function mostrarTextoPostVideo() {
+  video.pause();
+  video.currentTime = 0;
+  video.style.display = "none";
+
+  consoleDiv.innerHTML = ""; // limpiamos todo antes
+
+  const textoMisionPostVideo = `
+SALA 1 - MÓDULO DE COMANDO
+
+La misión ha comenzado según lo planeado. A medida que el módulo de comando alcanza la órbita terrestre, los sistemas de navegación se ajustan automáticamente. Los astronautas se preparan para la transferencia hacia la órbita lunar, ajustando sus trajes, comprobando niveles de oxígeno y presión. Todo parece ir segun lo planeado...
+`;
+typeText(textoMisionPostVideo, 0, iniciarError);
+}
+function iniciarError() {
+  // Cambiar fondo a rojo intermitente
+  document.body.classList.add("alert-bg");
+
+  const errorText = document.createElement("div");
+  errorText.className = "error";
+  errorText.setAttribute("data-text", "¡ERROR DE SISTEMA CRÍTICO!");
+  errorText.textContent = "¡ERROR DE SISTEMA CRÍTICO!";
+  consoleDiv.appendChild(errorText);
+
+  errorSound.play();
+
+  // Temblor más intenso para toda la pantalla
+  document.body.style.animation = "shake 0.08s infinite";
+
+  // Después de 5 seg, mostramos final épico
+  setTimeout(() => {
+    // Parar temblor y fondo alerta
+    document.body.style.animation = "";
+    document.body.classList.remove("alert-bg");
+
+    const finalText = document.createElement("div");
+    finalText.className = "fade-in final-shake";
+    finalText.textContent = `
+De repente, se detecta una pérdida de presión crítica en la cabina. Los sistemas de soporte vital alertan de inmediato y se activan los protocolos de emergencia.
+
+El cohete alcanza velocidades ultra sónicas, la situación se torna inestable...
+
+Las leyes de la física comienzan a doblarse mientras la nave atraviesa el sistema solar a velocidad inimaginable...
+
+`;
+consoleDiv.appendChild(finalText);
+  // Después de 8 seg quitamos vibración final
+    setTimeout(() => {
+      finalText.classList.remove("final-shake");
+    }, 8000);
+  }, 5000);
+}
+
+typeIntro();
+</script> </body> </html>
