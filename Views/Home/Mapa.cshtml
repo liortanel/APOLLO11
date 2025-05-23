@@ -2,13 +2,11 @@
 @{
     ViewData["Title"] = "Mapa";
 
-    // Leo la lista de planetas desbloqueados de la sesión (si no hay, solo Mercurio está desbloqueado)
-    var desbloqueados = Context.Session.GetString("NivelesCompletados")?.Split(',').ToList() ?? new List<string>() { "Mercurio" };
-
-    // Lista completa de planetas en orden
+    var desbloqueados = Context.Session.GetString("NivelesCompletados")?.Split(',').ToList() ?? new List<string>() { "Neptuno" };
+    var usados = Context.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
     var planetas = new List<string> { "Mercurio", "Venus", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno" };
-
-    // Función para saber si un planeta está desbloqueado
+    
+    bool EstaUsado(string planeta) => usados.Contains(planeta);
     bool EstaDesbloqueado(string planeta) => desbloqueados.Contains(planeta);
 }
 
@@ -60,6 +58,21 @@
       color: #000;
     }
 
+    .boton-usado {
+  position: absolute;
+  font-size: 16px;
+  color: #999999;
+  background-color: #444444;
+  border: 2px solid #666666;
+  padding: 8px 16px;
+  cursor: not-allowed;
+  text-align: center;
+  text-shadow: none;
+  border-radius: 8px;
+  user-select: none;
+  font-family: 'Courier New', monospace;
+  transform: translate(-50%, -50%);
+}
     .boton-bloqueado {
       position: absolute;
       font-size: 16px;
@@ -95,14 +108,21 @@
     @foreach (var planeta in planetas)
     {
         var idBoton = "btn" + planeta;
-        if (EstaDesbloqueado(planeta))
-        {
-            <a href="/Home/@planeta" class="boton-jugar" id="@idBoton">@planeta</a>
-        }
-        else
-        {
-            <button class="boton-bloqueado" id="@idBoton" disabled>@planeta</button>
-        }
+        if (EstaUsado(planeta))
+    {
+        // Ya jugado, botón gris oscuro (usado)
+        <button class="boton-usado" id="@idBoton" disabled>@planeta</button>
+    }
+    else if (EstaDesbloqueado(planeta))
+    {
+        // Desbloqueado y no jugado, botón activo
+        <a href="/Home/@planeta" class="boton-jugar" id="@idBoton">@planeta</a>
+    }
+    else
+    {
+        // Bloqueado, botón gris claro
+        <button class="boton-bloqueado" id="@idBoton" disabled>@planeta</button>
+    }
     }
   </div>
 </body>

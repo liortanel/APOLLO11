@@ -1,3 +1,8 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    var tokens = Antiforgery.GetAndStoreTokens(Context);
+}
+<input type="hidden" name="__RequestVerificationToken" value="@tokens.RequestToken" />
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%; width: 100%;
@@ -250,18 +255,41 @@ function createFlyingLetter() {
     });
   }
 
-  btnSubmit.addEventListener('click', () => {
+btnSubmit.addEventListener('click', () => {
   if (selectedLetters.join('') === clave) {
     statusMessage.textContent = '¡Clave correcta!';
     gameActive = false;
-    setTimeout(() => {
-      window.location.href = '/Home/Mapa'; 
-    }, 1000);
+
+    fetch('/Home/GanarNeptuno', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+      }
+    })
+    .then(res => {
+      if (res.ok) {
+        console.log('Respuesta OK del servidor. Redirigiendo...');
+        setTimeout(() => {
+          window.location.href = '/Home/Mapa';
+        }, 2000);
+      } else {
+        statusMessage.textContent = 'Error al comunicar con el servidor';
+        gameActive = true;
+      }
+    })
+    .catch(error => {
+      console.error('Error en el fetch:', error);
+      statusMessage.textContent = 'No se pudo contactar al servidor.';
+      gameActive = true;
+    });
+
   } else {
     statusMessage.textContent = 'Clave incorrecta, reiniciando la sala...';
     setTimeout(resetGame, 2000);
   }
 });
+
 
 function resetGame() {
   selectedLetters = [];
@@ -270,28 +298,11 @@ function resetGame() {
   gameActive = true; 
 }
 setInterval(createFlyingLetter, 400);
-const token = '@antiforgery.GetAndStoreTokens(HttpContext).RequestToken';
 
-  function reportarVictoria() {
-    const data = { gano: true };
-
-    fetch('/Home/RegistrarVictoriaNeptuno', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'RequestVerificationToken': token
-      },
-      body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(response => {
-      if(response.success) {
-        // Redirigir al mapa o donde quieras
-        window.location.href = '/Home/Mapa';
-      } else {
-        alert('Error al registrar victoria.');
-      }
-    })
-    .catch(err => console.error('Error:', err));
+document.addEventListener('keydown', function(e) {
+  if (e.key.toLowerCase() === 'v') {
+    selectedLetters = clave.split('');
+    updateSelectedLetters();
   }
+});
 </script>

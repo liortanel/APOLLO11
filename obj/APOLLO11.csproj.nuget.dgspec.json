@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\49123993\\APOLLO11\\APOLLO11.csproj": {}
+    "C:\\Users\\usuario\\APOLLO11\\APOLLO11.csproj": {}
   },
   "projects": {
-    "C:\\Users\\49123993\\APOLLO11\\APOLLO11.csproj": {
+    "C:\\Users\\usuario\\APOLLO11\\APOLLO11.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\49123993\\APOLLO11\\APOLLO11.csproj",
+        "projectUniqueName": "C:\\Users\\usuario\\APOLLO11\\APOLLO11.csproj",
         "projectName": "APOLLO11",
-        "projectPath": "C:\\Users\\49123993\\APOLLO11\\APOLLO11.csproj",
-        "packagesPath": "C:\\Users\\49123993\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\49123993\\APOLLO11\\obj\\",
+        "projectPath": "C:\\Users\\usuario\\APOLLO11\\APOLLO11.csproj",
+        "packagesPath": "C:\\Users\\usuario\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\usuario\\APOLLO11\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\49123993\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -77,7 +73,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

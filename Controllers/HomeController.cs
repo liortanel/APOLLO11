@@ -40,38 +40,14 @@ public class HomeController : Controller
     public IActionResult Neptuno(){
         return View();
     }
-
     [HttpPost]
-        public IActionResult CompletarPlaneta(string planetName)
-        {
-            var nivelesStr = HttpContext.Session.GetString("NivelesCompletados") ?? "";
-            var niveles = nivelesStr.Split(',').ToList();
+    public IActionResult GanarNeptuno()
+    {
+    HttpContext.Session.SetString("NivelesCompletados", "Urano");
+    HttpContext.Session.SetString("NivelesUsados", "Neptuno");
+    return View("Mapa");
+    }
 
-            if (!niveles.Contains(planetName) && planetas.Contains(planetName))
-            {
-                niveles.Add(planetName);
-                // Ordenar según la lista original para evitar desorden
-                niveles = planetas.Where(p => niveles.Contains(p)).ToList();
-
-                HttpContext.Session.SetString("NivelesCompletados", string.Join(",", niveles));
-            }
-
-            // Redirigir al mapa
-            return RedirectToAction("Mapa");
-        }
-        [HttpPost]
-[ValidateAntiForgeryToken]
-public IActionResult RegistrarVictoriaNeptuno([FromBody] VictoriaRequest request)
-{
-    if(request == null || !request.gano)
-        return Json(new { success = false });
-
-    // Guardar en sesión que desbloqueaste Urano
-    HttpContext.Session.SetInt32("NivelMaximo", 7);
-    
-
-    return Json(new { success = true });
-}
 
 public class VictoriaRequest
 {
