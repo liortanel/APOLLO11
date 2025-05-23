@@ -8,6 +8,50 @@
   <meta charset="UTF-8" />
   <title>@ViewData["Title"]</title>
   <style>
+
+  .contenedor-final {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 2s ease forwards;
+  z-index: 1000; /* aseguramos que quede encima */
+}
+
+    .titulo-apollo {
+  font-size: 48px;
+  font-weight: bold;
+  color: #00ffff;
+  text-align: center;
+  text-shadow: 0 0 10px #00ffff, 0 0 20px #00cccc;
+  animation: fadeIn 2s ease-out forwards;
+  margin-top: 40px;
+}
+
+.boton-jugar {
+  font-size: 24px;
+  color: #ffffff;
+  background-color: #222;
+  border: 2px solid #00ffff;
+  padding: 12px 24px;
+  margin: 30px auto 0;
+  width: fit-content;
+  cursor: pointer;
+  text-align: center;
+  text-shadow: 0 0 5px #00ffff;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+  animation: fadeIn 3s ease-out forwards;
+}
+
+.boton-jugar:hover {
+  background-color: #00ffff;
+  color: #000;
+  transform: scale(1.05);
+}
     html, body {
       margin: 0; padding: 0; height: 100%;
       background-color: black;
@@ -17,13 +61,12 @@
       overflow-x: hidden;
     }
 
-    #console {
-      max-width: 800px;
-      padding: 20px;
-      white-space: pre-wrap;
-      /* text aligned left for console style */
-      text-align: left;
-    }
+#console {
+  max-width: 800px;
+  padding: 20px;
+  white-space: pre-wrap;
+  text-align: left;
+}
 
     input {
       background: black;
@@ -310,6 +353,28 @@ SALA 1 - MÓDULO DE COMANDO
 La misión ha comenzado según lo planeado. A medida que el módulo de comando alcanza la órbita terrestre, los sistemas de navegación se ajustan automáticamente. Los astronautas se preparan para la transferencia hacia la órbita lunar, ajustando sus trajes, comprobando niveles de oxígeno y presión. Todo parece ir segun lo planeado...
 `;
 typeText(textoMisionPostVideo, 0, iniciarError);
+
+setTimeout(() => {
+  consoleDiv.innerHTML = "";
+
+  const titulo = document.createElement("div");
+  titulo.className = "titulo-apollo";
+  titulo.textContent = "MISIÓN APOLLO 11";
+
+  const boton = document.createElement("div");
+  boton.className = "boton-jugar";
+  boton.textContent = "EMPEZAR JUEGO";
+  boton.onclick = () => window.location.href = "/Home/Sala1";
+
+  consoleDiv.appendChild(titulo);
+  const contenedorFinal = document.createElement("div");
+contenedorFinal.className = "contenedor-final";
+contenedorFinal.appendChild(titulo);
+contenedorFinal.appendChild(boton);
+
+consoleDiv.appendChild(contenedorFinal);
+
+}, 10000); // 10s después del texto post-video
 }
 function iniciarError() {
   // Cambiar fondo a rojo intermitente
@@ -346,8 +411,8 @@ consoleDiv.appendChild(finalText);
   // Después de 8 seg quitamos vibración final
     setTimeout(() => {
       finalText.classList.remove("final-shake");
-    }, 8000);
-  }, 5000);
+    }, 500);
+  }, 2000);
 }
 
 typeIntro();
