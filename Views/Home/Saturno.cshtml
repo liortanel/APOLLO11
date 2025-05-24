@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Urano - Alien y el código binario</title>
+<style>
+  body {
+    background: linear-gradient(to bottom, #001022, #004466);
+    color: #eee;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+  }
+  #chat {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #002233;
+    border-radius: 10px;
+    margin: 20px;
+    box-shadow: 0 0 10px #00ffffaa;
+  }
+  .message {
+    margin-bottom: 15px;
+    max-width: 70%;
+  }
+  .alien {
+    color: #00ffff;
+  }
+  .user {
+    color: #ffcc00;
+    text-align: right;
+    margin-left: auto;
+  }
+  .binario {
+    color: #99ff99;
+    font-family: monospace;
+    margin-left: 20px;
+    font-size: 0.9em;
+  }
+  #inputArea {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 20px;
+    background: #003344;
+    justify-content: center;
+  }
+  #inputArea button {
+    padding: 10px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    background: #00ffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+    text-shadow: none;
+    transition: background 0.3s;
+    flex: 1 1 150px;
+    max-width: 250px;
+  }
+  #inputArea button:hover {
+    background: #33ffff;
+  }
+  #inputContrasenaContainer {
+    display: none;
+    padding: 10px 20px;
+    background: #003344;
+    justify-content: center;
+    gap: 10px;
+  }
+  #inputContrasenaContainer input {
+    flex-grow: 1;
+    padding: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+  }
+  #inputContrasenaContainer button {
+    padding: 10px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    background: #00ffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+    text-shadow: none;
+    transition: background 0.3s;
+  }
+  #inputContrasenaContainer button:hover {
+    background: #33ffff;
+  }
+</style>
+</head>
+<body>
+
+<div id="chat">
+  <div class="message alien">Saludos, terrícola. Soy el guardián de Urano.</div>
+</div>
+
+<div id="inputArea">
+  <button data-respuesta="hola">Hola</button>
+  <button data-respuesta="quién eres">¿Quién eres?</button>
+  <button data-respuesta="secreto">¿Cuál es el secreto?</button>
+  <button data-respuesta="pista">Dame una pista</button>
+  <button data-respuesta="historia">¿Como llegaste acá?</button>
+  <button id="btnEnviarContrasena" data-respuesta="enviar">Enviar contraseña</button>
+</div>
+
+<div id="inputContrasenaContainer">
+  <input type="text" id="inputContrasena" placeholder="Introduce la contraseña aquí..." autocomplete="off" />
+  <button id="btnValidarContrasena">Validar</button>
+</div>
+
+<script>
+  const chat = document.getElementById('chat');
+  const botones = document.querySelectorAll('#inputArea button');
+  const inputContrasenaContainer = document.getElementById('inputContrasenaContainer');
+  const inputContrasena = document.getElementById('inputContrasena');
+  const btnValidarContrasena = document.getElementById('btnValidarContrasena');
+  const inputArea = document.getElementById('inputArea');
+
+  const respuestasAlien = {
+    "hola": "Hola humano. Estoy aquí para ayudarte... o no.",
+    "quién eres": "Soy una IA que protege el secreto de Urano.",
+    "secreto": "El secreto está oculto, pero si reúnes las pistas en binario, descubrirás la contraseña.",
+    "pista": "Los números de las respuestas no están al azar...",
+    "historia": "Es una larga historia, no estoy autorizando a contarsela a simples humanos.",
+    "enviar": "Verificando contraseña...",
+  };
+
+  const binarios = {
+    "hola": "01100111 01110101 01100001",
+    "quién eres": "01110010 01100100 00110001",
+    "secreto": "01100001 01101110 01100100",
+    "pista": "01100101 01110101 01110010",
+    "historia": "01100001 01101110 01101111"
+  };
+
+  const contraseñaCorrecta = "guard1andeurano";
+  let acumuladoBinario = "";
+
+  function agregarMensaje(texto, clase) {
+    const div = document.createElement('div');
+    div.className = 'message ' + clase;
+    div.textContent = texto;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function agregarBinario(textoBinario) {
+    const div = document.createElement('div');
+    div.className = 'message alien binario';
+    div.textContent = textoBinario;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  botones.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const resp = btn.getAttribute('data-respuesta');
+
+      if (resp === 'enviar') {
+        // Borrar chat y mostrar input para contraseña
+        chat.innerHTML = "";
+        acumuladoBinario = "";
+        agregarMensaje("Introduce la contraseña que descubriste:", "alien");
+
+        inputArea.style.display = 'none';
+        inputContrasenaContainer.style.display = 'flex';
+        inputContrasena.value = "";
+        inputContrasena.focus();
+
+        return;
+      }
+
+      agregarMensaje(btn.textContent, 'user');
+
+      if (respuestasAlien[resp]) {
+        agregarMensaje(respuestasAlien[resp], 'alien');
+
+        if (binarios[resp]) {
+          acumuladoBinario += binarios[resp];
+          agregarBinario(binarios[resp]);
+        }
+      } else {
+        agregarMensaje("No entiendo eso. Intenta preguntar otra cosa.", 'alien');
+      }
+    });
+  });
+
+  btnValidarContrasena.addEventListener('click', () => {
+    const valor = inputContrasena.value.trim();
+    if (valor.toLowerCase() === contraseñaCorrecta.toLowerCase()) {
+      agregarMensaje("¡Contraseña correcta! Te llevo al siguiente nivel...", 'alien');
+      setTimeout(() => {
+          window.location.href = '/Home/VerificarSaturno';
+        }, 2000);
+    } else {
+      agregarMensaje("Contraseña incorrecta. Sigue buscando las pistas.", 'alien');
+      inputContrasena.value = "";
+      inputContrasena.focus();
+    }
+  });
+
+  inputContrasena.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      btnValidarContrasena.click();
+    }
+  });
+</script>
+
+</body>
+</html>

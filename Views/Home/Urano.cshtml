@@ -1,211 +1,97 @@
-<style>
-  html, body {
-    margin: 0; padding: 0; height: 100%; width: 100%;
-    background: radial-gradient(ellipse at center, #001122 0%, #000000 90%);
-    color: #00ffff;
-    font-family: monospace;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-  }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Escape Room - Urano</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; width: 100%;
+      background: radial-gradient(ellipse at center, #000011 0%, #000000 80%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
 
-  #gameContainer {
-    max-width: 600px;
-    padding: 20px 30px;
-    background: rgba(0, 15, 30, 0.8);
-    border: 2px solid #00ffff;
-    border-radius: 12px;
-    box-shadow: 0 0 15px #00ffff;
-    text-align: center;
-  }
+    #distractor {
+      font-size: 1.5rem;
+      text-align: center;
+      max-width: 80%;
+      margin-left:13%;
+      margin-bottom: 40px;
+    }
 
-  #story {
-    font-size: 1.3rem;
-    margin-bottom: 25px;
-  }
+    canvas {
+      border: 2px solid #00ffff;
+      box-shadow: 0 0 12px #00ffff;
+      margin-bottom: 20px;
+    }
 
-  #choices {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
+    .boton-jugar {
+      font-size: 20px;
+      background-color: #222;
+      color: #00ffff;
+      border: 2px solid #00ffff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
 
-  .choice-btn {
-    background-color: transparent;
-    border: 2px solid #00ffff;
-    color: #00ffff;
-    padding: 14px 20px;
-    font-size: 1.1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  .choice-btn:hover {
-    background-color: #00ffff;
-    color: #000;
-  }
-
-  #feedback {
-    margin-top: 30px;
-    min-height: 40px;
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #66ffcc;
-    text-shadow: 0 0 10px #66ffcc;
-  }
-
-  #restartBtn {
-    margin-top: 40px;
-    background-color: #ff0044;
-    border: none;
-    color: white;
-    padding: 12px 25px;
-    font-size: 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    display: none;
-    box-shadow: 0 0 15px #ff0044;
-    user-select: none;
-  }
-
-  #restartBtn:hover {
-    background-color: #cc0033;
-  }
-</style>
-
-<div id="gameContainer" role="main" aria-live="polite" aria-atomic="true">
-  <div id="story">
-    ¡Estás atrapado en un laberinto helado en Urano! Para escapar, debes elegir correctamente las puertas basándote en pistas.
+    .boton-jugar:hover {
+      background-color: #00ffff;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div id="distractor">
+    <p>Explorás una antigua estación abandonada en Urano. No parece haber mucho aquí...<br>
+    ¿Seguro que no hay nada útil en esta página?</p>
   </div>
 
-  <div id="choices" role="list"></div>
+  <!--
+    De que programa visto en Arte Digital será este codigo...?
 
-  <div id="feedback" aria-live="assertive" aria-atomic="true"></div>
-
-  <button id="restartBtn" aria-label="Reiniciar juego">Reiniciar</button>
-</div>
-
-<script>
-  const story = document.getElementById('story');
-  const choicesDiv = document.getElementById('choices');
-  const feedback = document.getElementById('feedback');
-  const restartBtn = document.getElementById('restartBtn');
-
-  // Estados del juego - array de objetos con historia, opciones y siguiente estado
-  const gameStates = [
-    {
-      id: 0,
-      text: '¡Estás atrapado en un laberinto helado en Urano! Para salir, elige una puerta con símbolo.',
-      choices: [
-        { text: 'Puerta con símbolo de una estrella', next: 1 },
-        { text: 'Puerta con símbolo de un cometa', next: 2 },
-        { text: 'Puerta con símbolo de un planeta', next: 3 }
-      ],
-      hint: 'Pista: El cometa es rápido y apunta al camino correcto...'
-    },
-    {
-      id: 1,
-      text: 'La puerta de la estrella está congelada y no abre. Intenta otra.',
-      choices: [
-        { text: 'Volver al inicio', next: 0 }
-      ],
-      hint: 'La estrella no brilla aquí...'
-    },
-    {
-      id: 2,
-      text: '¡Correcto! La puerta del cometa se abre y avanzás más profundo en el laberinto.',
-      choices: [
-        { text: 'Seguir por el pasillo izquierdo', next: 4 },
-        { text: 'Seguir por el pasillo derecho', next: 5 }
-      ],
-      hint: 'Un pasillo se siente frío, el otro huele a ozono.'
-    },
-    {
-      id: 3,
-      text: 'El planeta gira rápidamente bloqueando la puerta. No podés pasar.',
-      choices: [
-        { text: 'Volver al inicio', next: 0 }
-      ],
-      hint: 'Los planetas pueden ser un obstáculo aquí.'
-    },
-    {
-      id: 4,
-      text: 'El pasillo izquierdo termina en un muro de hielo sólido. Necesitas otro camino.',
-      choices: [
-        { text: 'Volver a la bifurcación', next: 2 }
-      ],
-      hint: 'Quizás el otro camino es mejor...'
-    },
-    {
-      id: 5,
-      text: '¡Bien! El pasillo derecho te lleva a una sala con un panel. Para salir, responde: ¿Cuál es el satélite más grande de Urano?',
-      choices: [
-        { text: 'Titania', next: 6 },
-        { text: 'Oberón', next: 7 },
-        { text: 'Miranda', next: 7 }
-      ],
-      hint: 'No es Miranda, es una de las lunas más grandes.'
-    },
-    {
-      id: 6,
-      text: '¡Correcto! El panel se abre y ves la salida del laberinto. ¡Saliste de Urano!',
-      choices: [
-        { text: 'Volver al mapa', next: 'end' }
-      ],
-      hint: ''
-    },
-    {
-      id: 7,
-      text: 'Respuesta incorrecta. El panel emite un frío intenso y debés volver atrás.',
-      choices: [
-        { text: 'Volver a la sala del panel', next: 5 }
-      ],
-      hint: 'Revisa bien las lunas de Urano.'
+    void setup() {
+    size(700, 200);
+    background(0);
+    stroke(0, 255, 255);
+    strokeWeight(3);
+    noFill();
+    line(20, 150, 40, 50);
+    line(40, 50, 60, 150);
+    line(30, 100, 50, 100);
+    line(80, 150, 80, 50);
+    line(80, 50, 120, 50);
+    line(120, 50, 120, 100);
+    line(120, 100, 80, 100);
+    beginShape();
+    vertex(150, 50); vertex(170, 50); vertex(190, 70);
+    vertex(190, 130); vertex(170, 150); vertex(150, 150);
+    vertex(130, 130); vertex(130, 70); endShape(CLOSE);
+    line(210, 50, 210, 150);
+    line(210, 150, 250, 150);
+    line(270, 50, 270, 150);
+    line(270, 150, 310, 150);
+    beginShape();
+    vertex(340, 50); vertex(360, 50); vertex(380, 70);
+    vertex(380, 130); vertex(360, 150); vertex(340, 150);
+    vertex(320, 130); vertex(320, 70); endShape(CLOSE);
+    line(410, 50, 410, 150);
+    line(430, 50, 430, 150);
     }
-  ];
+    
+    Descomentá esto para poder enviar tu respuesta.
+    -->
+    <form action="/Home/VerificarUrano" method="post" style="margin-top: 50px;">
+    <input type="text" name="respuesta" placeholder="Ingresá la clave..." style="
+      background: black; color: #00ffff; border: 2px solid #00ffff;
+      font-size: 20px; padding: 10px; border-radius: 8px; margin-left: 36.5%;" >
+    <button type="submit" class="boton-jugar">></button>
+  </form>
+  
 
-  let currentState = 0;
-
-  function renderState(stateId) {
-    const state = gameStates.find(s => s.id === stateId);
-    if (!state) return;
-
-    story.textContent = state.text;
-    feedback.textContent = state.hint || '';
-    choicesDiv.innerHTML = '';
-
-    state.choices.forEach(choice => {
-      const btn = document.createElement('button');
-      btn.textContent = choice.text;
-      btn.className = 'choice-btn';
-      btn.setAttribute('role', 'listitem');
-      btn.addEventListener('click', () => {
-        if (choice.next === 'end') {
-          feedback.textContent = 'Redirigiendo al mapa...';
-          setTimeout(() => {
-            window.location.href = '/Home/Mapa';
-          }, 2000);
-          choicesDiv.innerHTML = '';
-          restartBtn.style.display = 'none';
-          return;
-        }
-        currentState = choice.next;
-        renderState(currentState);
-      });
-      choicesDiv.appendChild(btn);
-    });
-
-    restartBtn.style.display = 'inline-block';
-  }
-
-  restartBtn.addEventListener('click', () => {
-    currentState = 0;
-    renderState(currentState);
-  });
-
-  // Inicio del juego
-  renderState(currentState);
-</script>
+</body>
+</html>

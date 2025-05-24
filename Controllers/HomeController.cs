@@ -33,9 +33,31 @@ public class HomeController : Controller
     public IActionResult Venus() => View("Home", "Venus");
     public IActionResult Marte() => View("Home", "Marte");
     public IActionResult Jupiter() => View("Home", "Jupiter");
-    public IActionResult Saturno() => View("Home", "Saturno");
-    public IActionResult Urano(){
+
+    public IActionResult Saturno(){
         return View();
+    }
+    public IActionResult VerificarSaturno()
+    {
+        HttpContext.Session.SetString("NivelesCompletados", "Jupiter");
+        var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
+        usados.Add("Saturno");
+        HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
+        return View("Mapa");
+    }
+    
+    public IActionResult Urano(){
+    return View();
+    }
+    public IActionResult VerificarUrano(string respuesta){
+    if (!string.IsNullOrEmpty(respuesta) && respuesta.ToUpper() == "APOLLO11")
+    {
+        HttpContext.Session.SetString("NivelesCompletados", "Saturno");
+        var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
+        usados.Add("Urano");
+        HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
+    }
+    return View("Mapa");
     }
     public IActionResult Neptuno(){
         return View();
