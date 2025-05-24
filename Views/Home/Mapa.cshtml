@@ -96,7 +96,7 @@
 
     #btnMercurio { top: 58%; left: 10.2%; }
     #btnVenus    { top: 63%; left: 16.75%; }
-    #btnMarte    { top: 63%; left: 25.2%; }
+    #btnMarte    { top: 63%; left: 33.2%; }
     #btnJupiter  { top: 70%; left: 45.3%; }
     #btnSaturno  { top: 70%; left: 58.5%; }
     #btnUrano    { top: 66%; left: 71.3%; }
@@ -106,24 +106,26 @@
 <body>
   <div class="mapa-contenedor">
     @foreach (var planeta in planetas)
+{
+    var idBoton = "btn" + planeta;
+    if ((planeta == "Mercurio" || planeta == "Venus" || planeta == "Marte") && !EstaUsado("Jupiter"))
     {
-        var idBoton = "btn" + planeta;
-        if (EstaUsado(planeta))
+        continue;
+    }
+    if (EstaUsado(planeta))
     {
-        // Ya jugado, botón gris oscuro (usado)
         <button class="boton-usado" id="@idBoton" disabled>@planeta</button>
     }
     else if (EstaDesbloqueado(planeta))
     {
-        // Desbloqueado y no jugado, botón activo
         <a href="/Home/@planeta" class="boton-jugar" id="@idBoton">@planeta</a>
     }
     else
     {
-        // Bloqueado, botón gris claro
         <button class="boton-bloqueado" id="@idBoton" disabled>@planeta</button>
     }
-    }
+}
   </div>
 </body>
 </html>
+

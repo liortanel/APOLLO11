@@ -29,9 +29,15 @@ public class HomeController : Controller
         }
         return View();
     }
-    public IActionResult Mercurio() => View("Home", "Mercurio");
+    public IActionResult Mercurio(){
+        return View();
+    }
     public IActionResult Venus() => View("Home", "Venus");
     public IActionResult Marte() => View("Home", "Marte");
+    public IActionResult TierraF()
+    {
+        return View();
+    }
     public IActionResult Jupiter(){
     var mailEnviado = HttpContext.Session.GetString("MailEnviado");
 
@@ -47,13 +53,13 @@ public class HomeController : Controller
         return View();
     }
     public IActionResult VerificarJupiter()
-    {   
-        HttpContext.Session.SetString("NivelesCompletados", "Marte");
-        var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
-        usados.Add("Jupiter");
-        HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
-        return View("Mapa");
-    }
+{   
+    HttpContext.Session.SetString("NivelesCompletados", "Mercurio");
+    var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
+    usados.Add("Jupiter");
+    HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
+    return RedirectToAction("TierraF", "Home");
+}
     public IActionResult Saturno(){
         return View();
     }

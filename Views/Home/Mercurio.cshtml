@@ -1,0 +1,243 @@
+@{
+    ViewData["Title"] = "Mercurio - Ola de Calor";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>@ViewData["Title"]</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: black;
+    overflow: hidden;
+    font-family: 'Courier New', monospace;
+    color: white;
+  }
+
+  .letter {
+    position: fixed;
+    font-size: 36px;
+    font-weight: bold;
+    color: #ff6a00;
+    text-shadow:
+      0 0 10px #ff6a00,
+      0 0 20px #ff3300,
+      0 0 30px #ff0000;
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+    animation-fill-mode: forwards;
+  }
+
+  @@keyframes heatWave {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.8);
+      filter: blur(4px);
+      color: #ff3300;
+      text-shadow: 0 0 5px #ff3300;
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(0) scale(1.2);
+      filter: blur(0);
+      color: #ff6600;
+      text-shadow:
+        0 0 15px #ff6600,
+        0 0 30px #ff3300,
+        0 0 40px #ff0000;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-30px) scale(0.8);
+      filter: blur(4px);
+      color: #ff3300;
+      text-shadow: 0 0 5px #ff3300;
+    }
+  }
+
+  /* Input container fixed bottom center */
+  #inputContainer {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 20, 0.8);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #ff6600;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  #codigoInput {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    padding: 8px 12px;
+    border: 2px solid #ff6600;
+    border-radius: 8px;
+    background: black;
+    color: #ff6600;
+    width: 180px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  #codigoInput:focus {
+    border-color: #ff3300;
+    box-shadow: 0 0 8px #ff3300;
+  }
+
+  #validarBtn {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    padding: 8px 20px;
+    border: 2px solid #ff6600;
+    background: transparent;
+    color: #ff6600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  #validarBtn:hover {
+    background-color: #ff6600;
+    color: black;
+  }
+
+  #mensaje {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222;
+    padding: 20px 30px;
+    border-radius: 14px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff6600;
+    text-shadow: 0 0 15px #ff6600;
+    display: none;
+    z-index: 1100;
+  }
+    #pistasBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(30, 30, 30, 0.85);
+  border: 2px solid #ff6600;
+  color: #ff6600;
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  z-index: 1000;
+  transition: background-color 0.3s, color 0.3s;
+}
+#pistasBtn:hover {
+  background: #ff6600;
+  color: black;
+}
+
+#pistaTexto {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  max-width: 250px;
+  font-size: 16px;
+  background: rgba(30, 30, 30, 0.85);
+  padding: 12px 16px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ff6600;
+  color: #ff6600;
+  font-family: 'Courier New', monospace;
+  display: none;
+  z-index: 1000;
+}
+</style>
+</head>
+<body>
+<!-- Botón de pistas -->
+<button id="pistasBtn" onclick="mostrarPista()">Pistas</button>
+
+<!-- Contenedor de la pista -->
+<div id="pistaTexto"></div>
+<script>
+  const texto = "OLA DE CALOR";
+  const letters = texto.replace(/ /g, '').split('');
+  const totalLetters = letters.length;
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  letters.forEach((char, i) => {
+    const span = document.createElement('span');
+    span.classList.add('letter');
+    span.textContent = char;
+
+    const x = Math.random() * (screenWidth - 50) + 25;
+    const y = Math.random() * (screenHeight - 50) + 25;
+    span.style.left = `${x}px`;
+    span.style.top = `${y}px`;
+
+    span.style.animation = `heatWave 3s ease-in-out infinite`;
+    span.style.animationDelay = `${i * 0.3}s`;
+
+    document.body.appendChild(span);
+  });
+
+  // Validación del código
+  function validarCodigo() {
+    const input = document.getElementById('codigoInput');
+    const mensaje = document.getElementById('mensaje');
+    const codigo = input.value.trim().toUpperCase();
+    const correcto = "CALOR";
+
+    if (codigo === correcto) {
+      mensaje.textContent = "✅ Código correcto. Preparando siguiente misión...";
+      mensaje.style.display = "block";
+      setTimeout(() => {
+        window.location.href = "/Home/Mapa"; // Cambiar a ruta siguiente
+      }, 2500);
+    } else {
+      mensaje.textContent = "❌ Código incorrecto. Intenta otra vez.";
+      mensaje.style.display = "block";
+      setTimeout(() => {
+        mensaje.style.display = "none";
+        input.value = "";
+        input.focus();
+      }, 2500);
+    }
+  }
+  let pistaPaso = 0;
+function mostrarPista() {
+  const pistaTexto = document.getElementById("pistaTexto");
+  const pistas = [
+    "🧩 Son tres palabras.",
+    "🌡️ Pensá en lo cercano a Mercurio.",
+    "🔤 Empiezan con O, D y C."
+  ];
+
+  if (pistaPaso < pistas.length) {
+    pistaTexto.textContent = pistas[pistaPaso];
+    pistaTexto.style.display = "block";
+    pistaPaso++;
+  } else {
+    pistaTexto.textContent = "📘 Ya viste todas las pistas.";
+  }
+}
+</script>
+
+<!-- Input y botón para ingresar código -->
+<div id="inputContainer">
+  <input id="codigoInput" type="text" maxlength="12" placeholder="Ingrese código..." autofocus>
+  <button id="validarBtn" onclick="validarCodigo()">Validar</button>
+</div>
+
+<!-- Mensaje resultado -->
+<div id="mensaje"></div>
+
+</body>
+</html>

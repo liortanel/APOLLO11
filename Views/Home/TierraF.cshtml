@@ -1,0 +1,179 @@
+@{
+    ViewData["Title"] = "PlanetaF";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>@ViewData["Title"]</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: black;
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      overflow-x: hidden;
+    }
+
+    #console {
+      max-width: 800px;
+      padding: 20px;
+      white-space: pre-wrap;
+      text-align: left;
+    }
+
+    input {
+      background: black;
+      border: none;
+      border-bottom: 1px solid white;
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      outline: none;
+      width: 250px;
+      margin-top: 20px;
+    }
+
+    .fade-in {
+      animation: fadeIn 3s ease forwards;
+      opacity: 0;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 20px;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff;
+      animation-delay: 1s;
+      animation-fill-mode: forwards;
+    }
+
+    @@keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @@keyframes flashRed {
+  0%, 100% { background-color: black; }
+  50% { background-color: red; }
+}
+
+@@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.error-effect {
+  animation: flashRed 0.2s alternate 10;
+}
+
+.shake-text {
+  display: inline-block;
+  animation: shake 0.5s infinite;
+  color: red;
+  text-shadow: 0 0 5px red, 0 0 10px red;
+}
+  </style>
+</head>
+<audio id="alarma" src="/sounds/alerta.mp3"></audio>
+<body>
+  <div id="console"></div>
+
+  <script>
+  const consoleDiv = document.getElementById("console");
+  const textoIntro = [
+    "Iniciando sistema de navegación...",
+    "Comunicaciones establecidas con torre de control.",
+    "Despegue exitoso.",
+    "Sincronizando trayectoria con Tierra...",
+    "Coordenadas alineadas: rumbo a la Tierra.",
+    "\nFallo en propulsor lateral.",
+    "Trayectoria comprometida.",
+    "Iniciando protocolo de aterrizaje de emergencia.",
+    "Nueva ubicación asignada: MERCURIO.",
+    "Preparando aterrizaje..."
+  ];
+
+  let lineaActual = 0;
+
+  function typeLine(line, charIndex = 0) {
+    if (charIndex < line.length) {
+      consoleDiv.innerHTML += line.charAt(charIndex);
+      setTimeout(() => typeLine(line, charIndex + 1), 30);
+    } else {
+      consoleDiv.innerHTML += "<br/>";
+      lineaActual++;
+      if (lineaActual < textoIntro.length) {
+        setTimeout(() => typeLine(textoIntro[lineaActual]), 500);
+      } else {
+        mostrarInstruccion();
+      }
+    }
+  }
+
+  function mostrarInstruccion() {
+    const contenedor = document.createElement("div");
+    contenedor.className = "fade-in";
+    contenedor.textContent = "Misión: Atraviese los planetas restantes para llegar a la tierra.";
+    consoleDiv.appendChild(contenedor);
+    setTimeout(() => {
+      window.location.href = "/Home/Mapa";
+    }, 4000);
+  }
+
+  typeLine(textoIntro[0]);
+
+  function typeLine(line, charIndex = 0) {
+  if (charIndex < line.length) {
+    consoleDiv.innerHTML += line.charAt(charIndex);
+    setTimeout(() => typeLine(line, charIndex + 1), 30);
+  } else {
+    consoleDiv.innerHTML += "<br/>";
+    
+    // ⚠️ Activar efectos si es la línea del error
+    if (line.includes("Coordenadas alineadas")) {
+      activarEfectosError();
+    }
+
+    lineaActual++;
+    if (lineaActual < textoIntro.length) {
+      setTimeout(() => typeLine(textoIntro[lineaActual]), 500);
+    } else {
+      mostrarInstruccion();
+    }
+  }
+}
+
+function activarEfectosError() {
+  // Vibración del texto
+  const shakeDiv = document.createElement("div");
+  shakeDiv.className = "shake-text";
+  shakeDiv.textContent = "¡ERROR DETECTADO!";
+  consoleDiv.appendChild(shakeDiv);
+
+  // Flash rojo en fondo
+  document.body.classList.add("error-effect");
+
+  // Sonido (si existe)
+  const alarma = document.getElementById("alarma");
+  if (alarma) alarma.play();
+
+  // Quitar efectos después de 2s
+  setTimeout(() => {
+    document.body.classList.remove("error-effect");
+    if (shakeDiv) shakeDiv.remove();
+  }, 2000);
+}
+</script>
+</body>
+</html>
