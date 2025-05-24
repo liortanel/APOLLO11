@@ -269,27 +269,70 @@
     let index = 0;
 
     function typeIntro() {
-      if (index < introText.length) {
-        consoleDiv.innerHTML += introText.charAt(index);
-        index++;
-        setTimeout(typeIntro, 0.1); // tiempo original
-      } else {
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "Ingresa tu nombre";
-        consoleDiv.appendChild(input);
-        input.focus();
+  if (index < introText.length) {
+    consoleDiv.innerHTML += introText.charAt(index);
+    index++;
+    setTimeout(typeIntro, 0.1);
+  } else {
+    pedirNombre();
+  }
+}
 
-        input.addEventListener("keydown", function (e) {
-          if (e.key === "Enter" && input.value.trim() !== "") {
-            const name = input.value.trim();
-            const span = document.createElement("span");
-            span.textContent = name;
-            consoleDiv.removeChild(input);
-            consoleDiv.appendChild(span);
+function pedirNombre() {
+  const inputNombre = document.createElement("input");
+  inputNombre.type = "text";
+  inputNombre.placeholder = "Ingresa tu nombre";
+  consoleDiv.appendChild(inputNombre);
+  inputNombre.focus();
 
-            setTimeout(() => {
-              const story = `
+  inputNombre.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && inputNombre.value.trim() !== "") {
+      const name = inputNombre.value.trim();
+      const span = document.createElement("span");
+      span.textContent = name;
+      consoleDiv.removeChild(inputNombre);
+      consoleDiv.appendChild(span);
+
+      fetch("/Home/GuardarNombre", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ nombre: name })
+      });
+      pedirEmail(name);
+    }
+  });
+}
+
+function pedirEmail(name) {
+  const br = document.createElement("br");
+  consoleDiv.appendChild(br);
+
+  const inputEmail = document.createElement("input");
+  inputEmail.type = "email";
+  inputEmail.placeholder = "Ingresa tu email";
+  consoleDiv.appendChild(inputEmail);
+  inputEmail.focus();
+
+  inputEmail.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && inputEmail.value.trim() !== "") {
+      const email = inputEmail.value.trim();
+      const span = document.createElement("span");
+      span.textContent = ` (${email})`;
+      consoleDiv.removeChild(inputEmail);
+      consoleDiv.appendChild(span);
+
+      fetch("/Home/GuardarEmail", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: email })
+
+        });
+
+      setTimeout(() => {
+        const story = `
+
 \n\nIniciando protocolo de misión...
 
 Astronauta ${name}, ha sido seleccionado para formar parte de la histórica misión Apollo 11.
@@ -308,13 +351,12 @@ Lugar: Centro Espacial Kennedy, Plataforma LC-39A
 
 Preparándose para iniciar la cuenta regresiva...
 `;
-typeText(story, 0, () => {
-iniciarCuentaRegresiva(5);
-});
-}, 500);
-}
-});
-}
+        typeText(story, 0, () => {
+          iniciarCuentaRegresiva(5);
+        });
+      }, 500);
+    }
+  });
 }
 
 function typeText(text, i = 0, callback) {

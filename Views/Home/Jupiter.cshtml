@@ -1,0 +1,172 @@
+@{
+    var email = Context.Session.GetString("EmailUsuario");
+    var nombre = Context.Session.GetString("NombreUsuario");
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Júpiter - Ingreso de contraseña</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background:
+      radial-gradient(2px 2px at 20% 30%, white, transparent),
+      radial-gradient(1.5px 1.5px at 40% 60%, white, transparent),
+      radial-gradient(2.5px 2.5px at 70% 80%, white, transparent),
+      radial-gradient(1px 1px at 85% 25%, white, transparent),
+      radial-gradient(1.8px 1.8px at 50% 50%, white, transparent),
+      #000011;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+
+    .contenedor {
+      background: #111;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .display {
+      width: 180px;
+      height: 40px;
+      margin-bottom: 10px;
+      font-size: 24px;
+      text-align: right;
+      padding: 5px 10px;
+      background-color: #111;
+      border: 2px solid #444;
+      color: white;
+      border-radius: 8px;
+    }
+
+    .pad {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-gap: 10px;
+      justify-content: center;
+    }
+
+    .boton {
+      color: #ffffff;
+    background-color: #222;
+    border: 2px solid #00ffff;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      padding: 10px;
+      transition: 0.2s;
+    }
+
+    .boton:hover {
+      background-color: #00ffff;
+    color: #000;
+    transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Estrellas -->
+  <div class="estrella"></div>
+  <div class="estrella"></div>
+  <div class="estrella"></div>
+  <div class="estrella"></div>
+
+  <!-- Contenido del pad -->
+  <div class="contenedor">
+    <div id="pantalla" class="display"></div>
+    <div class="pad">
+      <button class="boton" onclick="agregar('1')">1</button>
+      <button class="boton" onclick="agregar('2')">2</button>
+      <button class="boton" onclick="agregar('3')">3</button>
+      <button class="boton" onclick="agregar('4')">4</button>
+      <button class="boton" onclick="agregar('5')">5</button>
+      <button class="boton" onclick="agregar('6')">6</button>
+      <button class="boton" onclick="agregar('7')">7</button>
+      <button class="boton" onclick="agregar('8')">8</button>
+      <button class="boton" onclick="agregar('9')">9</button>
+      <button class="boton" onclick="borrar()">←</button>
+      <button class="boton" onclick="agregar('0')">0</button>
+      <button class="boton" onclick="verificar()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    let input = "";
+
+    function agregar(num) {
+      if (input.length < 3) {
+        input += num;
+        document.getElementById("pantalla").textContent = input;
+      }
+    }
+
+    function borrar() {
+      input = input.slice(0, -1);
+      document.getElementById("pantalla").textContent = input;
+    }
+
+    function verificar() {
+  const clave = "004";
+  const pantalla = document.getElementById("pantalla");
+
+  if (input === clave) {
+    pantalla.textContent = "Correcta";
+    setTimeout(() => {
+      window.location.href = "/Home/VerificarJupiter";
+    }, 2000);
+  } else {
+    pantalla.textContent = "Incorrecta";
+    setTimeout(() => {
+      input = "";
+      pantalla.textContent = "";
+    }, 2000);
+  }
+}
+  </script>
+
+</body>
+</html>
+
+
+<!-- Librería EmailJS -->
+@if(ViewBag.EnviarMail){
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@(Html.Raw("@"))emailjs/browser@4/dist/email.min.js"></script>
+
+<script type="text/javascript">
+  (function(){
+    emailjs.init({
+      publicKey: "Wp3fg5lkPUZ6OgaEn",
+    });
+  })();
+
+  // PASÁS LAS VARIABLES DESDE C# A JS COMO STRINGS
+  const nombre = "@nombre";
+  const email = "@email";
+
+  function enviarMail() {
+    const params = {
+      name: nombre,
+      email: email,
+    };
+
+    emailjs.send("service_53vaepr", "template_5ojzn81", params)
+      .then(function(response) {
+         console.log("✅ CORREO ENVIADO", response.status, response.text);
+      }, function(error) {
+         console.log("❌ ERROR al enviar", error);
+      });
+  }
+
+  // Ejecutar al cargar la página
+  window.onload = enviarMail;
+</script>}

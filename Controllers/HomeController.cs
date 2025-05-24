@@ -32,8 +32,28 @@ public class HomeController : Controller
     public IActionResult Mercurio() => View("Home", "Mercurio");
     public IActionResult Venus() => View("Home", "Venus");
     public IActionResult Marte() => View("Home", "Marte");
-    public IActionResult Jupiter() => View("Home", "Jupiter");
+    public IActionResult Jupiter(){
+    var mailEnviado = HttpContext.Session.GetString("MailEnviado");
 
+    if (mailEnviado == "true")
+    {
+        ViewBag.EnviarMail = false;
+    }
+    else
+    {
+        ViewBag.EnviarMail = true;
+        HttpContext.Session.SetString("MailEnviado", "true");
+    }
+        return View();
+    }
+    public IActionResult VerificarJupiter()
+    {   
+        HttpContext.Session.SetString("NivelesCompletados", "Marte");
+        var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
+        usados.Add("Jupiter");
+        HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
+        return View("Mapa");
+    }
     public IActionResult Saturno(){
         return View();
     }
@@ -70,9 +90,22 @@ public class HomeController : Controller
     return View("Mapa");
     }
 
-
 public class VictoriaRequest
 {
     public bool gano { get; set; }
+}
+
+[HttpPost]
+public IActionResult GuardarNombre([FromBody] NombreModel model)
+{
+    HttpContext.Session.SetString("NombreUsuario", model.Nombre);
+    return Ok();
+}
+
+[HttpPost]
+public IActionResult GuardarEmail([FromBody] EmailModel model)
+{
+    HttpContext.Session.SetString("EmailUsuario", model.Email);
+    return Ok();
 }
 }

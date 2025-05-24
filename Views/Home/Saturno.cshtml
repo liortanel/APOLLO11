@@ -5,9 +5,9 @@
 <title>Urano - Alien y el código binario</title>
 <style>
   body {
-    background: linear-gradient(to bottom, #001022, #004466);
     color: #eee;
     font-family: 'Courier New', monospace;
+    background: radial-gradient(ellipse at center, #000011 0%, #000000 80%);
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -45,7 +45,6 @@
     flex-wrap: wrap;
     gap: 10px;
     padding: 10px 20px;
-    background: #003344;
     justify-content: center;
   }
   #inputArea button {
@@ -69,7 +68,6 @@
   #inputContrasenaContainer {
     display: none;
     padding: 10px 20px;
-    background: #003344;
     justify-content: center;
     gap: 10px;
   }
@@ -79,7 +77,9 @@
     font-family: 'Courier New', monospace;
     font-size: 16px;
     border-radius: 5px;
-    border: none;
+    border: 2px solid #00ffff;
+    background: #002233;
+    color: #00ffff
   }
   #inputContrasenaContainer button {
     padding: 10px 20px;
@@ -115,7 +115,7 @@
 </div>
 
 <div id="inputContrasenaContainer">
-  <input type="text" id="inputContrasena" placeholder="Introduce la contraseña aquí..." autocomplete="off" />
+  <input type="text" id="inputContrasena" placeholder="Introduce la contraseña aquí..." autocomplete="off"/>
   <button id="btnValidarContrasena">Validar</button>
 </div>
 
