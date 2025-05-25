@@ -18,7 +18,7 @@
   flex-direction: column;
   align-items: center;
   animation: fadeIn 2s ease forwards;
-  z-index: 1000; /* aseguramos que quede encima */
+  z-index: 1000;
 }
 
     .titulo-apollo {
@@ -154,60 +154,23 @@
     }
 
    @@keyframes glitch-anim1 {
-      0% {
-        clip: rect(0, 9999px, 0, 0);
-        transform: translate(0);
-      }
-      20% {
-        clip: rect(2px, 9999px, 24px, 0);
-        transform: translate(-3px, 0);
-      }
-      40% {
-        clip: rect(15px, 9999px, 20px, 0);
-        transform: translate(3px, 0);
-      }
-      60% {
-        clip: rect(8px, 9999px, 18px, 0);
-        transform: translate(-3px, 0);
-      }
-      80% {
-        clip: rect(3px, 9999px, 22px, 0);
-        transform: translate(3px, 0);
-      }
-      100% {
-        clip: rect(0, 9999px, 0, 0);
-        transform: translate(0);
-      }
+      0% { clip: rect(0, 9999px, 0, 0); transform: translate(0); }
+      20% { clip: rect(2px, 9999px, 24px, 0); transform: translate(-3px, 0); }
+      40% { clip: rect(15px, 9999px, 20px, 0); transform: translate(3px, 0); }
+      60% { clip: rect(8px, 9999px, 18px, 0); transform: translate(-3px, 0); }
+      80% { clip: rect(3px, 9999px, 22px, 0); transform: translate(3px, 0); }
+      100% { clip: rect(0, 9999px, 0, 0); transform: translate(0); }
     }
 
    @@keyframes glitch-anim2 {
-      0% {
-        clip: rect(0, 9999px, 0, 0);
-        transform: translate(0);
-      }
-      20% {
-        clip: rect(10px, 9999px, 20px, 0);
-        transform: translate(3px, 0);
-      }
-      40% {
-        clip: rect(5px, 9999px, 25px, 0);
-        transform: translate(-3px, 0);
-      }
-      60% {
-        clip: rect(12px, 9999px, 18px, 0);
-        transform: translate(3px, 0);
-      }
-      80% {
-        clip: rect(7px, 9999px, 23px, 0);
-        transform: translate(-3px, 0);
-      }
-      100% {
-        clip: rect(0, 9999px, 0, 0);
-        transform: translate(0);
-      }
+      0% { clip: rect(0, 9999px, 0, 0); transform: translate(0); }
+      20% { clip: rect(10px, 9999px, 20px, 0); transform: translate(3px, 0); }
+      40% { clip: rect(5px, 9999px, 25px, 0); transform: translate(-3px, 0); }
+      60% { clip: rect(12px, 9999px, 18px, 0); transform: translate(3px, 0); }
+      80% { clip: rect(7px, 9999px, 23px, 0); transform: translate(-3px, 0); }
+      100% { clip: rect(0, 9999px, 0, 0); transform: translate(0); }
     }
 
-    /* Fondo rojo intermitente para alerta */
    @@keyframes alertBackground {
       0%, 100% { background-color: black; }
       50% { background-color: #660000; }
@@ -217,7 +180,6 @@
       animation: alertBackground 0.5s infinite;
     }
 
-    /* Fade-in para texto final */
    @@keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -235,7 +197,6 @@
       animation-fill-mode: forwards;
     }
 
-    /* Vibración final para texto */
    @@keyframes finalShake {
       0%, 100% { transform: translate(0, 0); }
       20%, 60% { transform: translate(-3px, 3px); }
@@ -251,14 +212,18 @@
   <div id="console"></div>
 
   <video autoplay muted id="myVideo">
-    <source src="/img/despegue.mp4" type="video/mp4" />
+    <source src="/img/1seg.mp4" type="video/mp4" />
     Your browser no soporta video HTML5.
   </video>
 
   <!-- SONIDO DE CHOQUE -->
   <audio id="errorSound">
-    <source src="/sonidos/choque.mp3" type="audio/mp3" />
-    <!-- 🔁 Reemplazá la línea de arriba con el path a tu archivo -->
+    <source src="/sounds/choque.mp3" type="audio/mp3" />
+  </audio>
+
+  <!-- SONIDO DE TECLAS -->
+  <audio id="typeSound">
+    <source src="/sounds/tecla.mp3" type="audio/mp3"/>
   </audio>
 
   <script>
@@ -266,17 +231,20 @@
     const consoleDiv = document.getElementById("console");
     const video = document.getElementById("myVideo");
     const errorSound = document.getElementById("errorSound");
+    const typeSound = document.getElementById("typeSound");
     let index = 0;
 
     function typeIntro() {
-  if (index < introText.length) {
-    consoleDiv.innerHTML += introText.charAt(index);
-    index++;
-    setTimeout(typeIntro, 0.1);
-  } else {
-    pedirNombre();
-  }
-}
+      if (index < introText.length) {
+        consoleDiv.innerHTML += introText.charAt(index);
+        typeSound.currentTime = 0;
+        typeSound.play();
+        index++;
+        setTimeout(typeIntro, 50);
+      } else {
+        pedirNombre();
+      }
+    }
 
 function pedirNombre() {
   const inputNombre = document.createElement("input");
@@ -354,19 +322,21 @@ Preparándose para iniciar la cuenta regresiva...
         typeText(story, 0, () => {
           iniciarCuentaRegresiva(5);
         });
-      }, 500);
+      }, 1);//500
     }
   });
 }
 
-function typeText(text, i = 0, callback) {
-  if (i < text.length) {
-    consoleDiv.innerHTML += text.charAt(i);
-    setTimeout(() => typeText(text, i + 1, callback), 0.1); // tiempo original
-  } else if (callback) {
-    callback();
-  }
-}
+    function typeText(text, i = 0, callback) {
+      if (i < text.length) {
+        consoleDiv.innerHTML += text.charAt(i);
+        typeSound.currentTime = 0;
+        typeSound.play();
+        setTimeout(() => typeText(text, i + 1, callback), 1);//1000
+      } else if (callback) {
+        callback();
+      }
+    }
 
 function iniciarCuentaRegresiva(numero) {
   if (numero > 0) {

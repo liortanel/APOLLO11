@@ -14,6 +14,7 @@
     overflow: hidden;
     font-family: 'Courier New', monospace;
     color: white;
+    width:100%;
   }
 
   .letter {
@@ -193,13 +194,14 @@
     const input = document.getElementById('codigoInput');
     const mensaje = document.getElementById('mensaje');
     const codigo = input.value.trim().toUpperCase();
-    const correcto = "CALOR";
+    const correctoJunto = "OLADECALOR";
+    const correctoSeparado = "OLA DE CALOR"
 
-    if (codigo === correcto) {
+    if (codigo.toUpperCase() === correctoJunto || codigo.toUpperCase() === correctoSeparado) {
       mensaje.textContent = "✅ Código correcto. Preparando siguiente misión...";
       mensaje.style.display = "block";
       setTimeout(() => {
-        window.location.href = "/Home/Mapa"; // Cambiar a ruta siguiente
+        window.location.href = "/Home/ValidarMercurio";
       }, 2500);
     } else {
       mensaje.textContent = "❌ Código incorrecto. Intenta otra vez.";

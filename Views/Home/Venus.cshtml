@@ -1,0 +1,158 @@
+@{
+    ViewData["Title"] = "Venus";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>@ViewData["Title"]</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: black;
+      color: white;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+    }
+
+    .pasillo {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      background: radial-gradient(circle at center, rgba(255,150,150,0.1) 0%, transparent 70%), #220000;
+      animation: vibrar 4s infinite;
+    }
+
+    .puerta {
+      margin-top:3%;
+      float:left;
+      margin-left:3%;
+      width: 100px;
+      height: 200px;
+      background: rgba(255, 100, 100, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255,100,100,0.3);
+      backdrop-filter: blur(6px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .puerta:hover {
+      cursor: pointer;
+    }
+
+    .puerta.flash {
+      animation: flash 0.6s ease;
+    }
+
+    .mensaje-final {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+
+    @@keyframes vibrar {
+      0%, 100% { background-position: 0 0; }
+      50% { background-position: 5px 5px; }
+    }
+
+    @@keyframes flash {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.2; transform: scale(1.1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="pasillo" id="pasillo"></div>
+  <div class="mensaje-final" id="mensajeFinal">Código: CRISTALVENUS</div>
+
+  <script>
+    const pasillo = document.getElementById('pasillo');
+    const filas = 3;
+    const columnas = 5;
+    const totalPuertas = filas * columnas;
+    let secuencia = [];
+    let inputJugador = [];
+    let puertas = [];
+
+    for (let f = 0; f < filas; f++) {
+      for (let c = 0; c < columnas; c++) {
+        const i = f * columnas + c;
+        const puerta = document.createElement('div');
+        puerta.classList.add('puerta');
+        puerta.style.top = `${10 + f * 30}px`;
+        puerta.style.left = `${10 + c * 110}px`;
+        puerta.dataset.index = i;
+        puerta.onclick = () => tocar(i);
+        pasillo.appendChild(puerta);
+        puertas.push(puerta);
+      }
+    }
+
+    function iniciarSecuencia() {
+      const nuevoPaso = Math.floor(Math.random() * totalPuertas);
+      secuencia.push(nuevoPaso);
+      inputJugador = [];
+      reproducirSecuencia();
+    }
+
+    function reproducirSecuencia() {
+      let i = 0;
+      const intervalo = setInterval(() => {
+        const index = secuencia[i];
+        puertas[index].classList.add('flash');
+        setTimeout(() => puertas[index].classList.remove('flash'), 400);
+        i++;
+        if (i >= secuencia.length) clearInterval(intervalo);
+      }, 700);
+    }
+
+    function tocar(index) {
+      inputJugador.push(index);
+      const i = inputJugador.length - 1;
+      if (inputJugador[i] !== secuencia[i]) {
+        secuencia = [];
+        inputJugador = [];
+        alert("Fallaste, empezá de nuevo");
+        setTimeout(iniciarSecuencia, 1000);
+        return;
+      }
+
+      if (inputJugador.length === secuencia.length) {
+        if (secuencia.length >= 5) {
+          mostrarCodigo();
+        } else {
+          setTimeout(iniciarSecuencia, 1000);
+        }
+      }
+    }
+
+    function mostrarCodigo() {
+      const mensaje = document.getElementById("mensajeFinal");
+      mensaje.style.opacity = 1;
+
+      setTimeout(() => {
+        fetch('/Home/VerificarVenus', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ codigo: "CRISTALVENUS" })
+        }).then(() => {
+          window.location.href = '/Home/VerificarVenus';
+        });
+      }, 4000);
+    }
+
+    iniciarSecuencia();
+  </script>
+</body>
+</html>

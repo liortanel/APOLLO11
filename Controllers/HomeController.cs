@@ -32,7 +32,17 @@ public class HomeController : Controller
     public IActionResult Mercurio(){
         return View();
     }
-    public IActionResult Venus() => View("Home", "Venus");
+    public IActionResult ValidarMercurio()
+    {
+        HttpContext.Session.SetString("NivelesCompletados", "Venus");
+        var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
+        usados.Add("Mercurio");
+        HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
+        return View("Mapa");
+    }
+    public IActionResult Venus(){
+        return View();
+    }
     public IActionResult Marte() => View("Home", "Marte");
     public IActionResult TierraF()
     {

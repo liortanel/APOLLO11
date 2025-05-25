@@ -13,6 +13,48 @@
     height: 100vh;
     margin: 0;
   }
+  #introScreen {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 200;
+  }
+  #introScreen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  #introScreen p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+  }
+  .boton-inicio {
+    position: absolute;
+    font-size: 24px;
+    color: #ffffff;
+    background-color: #222;
+    border: 2px solid #00ffff;
+    padding: 12px 24px;
+    cursor: pointer;
+    text-align: center;
+    text-shadow: 0 0 5px #00ffff;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
+    animation: fadeIn 3s ease-out forwards;
+    text-decoration: none;
+    display: inline-block;
+    margin-top:15%;
+    user-select: none;
+  }
+  .boton-inicio:hover {
+    background-color: #00ffff;
+    color: #000;
+    transform: scale(1.05);
+  }
   #chat {
     flex-grow: 1;
     padding: 20px;
@@ -100,9 +142,14 @@
 </style>
 </head>
 <body>
-
+<div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
+  <h1 id="introTitle">Saturno</h1>
+  <p id="introDesc">Un alienígena atrapado te observa. Solo una combinación lo liberará... o te condenará.</p>
+  <button id="btnStart" class="boton-inicio" aria-label="Aceptar e iniciar el juego">Aceptar</button>
+  <div id="gameContainer" aria-label="Área del juego" aria-hidden="true"></div>
+</div>
 <div id="chat">
-  <div class="message alien">Saludos, terrícola. Soy el guardián de Urano.</div>
+  <div class="message alien">Saludos, terrícola. Soy el guardián de Saturno.</div>
 </div>
 
 <div id="inputArea">
@@ -120,6 +167,12 @@
 </div>
 
 <script>
+btnStart.addEventListener('click', () => {
+    introScreen.style.display = 'none';
+    gameContainer.setAttribute('aria-hidden', 'false');
+    gameActive = true;
+    btnSubmit.disabled = false;
+  });
   const chat = document.getElementById('chat');
   const botones = document.querySelectorAll('#inputArea button');
   const inputContrasenaContainer = document.getElementById('inputContrasenaContainer');
@@ -129,7 +182,7 @@
 
   const respuestasAlien = {
     "hola": "Hola humano. Estoy aquí para ayudarte... o no.",
-    "quién eres": "Soy una IA que protege el secreto de Urano.",
+    "quién eres": "Soy una IA que protege el secreto de Saturno.",
     "secreto": "El secreto está oculto, pero si reúnes las pistas en binario, descubrirás la contraseña.",
     "pista": "Los números de las respuestas no están al azar...",
     "historia": "Es una larga historia, no estoy autorizando a contarsela a simples humanos.",
@@ -139,12 +192,12 @@
   const binarios = {
     "hola": "01100111 01110101 01100001",
     "quién eres": "01110010 01100100 00110001",
-    "secreto": "01100001 01101110 01100100",
-    "pista": "01100101 01110101 01110010",
-    "historia": "01100001 01101110 01101111"
+    "secreto": "01100001 01101110 01100101",
+    "pista": "01110011 01110000 01100001",
+    "historia": "01100011 01101001 01100001 01101100"
   };
 
-  const contraseñaCorrecta = "guard1andeurano";
+  const contraseñaCorrecta = "guard1anespacial";
   let acumuladoBinario = "";
 
   function agregarMensaje(texto, clase) {
