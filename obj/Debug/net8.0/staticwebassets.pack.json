@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\img\\despegue.mp4"
     },
     {
+      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\despegueM.mp4",
+      "PackagePath": "staticwebassets\\img\\despegueM.mp4"
+    },
+    {
       "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\planetas.png",
       "PackagePath": "staticwebassets\\img\\planetas.png"
     },
@@ -75,6 +79,14 @@
     {
       "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\alerta.mp3",
       "PackagePath": "staticwebassets\\sounds\\alerta.mp3"
+    },
+    {
+      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\choque.mp3",
+      "PackagePath": "staticwebassets\\sounds\\choque.mp3"
+    },
+    {
+      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\tecla.mp3",
+      "PackagePath": "staticwebassets\\sounds\\tecla.mp3"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.APOLLO11.Microsoft.AspNetCore.StaticWebAssets.props",

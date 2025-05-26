@@ -1,245 +1,371 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
-    ViewData["Title"] = "Mercurio - Ola de Calor";
+    var tokens = Antiforgery.GetAndStoreTokens(Context);
 }
+<input type="hidden" name="__RequestVerificationToken" value="@tokens.RequestToken" />
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8" />
-<title>@ViewData["Title"]</title>
 <style>
   html, body {
-    margin: 0; padding: 0; height: 100%;
-    background: black;
+    margin: 0; padding: 0; height: 100%; width: 100%;
     overflow: hidden;
-    font-family: 'Courier New', monospace;
+    font-family: monospace;
+    background: radial-gradient(ellipse at center, #220000 0%, #110000 90%);
     color: white;
-    width:100%;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
   }
 
-  .letter {
+  #introScreen {
     position: fixed;
-    font-size: 36px;
-    font-weight: bold;
-    color: #ff6a00;
-    text-shadow:
-      0 0 10px #ff6a00,
-      0 0 20px #ff3300,
-      0 0 30px #ff0000;
-    opacity: 0;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 200;
+  }
+
+  #introScreen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  #introScreen p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+  }
+
+  .boton-jugar {
+    position: absolute;
+    font-size: 24px;
+    color: #ffffff;
+    background-color: #222;
+    border: 2px solid #00ffff;
+    padding: 12px 24px;
+    cursor: pointer;
+    text-align: center;
+    text-shadow: 0 0 5px #00ffff;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
+    animation: fadeIn 3s ease-out forwards;
+    text-decoration: none;
+    display: inline-block;
+    margin-top:15%;
     user-select: none;
-    pointer-events: none;
-    animation-fill-mode: forwards;
   }
 
-  @@keyframes heatWave {
-    0% {
-      opacity: 0;
-      transform: translateY(30px) scale(0.8);
-      filter: blur(4px);
-      color: #ff3300;
-      text-shadow: 0 0 5px #ff3300;
-    }
-    50% {
-      opacity: 1;
-      transform: translateY(0) scale(1.2);
-      filter: blur(0);
-      color: #ff6600;
-      text-shadow:
-        0 0 15px #ff6600,
-        0 0 30px #ff3300,
-        0 0 40px #ff0000;
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(-30px) scale(0.8);
-      filter: blur(4px);
-      color: #ff3300;
-      text-shadow: 0 0 5px #ff3300;
-    }
+  .boton-jugar:hover {
+    background-color: #00ffff;
+    color: #000;
+    transform: scale(1.05);
   }
 
-  /* Input container fixed bottom center */
-  #inputContainer {
+  #gameContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background:
+      radial-gradient(2px 2px at 20% 30%, #ff3300, transparent),
+      radial-gradient(1.5px 1.5px at 40% 60%, #ff3300, transparent),
+      radial-gradient(2.5px 2.5px at 70% 80%, #ff3300, transparent),
+      radial-gradient(1px 1px at 85% 25%, #ff3300, transparent),
+      radial-gradient(1.8px 1.8px at 50% 50%, #ff3300, transparent),
+      #220000;
+    background-repeat: repeat;
+  }
+
+  .piece {
+    position: absolute;
+    width: 80px;
+    height: 50px;
+    background-color: #ff3300;
+    border: 2px solid #ff6600;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow:
+      0 0 10px #ff3300,
+      inset 0 0 8px #ff6600;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 0 4px #330000;
+    color: #fff;
+  }
+
+  .fixed {
+    cursor: default;
+    box-shadow:
+      0 0 15px #00ff00,
+      inset 0 0 12px #00ff00;
+    background-color: #00cc00;
+    border-color: #00ff00;
+    color: #000;
+    text-shadow: none;
+  }
+
+  #statusMessage {
     position: fixed;
-    bottom: 20px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(20, 20, 20, 0.8);
-    padding: 15px 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px #ff6600;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  #codigoInput {
-    font-family: 'Courier New', monospace;
-    font-size: 20px;
-    padding: 8px 12px;
-    border: 2px solid #ff6600;
-    border-radius: 8px;
-    background: black;
-    color: #ff6600;
-    width: 180px;
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  #codigoInput:focus {
-    border-color: #ff3300;
-    box-shadow: 0 0 8px #ff3300;
-  }
-
-  #validarBtn {
-    font-family: 'Courier New', monospace;
-    font-size: 20px;
-    padding: 8px 20px;
-    border: 2px solid #ff6600;
-    background: transparent;
-    color: #ff6600;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  #validarBtn:hover {
-    background-color: #ff6600;
-    color: black;
-  }
-
-  #mensaje {
-    position: fixed;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #222;
-    padding: 20px 30px;
-    border-radius: 14px;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
-    color: #ff6600;
-    text-shadow: 0 0 15px #ff6600;
+    min-height: 30px;
+    color: #00ff00;
+    text-shadow: 0 0 8px #00ff00;
+    z-index: 103;
+    pointer-events: none;
+  }
+
+  #motorGame {
     display: none;
-    z-index: 1100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.9);
+    z-index: 201;
   }
-    #pistasBtn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: rgba(30, 30, 30, 0.85);
-  border: 2px solid #ff6600;
-  color: #ff6600;
-  font-size: 16px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Courier New', monospace;
-  z-index: 1000;
-  transition: background-color 0.3s, color 0.3s;
-}
-#pistasBtn:hover {
-  background: #ff6600;
-  color: black;
-}
-
-#pistaTexto {
-  position: fixed;
-  top: 70px;
-  right: 20px;
-  max-width: 250px;
-  font-size: 16px;
-  background: rgba(30, 30, 30, 0.85);
-  padding: 12px 16px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #ff6600;
-  color: #ff6600;
-  font-family: 'Courier New', monospace;
-  display: none;
-  z-index: 1000;
-}
+  .motor-btn {
+    width: 100px; height: 100px; margin: 10px;
+    border: 4px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .motor-btn.active {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  #motorStatus {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #0f0;
+    text-shadow: 0 0 5px #0f0;
+  }
+  #motorBtns {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #videoContainer {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: black;
+    z-index: 999;
+  }
+  #videoContainer video {
+    width: 100%; height: 100%; object-fit: cover;
+  }
 </style>
-</head>
-<body>
-<!-- Botón de pistas -->
-<button id="pistasBtn" onclick="mostrarPista()">Pistas</button>
 
-<!-- Contenedor de la pista -->
-<div id="pistaTexto"></div>
-<script>
-  const texto = "OLA DE CALOR";
-  const letters = texto.replace(/ /g, '').split('');
-  const totalLetters = letters.length;
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-
-  letters.forEach((char, i) => {
-    const span = document.createElement('span');
-    span.classList.add('letter');
-    span.textContent = char;
-
-    const x = Math.random() * (screenWidth - 50) + 25;
-    const y = Math.random() * (screenHeight - 50) + 25;
-    span.style.left = `${x}px`;
-    span.style.top = `${y}px`;
-
-    span.style.animation = `heatWave 3s ease-in-out infinite`;
-    span.style.animationDelay = `${i * 0.3}s`;
-
-    document.body.appendChild(span);
-  });
-
-  // Validación del código
-  function validarCodigo() {
-    const input = document.getElementById('codigoInput');
-    const mensaje = document.getElementById('mensaje');
-    const codigo = input.value.trim().toUpperCase();
-    const correctoJunto = "OLADECALOR";
-    const correctoSeparado = "OLA DE CALOR"
-
-    if (codigo.toUpperCase() === correctoJunto || codigo.toUpperCase() === correctoSeparado) {
-      mensaje.textContent = "✅ Código correcto. Preparando siguiente misión...";
-      mensaje.style.display = "block";
-      setTimeout(() => {
-        window.location.href = "/Home/ValidarMercurio";
-      }, 2500);
-    } else {
-      mensaje.textContent = "❌ Código incorrecto. Intenta otra vez.";
-      mensaje.style.display = "block";
-      setTimeout(() => {
-        mensaje.style.display = "none";
-        input.value = "";
-        input.focus();
-      }, 2500);
-    }
-  }
-  let pistaPaso = 0;
-function mostrarPista() {
-  const pistaTexto = document.getElementById("pistaTexto");
-  const pistas = [
-    "🧩 Son tres palabras.",
-    "🌡️ Pensá en lo cercano a Mercurio.",
-    "🔤 Empiezan con O, D y C."
-  ];
-
-  if (pistaPaso < pistas.length) {
-    pistaTexto.textContent = pistas[pistaPaso];
-    pistaTexto.style.display = "block";
-    pistaPaso++;
-  } else {
-    pistaTexto.textContent = "📘 Ya viste todas las pistas.";
-  }
-}
-</script>
-
-<!-- Input y botón para ingresar código -->
-<div id="inputContainer">
-  <input id="codigoInput" type="text" maxlength="12" placeholder="Ingrese código..." autofocus>
-  <button id="validarBtn" onclick="validarCodigo()">Validar</button>
+<div id="introScreen" role="dialog" aria-modal="true">
+  <h1 id="introTitle">Mercurio</h1>
+  <p id="introDesc">La nave quedó hecha pedazos, toca las piezas en orden para reconstruirla.</p>
+  <button id="btnStart" class="boton-jugar">Aceptar</button>
 </div>
 
-<!-- Mensaje resultado -->
-<div id="mensaje"></div>
+<div id="gameContainer" aria-label="Área del juego" aria-hidden="true"></div>
+<div id="statusMessage" aria-live="polite"></div>
 
-</body>
-</html>
+<!-- MINIJUEGO MOTOR -->
+<div id="motorGame">
+  <h2>Inicio del Motor</h2>
+  <div id="motorBtns">
+    <div class="motor-btn" style="background:red" data-color="red"></div>
+    <div class="motor-btn" style="background:blue" data-color="blue"></div>
+    <div class="motor-btn" style="background:green" data-color="green"></div>
+    <div class="motor-btn" style="background:yellow" data-color="yellow"></div>
+  </div>
+  <div id="motorStatus"></div>
+</div>
+
+<div id="videoContainer">
+  <video id="despegueVideo" src="/img/despegueM.mp4"></video>
+</div>
+
+<script>
+  const introScreen = document.getElementById('introScreen');
+  const btnStart = document.getElementById('btnStart');
+  const gameContainer = document.getElementById('gameContainer');
+  const statusMessage = document.getElementById('statusMessage');
+
+  const piezasOrdenadas = [
+    { id: 'P1', top: 100, left: 280, name: 'Cola' },
+    { id: 'P2', top: 100, left: 430, name: 'Motor' },
+    { id: 'P3', top: 100, left: 580, name: 'Tanque' },
+    { id: 'P4', top: 100, left: 730, name: 'Alas' },
+    { id: 'P5', top: 100, left: 880, name: 'Cabina' },
+    { id: 'P6', top: 100, left: 1030, name: 'Cabeza' },
+  ];
+
+  let piezas = [];
+  let currentIndex = 0;
+  let gameActive = false;
+
+  btnStart.addEventListener('click', () => {
+    introScreen.style.display = 'none';
+    gameContainer.setAttribute('aria-hidden', 'false');
+    resetGame();
+    gameActive = true;
+  });
+
+  function resetGame() {
+    gameContainer.innerHTML = '';
+    piezas = [];
+    currentIndex = 0;
+    statusMessage.textContent = '';
+    gameActive = true;
+
+    piezasOrdenadas.forEach((piezaInfo, idx) => {
+      const p = document.createElement('div');
+      p.classList.add('piece');
+      p.id = piezaInfo.id;
+      p.textContent = piezaInfo.name;
+      p.style.top = (Math.random() * (gameContainer.clientHeight - 60)) + 'px';
+      p.style.left = (Math.random() * (gameContainer.clientWidth - 90)) + 'px';
+      p.style.transform = `rotate(${Math.random() * 360}deg)`;
+      p.dataset.placed = 'false';
+      p.dataset.index = idx;
+
+      animatePiece(p);
+
+      p.addEventListener('click', () => {
+        if (!gameActive || p.dataset.placed === 'true') return;
+
+        if (parseInt(p.dataset.index) === currentIndex) {
+          fixPiece(p, piezasOrdenadas[currentIndex]);
+          currentIndex++;
+          statusMessage.textContent = `Pieza "${piezaInfo.name}" colocada correctamente.`;
+          if (currentIndex === piezasOrdenadas.length) {
+            statusMessage.textContent = '¡Nave reconstruida correctamente!';
+            setTimeout(() => iniciarMotorGame(), 1000);
+          }
+        } else {
+          statusMessage.textContent = 'Pieza incorrecta, reiniciando...';
+          gameActive = false;
+          setTimeout(resetGame, 2000);
+        }
+      });
+
+      gameContainer.appendChild(p);
+      piezas.push(p);
+    });
+  }
+
+  function animatePiece(p) {
+    let directionX = Math.random() > 0.5 ? 1 : -1;
+    let directionY = Math.random() > 0.5 ? 1 : -1;
+    let speedX = 0.5 + Math.random();
+    let speedY = 0.3 + Math.random() * 0.7;
+    let posX = parseFloat(p.style.left);
+    let posY = parseFloat(p.style.top);
+
+    function move() {
+      if (p.dataset.placed === 'true') return;
+
+      posX += speedX * directionX;
+      posY += speedY * directionY;
+
+      if (posX < 0 || posX > gameContainer.clientWidth - 90) directionX *= -1;
+      if (posY < 0 || posY > gameContainer.clientHeight - 60) directionY *= -1;
+
+      p.style.left = posX + 'px';
+      p.style.top = posY + 'px';
+
+      requestAnimationFrame(move);
+    }
+
+    requestAnimationFrame(move);
+  }
+
+  function fixPiece(p, pos) {
+    p.dataset.placed = 'true';
+    p.classList.add('fixed');
+    p.style.top = pos.top + 'px';
+    p.style.left = pos.left + 'px';
+    p.style.transform = 'rotate(0deg)';
+  }
+
+  // ----------- MOTOR GAME -----------
+  const motorGame = document.getElementById('motorGame');
+  const motorBtns = document.querySelectorAll('.motor-btn');
+  const motorStatus = document.getElementById('motorStatus');
+  const videoContainer = document.getElementById('videoContainer');
+  const despegueVideo = document.getElementById('despegueVideo');
+
+  const secuenciaBotones = ['red', 'blue', 'green', 'yellow'];
+  let secuencia = [];
+  let progreso = [];
+
+  function iniciarMotorGame() {
+    motorGame.style.display = 'flex';
+    generarNuevaSecuencia();
+  }
+
+  function generarNuevaSecuencia() {
+    secuencia = [];
+    for (let i = 0; i < 4; i++) {
+      const color = secuenciaBotones[Math.floor(Math.random() * secuenciaBotones.length)];
+      secuencia.push(color);
+    }
+    progreso = [];
+    motorStatus.textContent = "Observa la secuencia...";
+    mostrarSecuencia(0);
+  }
+
+  function mostrarSecuencia(i) {
+    if (i >= secuencia.length) {
+      motorStatus.textContent = "Repite la secuencia.";
+      return;
+    }
+    const color = secuencia[i];
+    const btn = [...motorBtns].find(b => b.dataset.color === color);
+    btn.classList.add('active');
+    setTimeout(() => {
+      btn.classList.remove('active');
+      setTimeout(() => mostrarSecuencia(i + 1), 300);
+    }, 500);
+  }
+
+  motorBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const color = btn.dataset.color;
+      progreso.push(color);
+
+      if (!secuencia.slice(0, progreso.length).every((c, i) => c === progreso[i])) {
+        motorStatus.textContent = "¡Secuencia incorrecta! Reiniciando...";
+        progreso = [];
+        setTimeout(() => generarNuevaSecuencia(), 1500);
+        return;
+      }
+
+      if (progreso.length === secuencia.length) {
+        motorStatus.textContent = "¡Motor iniciado!";
+        setTimeout(() => mostrarVideoFinal(), 1500);
+      }
+    });
+  });
+
+  function mostrarVideoFinal() {
+    motorGame.style.display = 'none';
+    videoContainer.style.display = 'block';
+    despegueVideo.play();
+    despegueVideo.onended = () => {
+    window.location.href = "/Home/ValidarMercurio";
+    };
+  }
+</script>

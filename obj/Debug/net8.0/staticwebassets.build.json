@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "RwA0EwlAHBelVu69YjsEtBAsIM77+y7cdYp5VnP7ESY=",
+  "Hash": "r2lTiQVlPhkcTBgCBCRWigcDNGWBK1LdIm1XGnaBZUk=",
   "Source": "APOLLO11",
   "BasePath": "_content/APOLLO11",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\despegue.mp4"
+    },
+    {
+      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\despegueM.mp4",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/despegueM.mp4",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\despegueM.mp4"
     },
     {
       "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\planetas.png",
@@ -376,6 +395,44 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\sounds\\alerta.mp3"
+    },
+    {
+      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\choque.mp3",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "sounds/choque.mp3",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\sounds\\choque.mp3"
+    },
+    {
+      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\tecla.mp3",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "sounds/tecla.mp3",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\sounds\\tecla.mp3"
     }
   ]
 }

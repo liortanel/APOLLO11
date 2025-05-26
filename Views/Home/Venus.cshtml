@@ -5,154 +5,312 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>@ViewData["Title"]</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: black;
-      color: white;
-      font-family: 'Courier New', monospace;
-      overflow: hidden;
-    }
+<meta charset="UTF-8" />
+<title>@ViewData["Title"]</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: black;
+    overflow: hidden;
+    font-family: 'Courier New', monospace;
+    color: white;
+    width:100%;
+  }
+#introScreen {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 200;
+  }
+  #introScreen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  #introScreen p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+  }
+  .boton-inicio {
+    position: absolute;
+    font-size: 24px;
+    color: #ffffff;
+    background-color: #222;
+    border: 2px solid #00ffff;
+    padding: 12px 24px;
+    cursor: pointer;
+    text-align: center;
+    text-shadow: 0 0 5px #00ffff;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
+    animation: fadeIn 3s ease-out forwards;
+    text-decoration: none;
+    display: inline-block;
+    margin-top:15%;
+    user-select: none;
+  }
+  .boton-inicio:hover {
+    background-color: #00ffff;
+    color: #000;
+    transform: scale(1.05);
+  }
+  .letter {
+    position: fixed;
+    font-size: 36px;
+    font-weight: bold;
+    color: #ff6a00;
+    text-shadow:
+      0 0 10px #ff6a00,
+      0 0 20px #ff3300,
+      0 0 30px #ff0000;
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+    animation-fill-mode: forwards;
+  }
 
-    .pasillo {
-      width: 100%;
-      height: 100vh;
-      position: relative;
-      background: radial-gradient(circle at center, rgba(255,150,150,0.1) 0%, transparent 70%), #220000;
-      animation: vibrar 4s infinite;
-    }
-
-    .puerta {
-      margin-top:3%;
-      float:left;
-      margin-left:3%;
-      width: 100px;
-      height: 200px;
-      background: rgba(255, 100, 100, 0.15);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255,100,100,0.3);
-      backdrop-filter: blur(6px);
-      transition: opacity 0.3s, transform 0.3s;
-    }
-
-    .puerta:hover {
-      cursor: pointer;
-    }
-
-    .puerta.flash {
-      animation: flash 0.6s ease;
-    }
-
-    .mensaje-final {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 24px;
-      color: #00ffff;
-      text-shadow: 0 0 10px #00ffff;
+  @@keyframes heatWave {
+    0% {
       opacity: 0;
-      transition: opacity 1s;
+      transform: translateY(30px) scale(0.8);
+      filter: blur(4px);
+      color: #ff3300;
+      text-shadow: 0 0 5px #ff3300;
     }
+    50% {
+      opacity: 1;
+      transform: translateY(0) scale(1.2);
+      filter: blur(0);
+      color: #ff6600;
+      text-shadow:
+        0 0 15px #ff6600,
+        0 0 30px #ff3300,
+        0 0 40px #ff0000;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-30px) scale(0.8);
+      filter: blur(4px);
+      color: #ff3300;
+      text-shadow: 0 0 5px #ff3300;
+    }
+  }
 
-    @@keyframes vibrar {
-      0%, 100% { background-position: 0 0; }
-      50% { background-position: 5px 5px; }
-    }
+  /* Input container fixed bottom center */
+  #inputContainer {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 20, 0.8);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #ff6600;
+    display: none; /* Oculto hasta iniciar */
+    gap: 10px;
+    align-items: center;
+    z-index: 1000;
+  }
 
-    @@keyframes flash {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.2; transform: scale(1.1); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-  </style>
+  #codigoInput {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    padding: 8px 12px;
+    border: 2px solid #ff6600;
+    border-radius: 8px;
+    background: black;
+    color: #ff6600;
+    width: 180px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  #codigoInput:focus {
+    border-color: #ff3300;
+    box-shadow: 0 0 8px #ff3300;
+  }
+
+  #validarBtn {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    padding: 8px 20px;
+    border: 2px solid #ff6600;
+    background: transparent;
+    color: #ff6600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  #validarBtn:hover {
+    background-color: #ff6600;
+    color: black;
+  }
+
+  #mensaje {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222;
+    padding: 20px 30px;
+    border-radius: 14px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff6600;
+    text-shadow: 0 0 15px #ff6600;
+    display: none;
+    z-index: 1100;
+  }
+  #pistasBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(30, 30, 30, 0.85);
+    border: 2px solid #ff6600;
+    color: #ff6600;
+    font-size: 16px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s;
+    display: none; /* Oculto hasta iniciar */
+  }
+  #pistasBtn:hover {
+    background: #ff6600;
+    color: black;
+  }
+
+  #pistaTexto {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    max-width: 250px;
+    font-size: 16px;
+    background: rgba(30, 30, 30, 0.85);
+    padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ff6600;
+    color: #ff6600;
+    font-family: 'Courier New', monospace;
+    display: none;
+    z-index: 1000;
+  }
+</style>
 </head>
 <body>
-  <div class="pasillo" id="pasillo"></div>
-  <div class="mensaje-final" id="mensajeFinal">Código: CRISTALVENUS</div>
+<div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
+  <h1 id="introTitle">Venus</h1>
+  <p id="introDesc">Estás cerca de regresar a casa. Restos ardientes, misión en ruinas, un código encriptado.</p>
+  <button id="btnStart" class="boton-inicio" aria-label="Aceptar e iniciar el juego">Aceptar</button>
+  <div id="gameContainer" aria-label="Área del juego" aria-hidden="true"></div>
+</div>
 
-  <script>
-    const pasillo = document.getElementById('pasillo');
-    const filas = 3;
-    const columnas = 5;
-    const totalPuertas = filas * columnas;
-    let secuencia = [];
-    let inputJugador = [];
-    let puertas = [];
+<!-- Botón de pistas -->
+<button id="pistasBtn" onclick="mostrarPista()">Pistas</button>
 
-    for (let f = 0; f < filas; f++) {
-      for (let c = 0; c < columnas; c++) {
-        const i = f * columnas + c;
-        const puerta = document.createElement('div');
-        puerta.classList.add('puerta');
-        puerta.style.top = `${10 + f * 30}px`;
-        puerta.style.left = `${10 + c * 110}px`;
-        puerta.dataset.index = i;
-        puerta.onclick = () => tocar(i);
-        pasillo.appendChild(puerta);
-        puertas.push(puerta);
-      }
-    }
+<!-- Contenedor de la pista -->
+<div id="pistaTexto"></div>
 
-    function iniciarSecuencia() {
-      const nuevoPaso = Math.floor(Math.random() * totalPuertas);
-      secuencia.push(nuevoPaso);
-      inputJugador = [];
-      reproducirSecuencia();
-    }
+<!-- Input y botón para ingresar código -->
+<div id="inputContainer">
+  <input id="codigoInput" type="text" maxlength="12" placeholder="Ingrese código..." autofocus>
+  <button id="validarBtn">Validar</button>
+</div>
 
-    function reproducirSecuencia() {
-      let i = 0;
-      const intervalo = setInterval(() => {
-        const index = secuencia[i];
-        puertas[index].classList.add('flash');
-        setTimeout(() => puertas[index].classList.remove('flash'), 400);
-        i++;
-        if (i >= secuencia.length) clearInterval(intervalo);
-      }, 700);
-    }
+<!-- Mensaje resultado -->
+<div id="mensaje"></div>
 
-    function tocar(index) {
-      inputJugador.push(index);
-      const i = inputJugador.length - 1;
-      if (inputJugador[i] !== secuencia[i]) {
-        secuencia = [];
-        inputJugador = [];
-        alert("Fallaste, empezá de nuevo");
-        setTimeout(iniciarSecuencia, 1000);
-        return;
-      }
+<script>
+  const btnStart = document.getElementById('btnStart');
+  const introScreen = document.getElementById('introScreen');
+  const gameContainer = document.getElementById('gameContainer');
+  const inputContainer = document.getElementById('inputContainer');
+  const pistasBtn = document.getElementById('pistasBtn');
+  const pistaTexto = document.getElementById('pistaTexto');
 
-      if (inputJugador.length === secuencia.length) {
-        if (secuencia.length >= 5) {
-          mostrarCodigo();
-        } else {
-          setTimeout(iniciarSecuencia, 1000);
-        }
-      }
-    }
+  btnStart.addEventListener('click', () => {
+    introScreen.style.display = 'none';
+    gameContainer.setAttribute('aria-hidden', 'false');
+    inputContainer.style.display = 'flex';
+    pistasBtn.style.display = 'inline-block';
+    mostrarLetras();
+  });
 
-    function mostrarCodigo() {
-      const mensaje = document.getElementById("mensajeFinal");
-      mensaje.style.opacity = 1;
+  function mostrarLetras() {
+    const texto = "OLA DE CALOR";
+    const letters = texto.replace(/ /g, '').split('');
+    const totalLetters = letters.length;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
 
+    letters.forEach((char, i) => {
+      const span = document.createElement('span');
+      span.classList.add('letter');
+      span.textContent = char;
+
+      const x = Math.random() * (screenWidth - 50) + 25;
+      const y = Math.random() * (screenHeight - 50) + 25;
+      span.style.left = `${x}px`;
+      span.style.top = `${y}px`;
+
+      span.style.animation = `heatWave 3s ease-in-out infinite`;
+      span.style.animationDelay = `${i * 0.3}s`;
+
+      document.body.appendChild(span);
+    });
+  }
+
+  // Validación del código
+  function validarCodigo() {
+    const input = document.getElementById('codigoInput');
+    const mensaje = document.getElementById('mensaje');
+    const codigo = input.value.trim().toUpperCase();
+    const correctoJunto = "OLADECALOR";
+    const correctoSeparado = "OLA DE CALOR";
+
+    if (codigo === correctoJunto || codigo === correctoSeparado) {
+      mensaje.textContent = "✅ Código correcto. Preparando siguiente misión...";
+      mensaje.style.display = "block";
       setTimeout(() => {
-        fetch('/Home/VerificarVenus', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ codigo: "CRISTALVENUS" })
-        }).then(() => {
-          window.location.href = '/Home/VerificarVenus';
-        });
-      }, 4000);
+        window.location.href = "/Home/ValidarMercurio";
+      }, 2500);
+    } else {
+      mensaje.textContent = "❌ Código incorrecto. Intenta otra vez.";
+      mensaje.style.display = "block";
+      setTimeout(() => {
+        mensaje.style.display = "none";
+        input.value = "";
+        input.focus();
+      }, 2500);
     }
+  }
 
-    iniciarSecuencia();
-  </script>
+  // Event listener para validar sin usar onclick inline
+  document.getElementById('validarBtn').addEventListener('click', validarCodigo);
+
+  // Pistas
+  let pistaPaso = 0;
+  function mostrarPista() {
+    const pistas = [
+      "🧩 Son tres palabras.",
+      "🌡️ Pensá en lo cercano a Mercurio.",
+      "🔤 Empiezan con O, D y C."
+    ];
+
+    if (pistaPaso < pistas.length) {
+      pistaTexto.textContent = pistas[pistaPaso];
+      pistaTexto.style.display = "block";
+      pistaPaso++;
+    } else {
+      pistaTexto.textContent = "📘 Ya viste todas las pistas.";
+    }
+  }
+</script>
+
 </body>
 </html>

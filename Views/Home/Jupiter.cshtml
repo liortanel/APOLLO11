@@ -180,7 +180,7 @@
   const clave = "004";
   const pantalla = document.getElementById("pantalla");
 
-  if (input === clave) {
+  if (input === clave || input === "4") {
     pantalla.textContent = "Correcta";
     setTimeout(() => {
       window.location.href = "/Home/VerificarJupiter";
