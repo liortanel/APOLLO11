@@ -1,99 +1,99 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\css\\site.css",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\favicon.ico",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\1seg.mp4",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\1seg.mp4",
       "PackagePath": "staticwebassets\\img\\1seg.mp4"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\despegue.mp4",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\despegue.mp4",
       "PackagePath": "staticwebassets\\img\\despegue.mp4"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\despegueM.mp4",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\despegueM.mp4",
       "PackagePath": "staticwebassets\\img\\despegueM.mp4"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\meme.jpg",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\meme.jpg",
       "PackagePath": "staticwebassets\\img\\meme.jpg"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\planetas.png",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\planetas.png",
       "PackagePath": "staticwebassets\\img\\planetas.png"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\js\\site.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery\\LICENSE.txt",
       "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery\\dist\\jquery.js",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\alerta.mp3",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\alerta.mp3",
       "PackagePath": "staticwebassets\\sounds\\alerta.mp3"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\choque.mp3",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\choque.mp3",
       "PackagePath": "staticwebassets\\sounds\\choque.mp3"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\cohete.mp3",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\cohete.mp3",
       "PackagePath": "staticwebassets\\sounds\\cohete.mp3"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\tecla_.mp3",
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\tecla_.mp3",
       "PackagePath": "staticwebassets\\sounds\\tecla_.mp3"
     },
     {

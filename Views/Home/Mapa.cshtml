@@ -108,7 +108,7 @@
     @foreach (var planeta in planetas)
 {
     var idBoton = "btn" + planeta;
-    if ((planeta == "Mercurio" || planeta == "Venus" || planeta == "Marte") && !EstaUsado("Jupiter"))
+    if ((planeta == "Mercurio" || planeta == "Venus") && !EstaUsado("Marte"))
     {
         continue;
     }

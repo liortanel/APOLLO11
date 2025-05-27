@@ -43,7 +43,16 @@ public class HomeController : Controller
     public IActionResult Venus(){
         return View();
     }
-    public IActionResult Marte() => View("Home", "Marte");
+    public IActionResult Marte(){
+        return View();
+    }
+    public IActionResult VerificarMarte(){
+        HttpContext.Session.SetString("NivelesCompletados", "Mercurio");
+        var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
+        usados.Add("Marte");
+        HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
+        return RedirectToAction("TierraF", "Home");
+    }
     public IActionResult TierraF()
     {
         return View();
@@ -64,11 +73,11 @@ public class HomeController : Controller
     }
     public IActionResult VerificarJupiter()
 {   
-    HttpContext.Session.SetString("NivelesCompletados", "Mercurio");
+    HttpContext.Session.SetString("NivelesCompletados", "Marte");
     var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
     usados.Add("Jupiter");
     HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
-    return RedirectToAction("TierraF", "Home");
+    return RedirectToAction("Mapa", "Home");
 }
     public IActionResult Saturno(){
         return View();
