@@ -21,7 +21,7 @@
   z-index: 1000;
 }
 
-    .titulo-apollo {
+  .titulo-apollo {
   font-size: 48px;
   font-weight: bold;
   color: #00ffff;
@@ -77,7 +77,6 @@
       font-size: 18px;
       outline: none;
       width: 250px;
-      margin-top: 20px;
     }
 
     #myVideo {
@@ -206,32 +205,75 @@
     .final-shake {
       animation: finalShake 0.2s infinite;
     }
+        #f11-warning {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      font-weight: bold;
+      color: #00ffff;
+      text-align: center;
+      text-shadow: 0 0 15px #00ffff, 0 0 30px #00cccc;
+      background-color: rgba(0,0,0,0.85);
+      padding: 30px 50px;
+      border-radius: 12px;
+      opacity: 1;
+      animation: fadeOut 3s ease forwards;
+      /* Empieza visible y luego se desvanece */
+      z-index: 2000;
+    }
+    @@keyframes fadeOut {
+      0% { opacity: 1; }
+      70% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
   </style>
 </head>
 <body>
+<div id="f11-warning" class="warning-box">
+  PRESIONAR F11 PARA UNA MEJOR EXPERIENCIA
+</div>
   <div id="console"></div>
 
-  <video autoplay muted id="myVideo">
+  <video id="myVideo">
     <source src="/img/1seg.mp4" type="video/mp4" />
     Your browser no soporta video HTML5.
   </video>
 
   <!-- SONIDO DE CHOQUE -->
   <audio id="errorSound">
-    <source src="/sounds/choque.mp3" type="audio/mp3" />
+    <source src="/sounds/cohete.mp3" type="audio/mp3" />
   </audio>
 
   <!-- SONIDO DE TECLAS -->
   <audio id="typeSound">
-    <source src="/sounds/tecla.mp3" type="audio/mp3"/>
+    <source src="/sounds/tecla_.mp3" type="audio/mp3"/>
   </audio>
+  <!-- SONIDO DE COHETE -->
+  <audio id="coheteSound">
+  <source src="/sounds/cohete.mp3" type="audio/mp3" />
+</audio>
 
   <script>
-    const introText = "Bienvenido a la misión Apollo11 astronauta ";
-    const consoleDiv = document.getElementById("console");
+    const warning = document.getElementById("f11-warning");
     const video = document.getElementById("myVideo");
-    const errorSound = document.getElementById("errorSound");
-    const typeSound = document.getElementById("typeSound");
+    
+    // Esperamos a que la animación fadeOut termine (3s)
+    warning.addEventListener("animationend", () => {
+      warning.style.display = "none";
+      // Ahora sí arrancamos el programa:
+      typeIntro();
+    });
+
+    // El resto de tu código JS aquí (tipo typeIntro, etc) pero OJO:
+    // NO llamar typeIntro() hasta que desaparezca el warning.
+
+    // Ejemplo función typeIntro para que quede completo:
+    const consoleDiv = document.getElementById("console");
+    const typeSound = new Audio('/sounds/tecla_.mp3'); // o como lo tengas
+
+    const introText = "Bienvenido a la misión Apollo11 astronauta ";
     let index = 0;
 
     function typeIntro() {
@@ -300,8 +342,7 @@ function pedirEmail(name) {
 
       setTimeout(() => {
         const story = `
-
-\n\nIniciando protocolo de misión...
+Iniciando protocolo de misión...
 
 Astronauta ${name}, ha sido seleccionado para formar parte de la histórica misión Apollo 11.
 
@@ -362,34 +403,44 @@ function mostrarTextoPostVideo() {
   const textoMisionPostVideo = `
 MÓDULO DE COMANDO
 
-La misión ha comenzado según lo planeado. A medida que el módulo de comando alcanza la órbita terrestre, los sistemas de navegación se ajustan automáticamente. Los astronautas se preparan para la transferencia hacia la órbita lunar, ajustando sus trajes, comprobando niveles de oxígeno y presión. Todo parece ir segun lo planeado...
+La misión ha comenzado exitosamente. A medida que el módulo de comando alcanza la órbita terrestre, los sistemas de navegación se ajustan automáticamente. Los astronautas se preparan para la transferencia hacia la órbita lunar, ajustando sus trajes, comprobando niveles de oxígeno y presión. Todo parece ir según lo planeado...
 `;
-typeText(textoMisionPostVideo, 0, iniciarError);
+  const coheteSound = document.getElementById("coheteSound");
+  coheteSound.volume = 0.5;
+  coheteSound.currentTime = 0;
+  coheteSound.play();
 
-setTimeout(() => {
-  consoleDiv.innerHTML = "";
+  typeText(textoMisionPostVideo, 0, () => {
+    coheteSound.pause();
+    iniciarError();
+  });
 
-  const titulo = document.createElement("div");
-  titulo.className = "titulo-apollo";
-  titulo.textContent = "MISIÓN APOLLO 11";
+  setTimeout(() => {
+    errorSound.loop = false;
+    errorSound.pause();
+    errorSound.currentTime = 0;
+    consoleDiv.innerHTML = "";
 
-  const boton = document.createElement("div");
-  boton.className = "boton-jugar";
-  boton.textContent = "EMPEZAR JUEGO";
-  boton.onclick = () => window.location.href = "/Home/Mapa";
+    const titulo = document.createElement("div");
+    titulo.className = "titulo-apollo";
+    titulo.textContent = "MISIÓN APOLLO 11";
 
-  consoleDiv.appendChild(titulo);
-  const contenedorFinal = document.createElement("div");
-contenedorFinal.className = "contenedor-final";
-contenedorFinal.appendChild(titulo);
-contenedorFinal.appendChild(boton);
+    const boton = document.createElement("div");
+    boton.className = "boton-jugar";
+    boton.textContent = "EMPEZAR JUEGO";
+    boton.onclick = () => window.location.href = "/Home/Mapa";
 
-consoleDiv.appendChild(contenedorFinal);
+    const contenedorFinal = document.createElement("div");
+    contenedorFinal.className = "contenedor-final";
+    contenedorFinal.appendChild(titulo);
+    contenedorFinal.appendChild(boton);
 
-}, 10000); // 10s después del texto post-video
+    consoleDiv.appendChild(contenedorFinal);
+
+  }, 10000);
 }
+
 function iniciarError() {
-  // Cambiar fondo a rojo intermitente
   document.body.classList.add("alert-bg");
 
   const errorText = document.createElement("div");
@@ -398,35 +449,36 @@ function iniciarError() {
   errorText.textContent = "¡ERROR DE SISTEMA CRÍTICO!";
   consoleDiv.appendChild(errorText);
 
+  errorSound.loop = true;
+  errorSound.playbackRate = 3.0;
   errorSound.play();
 
-  // Temblor más intenso para toda la pantalla
   document.body.style.animation = "shake 0.08s infinite";
 
-  // Después de 5 seg, mostramos final épico
   setTimeout(() => {
-    // Parar temblor y fondo alerta
     document.body.style.animation = "";
     document.body.classList.remove("alert-bg");
 
-    const finalText = document.createElement("div");
-    finalText.className = "fade-in final-shake";
-    finalText.textContent = `
-De repente, se detecta una pérdida de presión crítica en la cabina. Los sistemas de soporte vital alertan de inmediato y se activan los protocolos de emergencia.
-
+    const antesFinalText = `De repente, se detecta una pérdida de presión crítica en la cabina. Los sistemas de soporte vital alertan de inmediato y se activan los protocolos de emergencia.
 El cohete alcanza velocidades ultra sónicas, la situación se torna inestable..., pierdes el conocimiento.
 
 Las leyes de la física comienzan a doblarse mientras la nave atraviesa el sistema solar a velocidad inimaginable...
-
-Te despiertas con el cohete en perfectas condiciones en la superficie de neptuno. Misión: Regresar a la tierra.
 `;
-consoleDiv.appendChild(finalText);
-  // Después de 8 seg quitamos vibración final
-    setTimeout(() => {
-      finalText.classList.remove("final-shake");
-    }, 500);
+
+    typeText(antesFinalText, 0, () => {
+      const finalText = document.createElement("div");
+      finalText.className = "fade-in final-shake";
+      finalText.textContent = capitalizarPrimeraLetra(`te despiertas con el cohete en perfectas condiciones en la superficie de Neptuno. Misión: Regresar a la Tierra.`);
+      consoleDiv.appendChild(finalText);
+
+      setTimeout(() => {
+        finalText.classList.remove("final-shake");
+      }, 500);
+    });
   }, 2000);
 }
 
-typeIntro();
+function capitalizarPrimeraLetra(texto) {
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
 </script> </body> </html>

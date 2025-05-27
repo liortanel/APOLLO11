@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "r2lTiQVlPhkcTBgCBCRWigcDNGWBK1LdIm1XGnaBZUk=",
+  "Hash": "ps7VWCve0hjEhkEr9l2tdMqfScaqmSLitN9sonb65i8=",
   "Source": "APOLLO11",
   "BasePath": "_content/APOLLO11",
   "Mode": "Default",
@@ -110,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\despegueM.mp4"
+    },
+    {
+      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\meme.jpg",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/meme.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\meme.jpg"
     },
     {
       "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\planetas.png",
@@ -416,12 +435,12 @@
       "OriginalItemSpec": "wwwroot\\sounds\\choque.mp3"
     },
     {
-      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\tecla.mp3",
+      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\cohete.mp3",
       "SourceId": "APOLLO11",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\",
       "BasePath": "_content/APOLLO11",
-      "RelativePath": "sounds/tecla.mp3",
+      "RelativePath": "sounds/cohete.mp3",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -432,7 +451,26 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\sounds\\tecla.mp3"
+      "OriginalItemSpec": "wwwroot\\sounds\\cohete.mp3"
+    },
+    {
+      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\tecla_.mp3",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "sounds/tecla_.mp3",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\sounds\\tecla_.mp3"
     }
   ]
 }

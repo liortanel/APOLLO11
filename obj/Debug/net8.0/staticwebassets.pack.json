@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets\\img\\despegueM.mp4"
     },
     {
+      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\meme.jpg",
+      "PackagePath": "staticwebassets\\img\\meme.jpg"
+    },
+    {
       "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\planetas.png",
       "PackagePath": "staticwebassets\\img\\planetas.png"
     },
@@ -85,8 +89,12 @@
       "PackagePath": "staticwebassets\\sounds\\choque.mp3"
     },
     {
-      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\tecla.mp3",
-      "PackagePath": "staticwebassets\\sounds\\tecla.mp3"
+      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\cohete.mp3",
+      "PackagePath": "staticwebassets\\sounds\\cohete.mp3"
+    },
+    {
+      "Id": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\sounds\\tecla_.mp3",
+      "PackagePath": "staticwebassets\\sounds\\tecla_.mp3"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.APOLLO11.Microsoft.AspNetCore.StaticWebAssets.props",
