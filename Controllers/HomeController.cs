@@ -23,18 +23,28 @@ public class HomeController : Controller
     }
     public IActionResult Mapa()
     {
-        if (string.IsNullOrEmpty(HttpContext.Session.GetString("NivelesCompletados")))
+        if (string.IsNullOrEmpty(HttpContext.Session.GetString("ProximoNivel")))
         {
-            HttpContext.Session.SetString("NivelesCompletados", "Neptuno");
+            HttpContext.Session.SetString("ProximoNivel", "Neptuno");
         }
         return View();
+    }
+    public IActionResult Luna(){
+        return View();
+    }
+    public IActionResult VerificarLuna()
+    {
+        var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
+        usados.Add("Luna");
+        HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
+        return View("Mapa");
     }
     public IActionResult Mercurio(){
         return View();
     }
     public IActionResult ValidarMercurio()
     {
-        HttpContext.Session.SetString("NivelesCompletados", "Venus");
+        HttpContext.Session.SetString("ProximoNivel", "Venus");
         var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
         usados.Add("Mercurio");
         HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
@@ -47,7 +57,7 @@ public class HomeController : Controller
         return View();
     }
     public IActionResult VerificarMarte(){
-        HttpContext.Session.SetString("NivelesCompletados", "Mercurio");
+        HttpContext.Session.SetString("ProximoNivel", "Mercurio");
         var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
         usados.Add("Marte");
         HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
@@ -73,7 +83,7 @@ public class HomeController : Controller
     }
     public IActionResult VerificarJupiter()
 {   
-    HttpContext.Session.SetString("NivelesCompletados", "Marte");
+    HttpContext.Session.SetString("ProximoNivel", "Marte");
     var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
     usados.Add("Jupiter");
     HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
@@ -84,7 +94,7 @@ public class HomeController : Controller
     }
     public IActionResult VerificarSaturno()
     {
-        HttpContext.Session.SetString("NivelesCompletados", "Jupiter");
+        HttpContext.Session.SetString("ProximoNivel", "Jupiter");
         var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
         usados.Add("Saturno");
         HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
@@ -97,7 +107,7 @@ public class HomeController : Controller
     public IActionResult VerificarUrano(string respuesta){
     if (!string.IsNullOrEmpty(respuesta) && respuesta.ToUpper() == "APOLLO11")
     {
-        HttpContext.Session.SetString("NivelesCompletados", "Saturno");
+        HttpContext.Session.SetString("ProximoNivel", "Saturno");
         var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
         usados.Add("Urano");
         HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
@@ -110,7 +120,7 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult GanarNeptuno()
     {
-    HttpContext.Session.SetString("NivelesCompletados", "Urano");
+    HttpContext.Session.SetString("ProximoNivel", "Urano");
     HttpContext.Session.SetString("NivelesUsados", "Neptuno");
     return View("Mapa");
     }

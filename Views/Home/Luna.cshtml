@@ -1,0 +1,192 @@
+@{
+    ViewData["Title"] = "Sala de la Luna";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            background: black;
+            color: white;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding: 50px;
+        }
+        #introScreen {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 200;
+  }
+  #introScreen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  #introScreen p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+  }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .contenedor {
+            margin-top: 7%;
+            margin-left: 28%;
+            position: relative;
+            max-width: 800px;
+        }
+
+        .qr-busqueda {
+            position: absolute;
+            margin-top: 60%;
+            margin-left: 100%;
+            width: 100px;
+            opacity: 0.05;
+            transition: opacity 0.5s;
+        }
+
+        .qr-busqueda:hover {
+            opacity: 1;
+        }
+
+        input[type="text"] {
+        width: 99%;
+        height: 40px;
+        margin-bottom: 10px;
+        font-size: 24px;
+        text-align: left;
+        padding: 5px 10px;
+        background-color: #111;
+        border: 2px solid #444;
+        color: white;
+        border-radius: 8px;
+        }
+
+        button {
+            color: #ffffff;
+  background-color: #222;
+  border: 2px solid #00ffff;
+  padding: 12px 24px;
+  margin: 30px auto 0;
+  width: fit-content;
+  cursor: pointer;
+  text-align: center;
+  text-shadow: 0 0 5px #00ffff;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+  animation: fadeIn 3s ease-out forwards;
+        }
+        button:hover{
+              background-color: #00ffff;
+  color: #000;
+  transform: scale(1.05);
+        }
+
+        #resultado {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: lightgreen;
+        }
+        iframe{
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
+  <h1 id="introTitle">Luna</h1>
+<p id="introDesc">Silencio. Huellas inmóviles sobre polvo eterno. Solo quienes conocen las coordenadas pueden regresar.<br><strong>NO TODO ES LO QUE PARECE</strong></p>
+  <button id="btnStart" class="boton-inicio" aria-label="Aceptar e iniciar el juego">Aceptar</button>
+  <div id="gameContainer" aria-label="Área del juego" aria-hidden="true"></div>
+</div>
+<iframe width="70%" height="500px" src="https://www.youtube.com/embed/4d6MWab6tls?si=guG_Qw0Foan5GV9Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div class="contenedor">
+        <img src="/img/qr.png" alt="QR" class="qr-busqueda" />
+
+        <div>
+            <input id="claveInput" type="text" placeholder="Introduce la clave..." />
+            <br />
+            <button onclick="verificarClave()">Enviar</button>
+            <div id="resultado"></div>
+        </div>
+    </div>
+    <audio id="beep" src="/sounds/tecla_.mp3" preload="auto"></audio>
+    <script>
+      btnStart.addEventListener('click', () => {
+    introScreen.style.display = 'none';
+    gameContainer.setAttribute('aria-hidden', 'false');
+    gameActive = true;
+    btnSubmit.disabled = false;
+  });
+        function verificarClave() {
+            const input = document.getElementById("claveInput").value.trim();
+            const claveCorrecta = "28,52339° N, 80,68192° O";
+            const resultado = document.getElementById("resultado");
+
+            if (input === claveCorrecta) {
+                resultado.innerText = "¡Correcto! Bien hecho.";
+                resultado.style.color = "lightgreen";
+                setTimeout(() => {
+                window.location.href = "/Home/VerificarLuna";
+                }, 2000);
+            } else {
+                resultado.innerText = "Clave incorrecta. Intenta de nuevo.";
+                resultado.style.color = "red";
+            }
+        }
+
+        const beep = document.getElementById("beep");
+
+    // Coordenadas objetivo: esquina inferior derecha (por ejemplo, últimos 100px x 100px)
+    document.addEventListener("mousemove", (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        const dx = windowWidth - x;
+        const dy = windowHeight - y;
+
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Umbral de distancia para activar pitido
+        const maxDistance = 500;
+        const minDistance = 20;
+
+        // Normalizamos volumen en base a cercanía
+        let volume = 0;
+
+        if (distance < maxDistance) {
+            volume = 1 - (distance - minDistance) / (maxDistance - minDistance);
+            volume = Math.max(0, Math.min(1, volume)); // clamp
+            beep.volume = volume;
+
+            // Reproducimos solo si no está sonando
+            if (beep.paused) {
+                beep.play().catch(() => { /* Ignorar errores de autoplay */ });
+            }
+        } else {
+            beep.pause();
+            beep.currentTime = 0;
+        }
+
+        // Cambio de cursor si está muy cerca
+        if (distance < 80) {
+            document.body.style.cursor = "pointer";
+        } else {
+            document.body.style.cursor = "default";
+        }
+    });
+    </script>
+</body>
+</html>

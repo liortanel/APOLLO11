@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "+55kAsfQRRfVNM5cROxZfWrJLISpvAI7CnJEVvqrp8E=",
+  "Hash": "0sEX3hfAl7U+u3VFqo229jNDHsmhUwpojVfnn39QQMo=",
   "Source": "APOLLO11",
   "BasePath": "_content/APOLLO11",
   "Mode": "Default",
@@ -148,6 +148,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\planetas.png"
+    },
+    {
+      "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\qr.png",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/qr.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\qr.png"
     },
     {
       "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\js\\site.js",

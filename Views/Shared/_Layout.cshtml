@@ -18,4 +18,10 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
+<script>
+    document.body.addEventListener("click", () => {
+        document.getElementById("beep").play().catch(() => {});
+    }, { once: true });
+</script>
+
 </html>

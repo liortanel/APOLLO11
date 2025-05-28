@@ -2,9 +2,9 @@
 @{
     ViewData["Title"] = "Mapa";
 
-    var desbloqueados = Context.Session.GetString("NivelesCompletados")?.Split(',').ToList() ?? new List<string>() { "Neptuno" };
+    var desbloqueados = Context.Session.GetString("ProximoNivel")?.Split(',').ToList() ?? new List<string>() { "Neptuno" };
     var usados = Context.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
-    var planetas = new List<string> { "Mercurio", "Venus", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno" };
+    var planetas = new List<string> { "Mercurio", "Venus", "Luna", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno"};
     
     bool EstaUsado(string planeta) => usados.Contains(planeta);
     bool EstaDesbloqueado(string planeta) => desbloqueados.Contains(planeta);

@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\img\\planetas.png"
     },
     {
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\qr.png",
+      "PackagePath": "staticwebassets\\img\\qr.png"
+    },
+    {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
