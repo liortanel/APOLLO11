@@ -1,3 +1,6 @@
+@{
+    ViewData["Title"] = "Marte";
+}
 <style>
 #introScreen {
     position: fixed;
@@ -10,188 +13,148 @@
     text-align: center;
     color:white;
     z-index: 200;
-  }
-        button {
-            color: #ffffff;
-  background-color: #222;
-  border: 2px solid #00ffff;
-  padding: 12px 24px;
-  margin: 30px auto 0;
-  width: fit-content;
-  cursor: pointer;
-  text-align: center;
-  text-shadow: 0 0 5px #00ffff;
-  border-radius: 8px;
-  transition: background 0.3s, transform 0.2s;
-  animation: fadeIn 3s ease-out forwards;
-        }
-    button:hover{
-              background-color: #00ffff;
-  color: #000;
-  transform: scale(1.05);
-        }
-  #introScreen h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-  }
-
-  #introScreen p {
-    font-size: 1.5rem;
-    margin-bottom: 40px;
-  }
-        #videoContainer {
-            position: relative;
-            width: 320px;
-            height: 240px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 0 20px #ff6f61aa;
-            margin-bottom: 1rem;
-        }
-        video {
-            width: 320px;
-            height: 240px;
-            object-fit: cover;
-        }
-        #status {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-            color: #ffa07a;
-            font-weight: bold;
-        }
-        #successMsg {
-            margin-top: 2rem;
-            font-size: 1.6rem;
-            color: #7fff7f;
-            text-shadow: 0 0 10px #7fff7f;
-            font-weight: 700;
-        }
+}
+button {
+    color: #ffffff;
+    background-color: #222;
+    border: 2px solid #00ffff;
+    padding: 12px 24px;
+    margin-top: 20px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
+}
+button:hover {
+    background-color: #00ffff;
+    color: #000;
+    transform: scale(1.05);
+}
+#videoContainer {
+    margin-top: 30px;
+    width: 320px;
+    height: 240px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 20px #ff6f61aa;
+}
+#status {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    color: #ffa07a;
+    font-weight: bold;
+}
+#successMsg {
+    margin-top: 2rem;
+    font-size: 1.6rem;
+    color: #7fff7f;
+    text-shadow: 0 0 10px #7fff7f;
+    font-weight: 700;
+}
 </style>
-<div id="introScreen" role="dialog" aria-modal="true">
-<h1 id="introTitle">Marte</h1>
+
+<div id="introScreen">
+    <h1 id="introTitle">Marte</h1>
     <p id="introDesc">Tus ojos revelan secretos. Parpadeá tres veces rápido para avanzar.</p>
-  <button id="btnStart" class="boton-jugar">Aceptar</button>
+    <button id="btnStart">Aceptar</button>
 </div>
- <div id="videoContainer">
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <div id="videoContainer">
         <video id="video" autoplay muted playsinline></video>
     </div>
-
-    <div id="status">Preparando detección...</div>
+    <div id="status">Esperando inicio...</div>
     <div id="successMsg" style="display:none;">¡Patrón detectado! La puerta se abre...</div>
+</div>
 
-    <!-- MediaPipe Face Mesh y TF.js -->
-    @Html.Raw(@"<script src='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.4.0/dist/tf-core.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.4.0/dist/tf-converter.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.2/dist/face-landmarks-detection.min.js'></script>")
+<!-- Librerías -->
+@Html.Raw(@"
+<script src='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection'></script>
+<script src='https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh'></script>
+")
+
 <script>
-      btnStart.addEventListener('click', () => {
-    introScreen.style.display = 'none';
-    gameContainer.setAttribute('aria-hidden', 'false');
-    gameActive = true;
-    btnSubmit.disabled = false;
-  });
-const video = document.getElementById('video');
-        const status = document.getElementById('status');
-        const successMsg = document.getElementById('successMsg');
+const btnStart = document.getElementById("btnStart");
+const introScreen = document.getElementById("introScreen");
+const video = document.getElementById("video");
+const status = document.getElementById("status");
+const successMsg = document.getElementById("successMsg");
 
-        let model, blinkCounter = 0;
-        let blinkTimes = [];
-        let detecting = true;
+let model, blinkCounter = 0;
+let blinkTimes = [];
+let detecting = false;
 
-        // Umbral para el ojo cerrado (distancia entre párpados)
-        // Lo vamos a calcular con landmarks específicos (eye aspect ratio)
-        function eyeAspectRatio(upper, lower) {
-            // simple vertical distance entre landmarks de párpado superior e inferior
-            const dist = Math.abs(upper[1] - lower[1]);
-            return dist;
-        }
+btnStart.addEventListener("click", () => {
+    introScreen.style.display = "none";
+    startCameraAndDetection();
+});
 
-        // Vamos a usar landmarks del ojo derecho (pero podés usar ambos)
-        // Puntos aproximados de MediaPipe Face Mesh para párpados:
-        // Ojo derecho (según documentación):
-        // superior: 159, inferior: 145 (aprox)
+function eyeAspectRatio(upper, lower) {
+    return Math.abs(upper[1] - lower[1]);
+}
 
-        async function setupCamera() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
-            video.srcObject = stream;
+async function startCameraAndDetection() {
+    try {
+        status.textContent = "Cargando modelo...";
+        model = await faceLandmarksDetection.load(
+            faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
+        );
 
-            return new Promise((resolve) => {
-                video.onloadedmetadata = () => {
-                    resolve(video);
-                };
-            });
-        }
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+        video.srcObject = stream;
+        await video.play();
 
-        async function loadModel() {
-            return await faceLandmarksDetection.load(
-                faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
-            );
-        }
+        detecting = true;
+        status.textContent = "Detectando rostro...";
 
-        async function detectBlink() {
+        setInterval(async () => {
             if (!detecting) return;
 
-            const predictions = await model.estimateFaces({ input: video, flipHorizontal: false });
+            const predictions = await model.estimateFaces({ input: video });
 
             if (predictions.length > 0) {
                 const keypoints = predictions[0].scaledMesh;
-
-                // Obtener coords ojo derecho
-                const upper = keypoints[159]; // párpado superior
-                const lower = keypoints[145]; // párpado inferior
-
+                const upper = keypoints[159];
+                const lower = keypoints[145];
                 const ear = eyeAspectRatio(upper, lower);
 
-                // Umbral de cierre ojo: si distancia vertical < 5 pix, ojo cerrado
                 if (ear < 5) {
                     if (!window.eyeClosed) {
                         window.eyeClosed = true;
                         blinkCounter++;
                         blinkTimes.push(Date.now());
-                        status.textContent = `Parpadeos detectados: ${blinkCounter}`;
+                        status.textContent = `Parpadeos: ${blinkCounter}`;
                         checkPattern();
                     }
                 } else {
                     window.eyeClosed = false;
                 }
             } else {
-                status.textContent = 'No se detectó rostro.';
+                status.textContent = "No se detectó rostro.";
             }
-        }
+        }, 150);
+    } catch (error) {
+        console.error("Error:", error);
+        status.textContent = "Error cargando cámara o modelo.";
+    }
+}
 
-        function checkPattern() {
-            // Queremos 3 parpadeos en menos de 5 segundos
-            if (blinkCounter >= 3) {
-                // Últimos 3 parpadeos
-                const lastThree = blinkTimes.slice(-3);
-                if (lastThree.length === 3 && (lastThree[2] - lastThree[0] <= 5000)) {
-                    detecting = false;
-                    status.style.display = 'none';
-                    successMsg.style.display = 'block';
-                    stopCamera();
-                }
-            }
-        }
+function checkPattern() {
+    const lastThree = blinkTimes.slice(-3);
+    if (lastThree.length === 3 && (lastThree[2] - lastThree[0] <= 5000)) {
+        detecting = false;
+        status.style.display = "none";
+        successMsg.style.display = "block";
+        stopCamera();
+    }
+}
 
-        function stopCamera() {
-            const stream = video.srcObject;
-            const tracks = stream.getTracks();
-
-            tracks.forEach(track => track.stop());
-            video.srcObject = null;
-        }
-
-        async function main() {
-            status.textContent = 'Cargando modelo...';
-            model = await loadModel();
-            status.textContent = 'Modelo cargado. Activando cámara...';
-            await setupCamera();
-            status.textContent = 'Detectando parpadeos...';
-            window.eyeClosed = false;
-
-            setInterval(detectBlink, 100);
-        }
-
-        main();
-
+function stopCamera() {
+    const stream = video.srcObject;
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+}
 </script>

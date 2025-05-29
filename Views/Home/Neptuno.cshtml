@@ -2,6 +2,9 @@
 @{
     var tokens = Antiforgery.GetAndStoreTokens(Context);
 }
+@{
+    ViewData["Title"] = "Neptuno";
+}
 <input type="hidden" name="__RequestVerificationToken" value="@tokens.RequestToken" />
 <style>
   html, body {
