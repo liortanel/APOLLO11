@@ -2,103 +2,157 @@
     ViewData["Title"] = "Marte";
 }
 <style>
-*{
-    background-color: black;
-    font-family: 'Courier New', monospace;
-}
-  #introScreen {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,1);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color:white;
-      z-index: 200;
-  }
-  button {
-      color: #ffffff;
-      background-color: #222;
-      border: 2px solid #00ffff;
-      padding: 12px 24px;
-      margin: 30px auto 0;
-      width: fit-content;
-      cursor: pointer;
-      text-align: center;
-      text-shadow: 0 0 5px #00ffff;
-      border-radius: 8px;
-      transition: background 0.3s, transform 0.2s;
-      animation: fadeIn 3s ease-out forwards;
-  }
-  button:hover {
-      background-color: #00ffff;
-      color: #000;
-      transform: scale(1.05);
-  }
-  #introScreen h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-  }
-  #introScreen p {
-      font-size: 1.5rem;
-      margin-bottom: 40px;
-  }
-  #videoContainer {
-      margin-top: 2%;
-      margin-left: 20.5%;
-      width: 30%;
-      height: auto;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 20px #00ffff;
-      float: left;
-  }
-  video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scaleX(-1); /* Invertir horizontalmente el video */
-  }
-  #status {
-      clear: both;
-      padding-top: 20px;
-      font-size: 1.2rem;
-      color: #00ffff;
-      font-weight: bold;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      text-shadow: 0 0 10px #00ffff;
-  }
-  #successMsg {
-      margin-top: 2rem;
-      font-size: 1.6rem;
-      color: #00ffff;
-      text-shadow: 0 0 10px #00ffff;
-      font-weight: 700;
-      font-family: 'Courier New', monospace;
-      clear: both;
-      text-align: center;
-  }
-  #alien {
-      width: 22.9%;
-      height: auto;
-      margin-top: 2%;
-      margin-left: 5%;
-      float: left;
-      transition: all 0.3s ease;
-  }
-  #alien:hover {
-      transform: scale(1.1);
-      filter: drop-shadow(0 0 20px #00ffff);
-  }
+    *{
+        background-color: black;
+        font-family: 'Courier New', monospace;
+    }
+
+    #gameScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,1);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 300;
+    }
+
+    #gameCanvas {
+        border: 2px solid #00ffff;
+        box-shadow: 0 0 20px #00ffff;
+        background: black;
+    }
+
+    #gameTimer {
+        color: #00ffff;
+        font-size: 2rem;
+        margin-top: 20px;
+        text-shadow: 0 0 10px #00ffff;
+        font-family: 'Courier New', monospace;
+        background: transparent;
+    }
+
+    #gameInstructions {
+        color: #00ffff;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        text-align: center;
+        text-shadow: 0 0 5px #00ffff;
+        font-family: 'Courier New', monospace;
+        background: transparent;
+    }
+
+    #introScreen {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0,0,0,1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color:white;
+        z-index: 200;
+    }
+
+    button {
+        color: #ffffff;
+        background-color: #222;
+        border: 2px solid #00ffff;
+        padding: 12px 24px;
+        margin: 30px auto 0;
+        width: fit-content;
+        cursor: pointer;
+        text-align: center;
+        text-shadow: 0 0 5px #00ffff;
+        border-radius: 8px;
+        transition: background 0.3s, transform 0.2s;
+        animation: fadeIn 3s ease-out forwards;
+    }
+
+    button:hover {
+        background-color: #00ffff;
+        color: #000;
+        transform: scale(1.05);
+    }
+
+    #introScreen h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    #introScreen p {
+        font-size: 1.5rem;
+        margin-bottom: 40px;
+    }
+
+    #videoContainer {
+        margin-top: 2%;
+        margin-left: 20.5%;
+        width: 30%;
+        height: auto;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 20px #00ffff;
+        float: left;
+    }
+
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1);
+    }
+
+    #status {
+        clear: both;
+        padding-top: 20px;
+        font-size: 1.2rem;
+        color: #00ffff;
+        font-weight: bold;
+        font-family: 'Courier New', monospace;
+        text-align: center;
+        text-shadow: 0 0 10px #00ffff;
+    }
+
+    #successMsg {
+        margin-top: 2rem;
+        font-size: 1.6rem;
+        color: #00ffff;
+        text-shadow: 0 0 10px #00ffff;
+        font-weight: 700;
+        font-family: 'Courier New', monospace;
+        clear: both;
+        text-align: center;
+    }
+
+    #alien {
+        width: 22.9%;
+        height: auto;
+        margin-top: 2%;
+        margin-left: 5%;
+        float: left;
+        transition: all 0.3s ease;
+    }
 </style>
 
 <div id="introScreen">
     <h1 id="introTitle">Marte</h1>
-    <p id="introDesc">Tus ojos revelan secretos. Parpadeá tres veces rápido para avanzar.</p>
-    <button id="btnStart">Aceptar</button>
+    <p id="introDesc">Bienvenido a Marte. Prepárate para la prueba.</p>
+    <button id="btnStart">Comenzar</button>
+</div>
+
+<div id="gameScreen">
+    <div id="gameInstructions">
+        Sobrevive 60 segundos esquivando los meteoritos<br>
+        Usa las flechas ←↑→↓ para moverte
+    </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="gameTimer">Tiempo: 60s</div>
 </div>
 
 <div id="videoContainer" style="display:none;">
@@ -108,6 +162,226 @@
 <div id="status"></div>
 <div id="successMsg" style="display:none;">¡Patrón detectado! La puerta se abre...</div>
 
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gameTimer = document.getElementById('gameTimer');
+    const gameScreen = document.getElementById('gameScreen');
+
+    // Jugador
+    const player = {
+        x: canvas.width / 2,
+        y: canvas.height - 50,
+        width: 40,
+        height: 40,
+        speed: 7,
+        color: '#00ffff',
+        velocity: {
+            x: 0,
+            y: 0
+        }
+    };
+
+    // Array de meteoritos
+    let meteors = [];
+    let gameTime = 60;
+    let isGameOver = false;
+    let gameLoop;
+    let timeInterval;
+
+    // Controles
+    const keys = {
+        left: false,
+        right: false,
+        up: false,
+        down: false
+    };
+
+    // Event listeners para controles
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') keys.left = true;
+        if (e.key === 'ArrowRight') keys.right = true;
+        if (e.key === 'ArrowUp') keys.up = true;
+        if (e.key === 'ArrowDown') keys.down = true;
+        // Tecla para ganar inmediatamente (desarrollo)
+        if (e.key === 'v') {
+            gameOver(true);
+        }
+    });
+
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'ArrowLeft') keys.left = false;
+        if (e.key === 'ArrowRight') keys.right = false;
+        if (e.key === 'ArrowUp') keys.up = false;
+        if (e.key === 'ArrowDown') keys.down = false;
+    });
+
+    // Crear meteorito
+    function createMeteor() {
+        return {
+            x: Math.random() * (canvas.width - 20),
+            y: -20,
+            width: 20,
+            height: 20,
+            speed: (3 + Math.random() * 2) * 1.2, // Velocidad aumentada en 20%
+            color: '#ff4444'
+        };
+    }
+
+    // Dibujar jugador con efecto de movimiento
+    function drawPlayer() {
+        ctx.fillStyle = player.color;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#00ffff';
+        
+        // Dibujar el jugador
+        ctx.fillRect(player.x - player.width/2, player.y, player.width, player.height);
+        
+        // Efecto de estela
+        ctx.globalAlpha = 0.3;
+        ctx.fillRect(
+            player.x - player.width/2 - player.velocity.x * 0.5, 
+            player.y - player.velocity.y * 0.5, 
+            player.width, 
+            player.height
+        );
+        ctx.globalAlpha = 1.0;
+        ctx.shadowBlur = 0;
+    }
+
+    // Dibujar meteoritos
+    function drawMeteors() {
+        meteors.forEach(meteor => {
+            ctx.fillStyle = meteor.color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ff4444';
+            ctx.fillRect(meteor.x, meteor.y, meteor.width, meteor.height);
+            ctx.shadowBlur = 0;
+        });
+    }
+
+    // Actualizar juego
+    function update() {
+        // Calcular velocidad del jugador
+        player.velocity.x = 0;
+        player.velocity.y = 0;
+
+        if (keys.left) player.velocity.x = -player.speed;
+        if (keys.right) player.velocity.x = player.speed;
+        if (keys.up) player.velocity.y = -player.speed;
+        if (keys.down) player.velocity.y = player.speed;
+
+        // Normalizar movimiento diagonal
+        if ((keys.left || keys.right) && (keys.up || keys.down)) {
+            player.velocity.x *= 0.707; // Math.cos(45 grados)
+            player.velocity.y *= 0.707; // Math.sin(45 grados)
+        }
+
+        // Aplicar movimiento
+        player.x += player.velocity.x;
+        player.y += player.velocity.y;
+
+        // Limitar posición del jugador
+        player.x = Math.max(player.width/2, Math.min(canvas.width - player.width/2, player.x));
+        player.y = Math.max(0, Math.min(canvas.height - player.height, player.y));
+
+        // Mover meteoritos
+        for (let i = meteors.length - 1; i >= 0; i--) {
+            const meteor = meteors[i];
+            meteor.y += meteor.speed;
+            
+            // Verificar colisión
+            if (meteor.y + meteor.height > player.y &&
+                meteor.y < player.y + player.height &&
+                meteor.x < player.x + player.width/2 &&
+                meteor.x + meteor.width > player.x - player.width/2) {
+                gameOver(false);
+                return;
+            }
+
+            // Eliminar meteoritos que salen de la pantalla
+            if (meteor.y > canvas.height) {
+                meteors.splice(i, 1);
+            }
+        }
+
+        // Agregar nuevos meteoritos con velocidad variable
+        if (Math.random() < 0.06) { // Duplicamos la frecuencia (antes era 0.03)
+            meteors.push(createMeteor());
+        }
+    }
+
+    // Dibujar juego
+    function draw() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawPlayer();
+        drawMeteors();
+    }
+
+    // Game loop
+    function gameStep() {
+        if (!isGameOver) {
+            update();
+            draw();
+            requestAnimationFrame(gameStep);
+        }
+    }
+
+    // Iniciar juego
+    function startGame() {
+        console.log("Iniciando juego");
+        isGameOver = false;
+        meteors = [];
+        player.x = canvas.width / 2;
+        player.y = canvas.height - 50;
+        gameTime = 60;
+        
+        if (timeInterval) {
+            clearInterval(timeInterval);
+        }
+        
+        timeInterval = setInterval(() => {
+            if (!isGameOver) {
+                gameTime--;
+                console.log("Tiempo restante:", gameTime);
+                gameTimer.textContent = `Tiempo: ${gameTime}s`;
+                
+                if (gameTime <= 0) {
+                    console.log("¡Tiempo completado!");
+                    gameOver(true);
+                }
+            }
+        }, 1000);
+
+        requestAnimationFrame(gameStep);
+    }
+
+    // Game over
+    function gameOver(won) {
+        console.log("Game Over - Victoria:", won);
+        isGameOver = true;
+        clearInterval(timeInterval);
+        timeInterval = null;
+
+        if (won) {
+            console.log("Iniciando transición a cámara");
+            setTimeout(() => {
+                gameScreen.style.display = 'none';
+                videoContainer.style.display = 'block';
+                iniciarDeteccion();
+            }, 1000);
+        } else {
+            console.log("Reiniciando juego");
+            setTimeout(() => {
+                startGame();
+            }, 1000);
+        }
+    }
+
+    // Iniciar el juego cuando carga la página
+    // startGame();
+</script>
 
 <!-- ✅ Carga de scripts desde CDN -->
 @Html.Raw(@"
@@ -155,15 +429,9 @@
 
         btnStart.addEventListener('click', async () => {
             console.log("Botón clickeado");
-            try {
-                updateStatus("Iniciando...");
-                document.getElementById('introScreen').style.display = 'none';
-                videoContainer.style.display = 'block';
-                await iniciarDeteccion();
-            } catch (error) {
-                console.error("Error al iniciar:", error);
-                updateStatus("Error: " + error.message, true);
-            }
+            document.getElementById('introScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'flex';
+            startGame();
         });
     });
 
