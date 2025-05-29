@@ -2,55 +2,97 @@
     ViewData["Title"] = "Marte";
 }
 <style>
-#introScreen {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color:white;
-    z-index: 200;
+*{
+    background-color: black;
+    font-family: 'Courier New', monospace;
 }
-button {
-    color: #ffffff;
-    background-color: #222;
-    border: 2px solid #00ffff;
-    padding: 12px 24px;
-    margin-top: 20px;
-    cursor: pointer;
-    text-align: center;
-    border-radius: 8px;
-    transition: background 0.3s, transform 0.2s;
-}
-button:hover {
-    background-color: #00ffff;
-    color: #000;
-    transform: scale(1.05);
-}
-#videoContainer {
-    margin-top: 30px;
-    width: 320px;
-    height: 240px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 0 20px #ff6f61aa;
-}
-#status {
-    font-size: 1.2rem;
-    margin-top: 1rem;
-    color: #ffa07a;
-    font-weight: bold;
-}
-#successMsg {
-    margin-top: 2rem;
-    font-size: 1.6rem;
-    color: #7fff7f;
-    text-shadow: 0 0 10px #7fff7f;
-    font-weight: 700;
-}
+  #introScreen {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color:white;
+      z-index: 200;
+  }
+  button {
+      color: #ffffff;
+      background-color: #222;
+      border: 2px solid #00ffff;
+      padding: 12px 24px;
+      margin: 30px auto 0;
+      width: fit-content;
+      cursor: pointer;
+      text-align: center;
+      text-shadow: 0 0 5px #00ffff;
+      border-radius: 8px;
+      transition: background 0.3s, transform 0.2s;
+      animation: fadeIn 3s ease-out forwards;
+  }
+  button:hover {
+      background-color: #00ffff;
+      color: #000;
+      transform: scale(1.05);
+  }
+  #introScreen h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+  }
+  #introScreen p {
+      font-size: 1.5rem;
+      margin-bottom: 40px;
+  }
+  #videoContainer {
+      margin-top: 2%;
+      margin-left: 20.5%;
+      width: 30%;
+      height: auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 20px #00ffff;
+      float: left;
+  }
+  video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1); /* Invertir horizontalmente el video */
+  }
+  #status {
+      clear: both;
+      padding-top: 20px;
+      font-size: 1.2rem;
+      color: #00ffff;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      text-shadow: 0 0 10px #00ffff;
+  }
+  #successMsg {
+      margin-top: 2rem;
+      font-size: 1.6rem;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      clear: both;
+      text-align: center;
+  }
+  #alien {
+      width: 22.9%;
+      height: auto;
+      margin-top: 2%;
+      margin-left: 5%;
+      float: left;
+      transition: all 0.3s ease;
+  }
+  #alien:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 20px #00ffff);
+  }
 </style>
 
 <div id="introScreen">
@@ -59,102 +101,163 @@ button:hover {
     <button id="btnStart">Aceptar</button>
 </div>
 
-<div style="display: flex; flex-direction: column; align-items: center;">
-    <div id="videoContainer">
-        <video id="video" autoplay muted playsinline></video>
-    </div>
-    <div id="status">Esperando inicio...</div>
-    <div id="successMsg" style="display:none;">¡Patrón detectado! La puerta se abre...</div>
+<div id="videoContainer" style="display:none;">
+    <video id="video" autoplay muted playsinline></video>
 </div>
+<img src="/img/alien.png" alt="alien" id="alien">
+<div id="status"></div>
+<div id="successMsg" style="display:none;">¡Patrón detectado! La puerta se abre...</div>
 
-<!-- Librerías -->
+
+<!-- ✅ Carga de scripts desde CDN -->
 @Html.Raw(@"
-<script src='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection'></script>
-<script src='https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh'></script>
+<script src='https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915'></script>
+<script src='https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074'></script>
+<script src='https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257'></script>
 ")
 
 <script>
-const btnStart = document.getElementById("btnStart");
-const introScreen = document.getElementById("introScreen");
-const video = document.getElementById("video");
-const status = document.getElementById("status");
-const successMsg = document.getElementById("successMsg");
+    let model;
+    let detecting = false;
+    let video = null;
+    let statusText = null;
+    let successMsg = null;
+    let videoContainer = null;
+    let btnStart = null;
+    let handsDetectedTime = null;
+    let hands;
+    let camera;
 
-let model, blinkCounter = 0;
-let blinkTimes = [];
-let detecting = false;
+    function updateStatus(message, isError = false) {
+        console.log(message);
+        if (statusText) {
+            statusText.innerHTML = message;
+            if (isError) {
+                statusText.style.color = '#00ffff';
+            } else {
+                statusText.style.color = '#00ffff';
+            }
+        }
+    }
 
-btnStart.addEventListener("click", () => {
-    introScreen.style.display = "none";
-    startCameraAndDetection();
-});
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM cargado, inicializando elementos...");
+        video = document.getElementById('video');
+        statusText = document.getElementById('status');
+        successMsg = document.getElementById('successMsg');
+        videoContainer = document.getElementById('videoContainer');
+        btnStart = document.getElementById('btnStart');
 
-function eyeAspectRatio(upper, lower) {
-    return Math.abs(upper[1] - lower[1]);
-}
+        if (!btnStart) {
+            console.error("No se encontró el botón de inicio");
+            return;
+        }
 
-async function startCameraAndDetection() {
-    try {
-        status.textContent = "Cargando modelo...";
-        model = await faceLandmarksDetection.load(
-            faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
-        );
+        btnStart.addEventListener('click', async () => {
+            console.log("Botón clickeado");
+            try {
+                updateStatus("Iniciando...");
+                document.getElementById('introScreen').style.display = 'none';
+                videoContainer.style.display = 'block';
+                await iniciarDeteccion();
+            } catch (error) {
+                console.error("Error al iniciar:", error);
+                updateStatus("Error: " + error.message, true);
+            }
+        });
+    });
 
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
-        video.srcObject = stream;
-        await video.play();
+    async function setupCamera() {
+        updateStatus("Inicializando cámara...");
+        try {
+            hands = new Hands({
+                locateFile: (file) => {return @Html.Raw(@"`https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/${file}`");
+                }
+            });
 
-        detecting = true;
-        status.textContent = "Detectando rostro...";
+            hands.setOptions({
+                maxNumHands: 2,
+                modelComplexity: 1,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
 
-        setInterval(async () => {
-            if (!detecting) return;
+            hands.onResults(onResults);
 
-            const predictions = await model.estimateFaces({ input: video });
+            camera = new Camera(video, {
+                onFrame: async () => {
+                    await hands.send({image: video});
+                },
+                width: 640,
+                height: 480
+            });
 
-            if (predictions.length > 0) {
-                const keypoints = predictions[0].scaledMesh;
-                const upper = keypoints[159];
-                const lower = keypoints[145];
-                const ear = eyeAspectRatio(upper, lower);
+            await camera.start();
+            updateStatus("Cámara inicializada");
+        } catch (error) {
+            updateStatus("Error accediendo a la cámara: " + error.message, true);
+            throw error;
+        }
+    }
 
-                if (ear < 5) {
-                    if (!window.eyeClosed) {
-                        window.eyeClosed = true;
-                        blinkCounter++;
-                        blinkTimes.push(Date.now());
-                        status.textContent = `Parpadeos: ${blinkCounter}`;
-                        checkPattern();
-                    }
+    async function iniciarDeteccion() {
+        try {
+            updateStatus("Inicializando sistema de detección...");
+            await setupCamera();
+            updateStatus("Sistema listo. Muestra tus dos manos...");
+            detecting = true;
+        } catch (e) {
+            console.error("Error durante la inicialización:", e);
+            updateStatus("Error: " + e.message, true);
+        }
+    }
+
+    function onResults(results) {
+        if (!detecting) return;
+
+        try {
+            const numHands = results.multiHandLandmarks.length;
+            
+            // Debug info
+            let debugInfo = "";
+            results.multiHandedness.forEach((hand, index) => {
+                debugInfo += `Mano ${index + 1}: ${(hand.score * 100).toFixed(0)}% confianza (${hand.label})<br>`;
+            });
+
+            if (numHands === 2) {
+                if (!handsDetectedTime) {
+                    handsDetectedTime = Date.now();
+                    updateStatus("¡Dos manos detectadas! Mantén la posición...");
                 } else {
-                    window.eyeClosed = false;
+                    const timeElapsed = Date.now() - handsDetectedTime;
+                    if (timeElapsed >= 2000) {
+                        detecting = false;
+                        statusText.style.display = 'none';
+                        successMsg.style.display = 'block';
+                        successMsg.innerHTML = "✨ ¡Manos detectadas! 🚪 La puerta se abre... ✨";
+                        camera.stop();
+                        return;
+                    }
+                    const remainingTime = ((2000 - timeElapsed) / 1000).toFixed(1);
+                    statusText.innerHTML = `
+                        ¡Dos manos detectadas!<br>
+                        Mantén ${remainingTime} segundos más...<br>
+                        ${debugInfo}
+                        ${'🖐️'.repeat(numHands)} (${numHands}/2)
+                    `;
                 }
             } else {
-                status.textContent = "No se detectó rostro.";
+                handsDetectedTime = null;
+                statusText.innerHTML = `
+                    Manos detectadas: ${numHands}/2<br>
+                    ${debugInfo}
+                    ${'🖐️'.repeat(numHands)}
+                    <br>Muestra ambas manos frente a la cámara
+                `;
             }
-        }, 150);
-    } catch (error) {
-        console.error("Error:", error);
-        status.textContent = "Error cargando cámara o modelo.";
+        } catch (error) {
+            console.error("Error en detección:", error);
+            updateStatus("Detectando...");
+        }
     }
-}
-
-function checkPattern() {
-    const lastThree = blinkTimes.slice(-3);
-    if (lastThree.length === 3 && (lastThree[2] - lastThree[0] <= 5000)) {
-        detecting = false;
-        status.style.display = "none";
-        successMsg.style.display = "block";
-        stopCamera();
-    }
-}
-
-function stopCamera() {
-    const stream = video.srcObject;
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        video.srcObject = null;
-    }
-}
 </script>
