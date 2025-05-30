@@ -150,6 +150,32 @@
     z-index: 103;
     pointer-events: none;
   }
+  .botonMapa {
+    position: absolute;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #222;
+    border: 2px solid #00ffff;
+    padding: 8px 16px;
+    cursor: pointer;
+    text-align: center;
+    text-shadow: 0 0 5px #00ffff;
+    border-radius: 8px;
+    transition: background 0.3s;
+    animation: fadeIn 3s ease-out forwards;
+    text-decoration: none;
+    display: inline-block;
+    user-select: none;
+    transform: translate(-50%, -50%);
+    top: 5%;
+    left: 5%;
+    z-index: 1000;
+  }
+
+  .botonMapa:hover {
+    background-color: #00ffff;
+    color: #000;
+  }
 </style>
 
 <div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
@@ -164,6 +190,8 @@
 
 <button id="btnSubmit" class="boton-jugar" disabled>Enviar clave</button>
 <div id="statusMessage" aria-live="polite"></div>
+
+<a href="/Home/Mapa" class="botonMapa">🗺️</a>
 
 <script>
 

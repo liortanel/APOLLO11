@@ -25,16 +25,16 @@
       "PackagePath": "staticwebassets\\img\\despegueM.mp4"
     },
     {
-      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\meme.jpg",
-      "PackagePath": "staticwebassets\\img\\meme.jpg"
-    },
-    {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\planetas.png",
       "PackagePath": "staticwebassets\\img\\planetas.png"
     },
     {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\qr.png",
       "PackagePath": "staticwebassets\\img\\qr.png"
+    },
+    {
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\videoAlien.mp4",
+      "PackagePath": "staticwebassets\\img\\videoAlien.mp4"
     },
     {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\js\\site.js",
@@ -91,6 +91,10 @@
     {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\alerta.mp3",
       "PackagePath": "staticwebassets\\sounds\\alerta.mp3"
+    },
+    {
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\audioAlien.mp3",
+      "PackagePath": "staticwebassets\\sounds\\audioAlien.mp3"
     },
     {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\choque.mp3",

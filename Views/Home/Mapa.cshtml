@@ -4,7 +4,7 @@
 
     var desbloqueados = Context.Session.GetString("ProximoNivel")?.Split(',').ToList() ?? new List<string>() { "Neptuno" };
     var usados = Context.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
-    var planetas = new List<string> { "Mercurio", "Venus", "Luna", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno"};
+    var planetas = new List<string> { "Mercurio", "Venus", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno"};
     
     bool EstaUsado(string planeta) => usados.Contains(planeta);
     bool EstaDesbloqueado(string planeta) => desbloqueados.Contains(planeta);
@@ -95,12 +95,12 @@
     }
 
     #btnMercurio { top: 58%; left: 10.2%; }
-    #btnVenus    { top: 63%; left: 16.75%; }
+    #btnVenus    { top: 60%; left: 17%; }
     #btnMarte    { top: 63%; left: 33.2%; }
     #btnJupiter  { top: 70%; left: 45.3%; }
     #btnSaturno  { top: 70%; left: 58.5%; }
     #btnUrano    { top: 66%; left: 71.3%; }
-    #btnNeptuno  { top: 66%; left: 83%; }
+    #btnNeptuno  { top: 66%; left: 82.9%; }
   </style>
 </head>
 <body>

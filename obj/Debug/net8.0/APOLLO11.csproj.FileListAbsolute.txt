@@ -128,3 +128,4 @@ C:\Users\usuario\APOLLO11\bin\Debug\net8.0\System.Formats.Asn1.dll
 C:\Users\49123993\APOLLO11\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 C:\Users\49123993\APOLLO11\bin\Debug\net8.0\MailKit.dll
 C:\Users\49123993\APOLLO11\bin\Debug\net8.0\MimeKit.dll
+C:\Users\49123993\APOLLO11\bin\Debug\net8.0\System.Formats.Asn1.dll

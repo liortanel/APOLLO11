@@ -58,7 +58,6 @@
         color:white;
         z-index: 200;
     }
-
     button {
         color: #ffffff;
         background-color: #222;
@@ -91,10 +90,10 @@
     }
 
     #videoContainer {
-        margin-top: 2%;
+        margin-top: 1%;
         margin-left: 20.5%;
-        width: 30%;
-        height: auto;
+        width: 60%;
+        height: 850px;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 0 20px #00ffff;
@@ -130,13 +129,31 @@
         text-align: center;
     }
 
-    #alien {
-        width: 22.9%;
-        height: auto;
-        margin-top: 2%;
-        margin-left: 5%;
-        float: left;
-        transition: all 0.3s ease;
+    .botonMapa {
+        position: absolute;
+        font-size: 16px;
+        color: #ffffff;
+        background-color: #222;
+        border: 2px solid #00ffff;
+        padding: 8px 16px;
+        cursor: pointer;
+        text-align: center;
+        text-shadow: 0 0 5px #00ffff;
+        border-radius: 8px;
+        transition: background 0.3s;
+        animation: fadeIn 3s ease-out forwards;
+        text-decoration: none;
+        display: inline-block;
+        user-select: none;
+        transform: translate(-50%, -50%);
+        top: 5%;
+        left: 5%;
+        z-index: 1000;
+    }
+
+    .botonMapa:hover {
+        background-color: #00ffff;
+        color: #000;
     }
 </style>
 
@@ -145,6 +162,8 @@
     <p id="introDesc">Bienvenido a Marte. Prepárate para la prueba.</p>
     <button id="btnStart">Comenzar</button>
 </div>
+
+<a href="/Home/Mapa" class="botonMapa">🗺️</a>
 
 <div id="gameScreen">
     <div id="gameInstructions">
@@ -155,10 +174,18 @@
     <div id="gameTimer">Tiempo: 60s</div>
 </div>
 
+<div id="transitionScreen" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 250;">
+    <video id="backgroundVideo" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" muted>
+        <source src="/img/videoAlien.mp4" type="video/mp4">
+    </video>
+    <audio id="backgroundAudio">
+        <source src="/sounds/audioAlien.mp3" type="audio/mp3">
+    </audio>
+</div>
+
 <div id="videoContainer" style="display:none;">
     <video id="video" autoplay muted playsinline></video>
 </div>
-<img src="/img/alien.png" alt="alien" id="alien">
 <div id="status"></div>
 <div id="successMsg" style="display:none;">¡Patrón detectado! La puerta se abre...</div>
 
@@ -365,12 +392,24 @@
         timeInterval = null;
 
         if (won) {
-            console.log("Iniciando transición a cámara");
+            console.log("Iniciando secuencia de transición");
+            const transitionScreen = document.getElementById('transitionScreen');
+            const backgroundVideo = document.getElementById('backgroundVideo');
+            const backgroundAudio = document.getElementById('backgroundAudio');
+            
+            gameScreen.style.display = 'none';
+            transitionScreen.style.display = 'block';
+            
+            // Reproducir video y audio
+            backgroundVideo.play();
+            backgroundAudio.play();
+            
+            // Después de 5 segundos, mostrar la cámara
             setTimeout(() => {
-                gameScreen.style.display = 'none';
+                transitionScreen.style.display = 'none';
                 videoContainer.style.display = 'block';
                 iniciarDeteccion();
-            }, 1000);
+            }, 5000);
         } else {
             console.log("Reiniciando juego");
             setTimeout(() => {
@@ -436,8 +475,30 @@
     });
 
     async function setupCamera() {
-        updateStatus("Inicializando cámara...");
         try {
+            const constraints = {
+                video: {
+                    width: 640,
+                    height: 480,
+                    advanced: [{
+                        zoom: 1  // Zoom mínimo
+                    }]
+                }
+            };
+
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            video.srcObject = stream;
+
+            // Intentar configurar el zoom mínimo después de obtener el stream
+            const [videoTrack] = stream.getVideoTracks();
+            const capabilities = videoTrack.getCapabilities();
+            if (capabilities.zoom) {
+                const settings = {
+                    zoom: capabilities.zoom.min || 1
+                };
+                await videoTrack.applyConstraints({ advanced: [settings] });
+            }
+
             hands = new Hands({
                 locateFile: (file) => {return @Html.Raw(@"`https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/${file}`");
                 }
@@ -461,7 +522,6 @@
             });
 
             await camera.start();
-            updateStatus("Cámara inicializada");
         } catch (error) {
             updateStatus("Error accediendo a la cámara: " + error.message, true);
             throw error;
@@ -470,9 +530,7 @@
 
     async function iniciarDeteccion() {
         try {
-            updateStatus("Inicializando sistema de detección...");
             await setupCamera();
-            updateStatus("Sistema listo. Muestra tus dos manos...");
             detecting = true;
         } catch (e) {
             console.error("Error durante la inicialización:", e);
@@ -489,7 +547,8 @@
             // Debug info
             let debugInfo = "";
             results.multiHandedness.forEach((hand, index) => {
-                debugInfo += `Mano ${index + 1}: ${(hand.score * 100).toFixed(0)}% confianza (${hand.label})<br>`;
+                const invertedLabel = hand.label === 'Right' ? 'Left' : 'Right';
+                debugInfo += `Mano ${index + 1}: (${invertedLabel})<br>`;
             });
 
             if (numHands === 2) {
@@ -502,8 +561,9 @@
                         detecting = false;
                         statusText.style.display = 'none';
                         successMsg.style.display = 'block';
-                        successMsg.innerHTML = "✨ ¡Manos detectadas! 🚪 La puerta se abre... ✨";
+                        successMsg.innerHTML = "✨ ¡Manos detectadas! 🚀 Saliendo de marte... ✨";
                         camera.stop();
+                        window.location.href = "/Home/VerificarMarte";
                         return;
                     }
                     const remainingTime = ((2000 - timeElapsed) / 1000).toFixed(1);
@@ -517,10 +577,6 @@
             } else {
                 handsDetectedTime = null;
                 statusText.innerHTML = `
-                    Manos detectadas: ${numHands}/2<br>
-                    ${debugInfo}
-                    ${'🖐️'.repeat(numHands)}
-                    <br>Muestra ambas manos frente a la cámara
                 `;
             }
         } catch (error) {

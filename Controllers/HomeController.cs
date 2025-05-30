@@ -15,7 +15,7 @@ public class HomeController : Controller
 
     private readonly List<string> planetas = new List<string>
         {
-            "Mercurio", "Venus", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno"
+            "Mercurio", "Venus", "Marte", "Tierra", "Jupiter", "Saturno", "Urano", "Neptuno"
         };
     public IActionResult Index()
     {
@@ -52,6 +52,14 @@ public class HomeController : Controller
     }
     public IActionResult Venus(){
         return View();
+    }
+    public IActionResult VerificarVenus()
+    {
+        HttpContext.Session.SetString("ProximoNivel", "Tierra");
+        var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
+        usados.Add("Venus");
+        HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
+        return RedirectToAction("Luna", "Home");
     }
     public IActionResult Marte(){
         return View();

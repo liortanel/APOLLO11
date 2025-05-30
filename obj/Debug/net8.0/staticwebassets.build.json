@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "By6WatxKSyopz9DAapTfAXRLi1FdqUPAvxZNrX3PIUw=",
+  "Hash": "UeFXI0Ic/0p7RfawAE8uJHx3iOrdvFHZDNbn5XI2/jQ=",
   "Source": "APOLLO11",
   "BasePath": "_content/APOLLO11",
   "Mode": "Default",
@@ -131,25 +131,6 @@
       "OriginalItemSpec": "wwwroot\\img\\despegueM.mp4"
     },
     {
-      "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\meme.jpg",
-      "SourceId": "APOLLO11",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\",
-      "BasePath": "_content/APOLLO11",
-      "RelativePath": "img/meme.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\meme.jpg"
-    },
-    {
       "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\planetas.png",
       "SourceId": "APOLLO11",
       "SourceType": "Discovered",
@@ -186,6 +167,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\qr.png"
+    },
+    {
+      "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\videoAlien.mp4",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/videoAlien.mp4",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\videoAlien.mp4"
     },
     {
       "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\js\\site.js",
@@ -452,6 +452,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\sounds\\alerta.mp3"
+    },
+    {
+      "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\audioAlien.mp3",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "sounds/audioAlien.mp3",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\sounds\\audioAlien.mp3"
     },
     {
       "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\sounds\\choque.mp3",

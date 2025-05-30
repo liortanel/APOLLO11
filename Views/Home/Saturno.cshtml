@@ -139,6 +139,31 @@
   #inputContrasenaContainer button:hover {
     background: #33ffff;
   }
+  .botonMapa {
+    position: absolute;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #222;
+    border: 2px solid #00ffff;
+    padding: 8px 16px;
+    cursor: pointer;
+    text-align: center;
+    text-shadow: 0 0 5px #00ffff;
+    border-radius: 8px;
+    transition: background 0.3s;
+    animation: fadeIn 3s ease-out forwards;
+    text-decoration: none;
+    display: inline-block;
+    user-select: none;
+    transform: translate(-50%, -50%);
+    top: 5%;
+    left: 5%;
+    z-index: 1000;
+  }
+  .botonMapa:hover {
+    background-color: #00ffff;
+    color: #000;
+  }
 </style>
 </head>
 <body>
@@ -165,6 +190,8 @@
   <input type="text" id="inputContrasena" placeholder="Introduce la contraseña aquí..." autocomplete="off"/>
   <button id="btnValidarContrasena">Validar</button>
 </div>
+
+<a href="/Home/Mapa" class="botonMapa">🗺️</a>
 
 <script>
 btnStart.addEventListener('click', () => {
