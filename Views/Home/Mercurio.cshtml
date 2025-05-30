@@ -68,8 +68,81 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
     padding: 20px;
+    position: relative;
+    height: 65vh;
+  }
+
+  #gameInfo {
+    color: #00ffff;
+    text-shadow: 0 0 5px #00ffff;
+    font-size: 18px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    margin-left: 200%;
+    margin-top: -90%;
+    width: 80%;
+    max-width: 600px;
+  }
+
+  #gameInfo h3 {
+    color: #ff6600;
+    text-shadow: 0 0 5px #ff6600;
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  #gameInfo ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #gameInfo li {
+    padding-left: 20px;
+    position: relative;
+  }
+
+  #gameInfo li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #ff6600;
+  }
+
+  #indicators {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    text-align: right;
+  }
+
+  #roundIndicator, #progressIndicator {
+    font-size: 24px;
+    color: #00ffff;
+    text-shadow: 0 0 8px #00ffff;
+    margin-bottom: 10px;
+  }
+
+  .pyramid-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    transform: scale(1.3);
+    margin: 50px 0;
+  }
+
+  .pyramid-container.active {
+    display: flex;
   }
 
   .pyramid-row {
@@ -106,18 +179,86 @@
 
   .cell .letter {
     position: absolute;
-    top: -25px;
-    left: -25px;
+    top: 2px;
+    left: 33px;
     font-size: 20px;
     color: #00ffff;
     text-shadow: 0 0 5px #00ffff;
   }
 
+  .cell.success {
+    background: rgba(0, 255, 0, 0.3);
+    border-color: #00ff00;
+    box-shadow: 0 0 20px #00ff00;
+    pointer-events: none;
+  }
+
+  .cell.used {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  #foundSequences {
+    position: fixed;
+    left: 150px;
+    top: 45%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    color: #00ffff;
+    min-width: 200px;
+  }
+
+  #foundSequences h3 {
+    color: #ff6600;
+    text-shadow: 0 0 5px #ff6600;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .sequence-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sequence-list li {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border: 1px solid #00ffff;
+    border-radius: 5px;
+    text-align: center;
+    text-shadow: 0 0 5px #00ffff;
+  }
+
   #objective {
-    font-size: 32px;
-    color: #00ff00;
-    text-shadow: 0 0 10px #00ff00;
-    margin-bottom: 20px;
+    font-size: 20px;
+    color: #ff6600;
+    text-shadow: 0 0 15px #ff6600;
+    margin-bottom: 0;
+    text-align: center;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px 40px;
+    border-radius: 20px;
+    border: 2px solid #ff6600;
+    box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
+    z-index: 100;
+  }
+
+  #objective span {
+    font-size: 30px;
+    color: #00ffff;
+    text-shadow: 0 0 20px #00ffff;
+    margin-left: 15px;
   }
 
   #message {
@@ -136,6 +277,18 @@
     margin-top: 20px;
     text-align: center;
   }
+
+  @@keyframes pulseGlow {
+    0% {
+      text-shadow: 0 0 20px #00ffff;
+    }
+    50% {
+      text-shadow: 0 0 40px #00ffff, 0 0 60px #00ffff;
+    }
+    100% {
+      text-shadow: 0 0 20px #00ffff;
+    }
+  }
 </style>
 
 <div id="introScreen">
@@ -145,81 +298,238 @@
 </div>
 
 <div id="gameContainer" style="display: none;">
-  <div id="objective">Objetivo: 9</div>
-  <div class="pyramid-row">
-    <div class="cell" data-value="1" data-operator="+"><span class="letter">A</span>+1</div>
-  </div>
-  <div class="pyramid-row">
-    <div class="cell" data-value="4" data-operator="/"><span class="letter">B</span>/4</div>
-    <div class="cell" data-value="3" data-operator="*"><span class="letter">C</span>*3</div>
-  </div>
-  <div class="pyramid-row">
-    <div class="cell" data-value="10" data-operator="-"><span class="letter">D</span>-10</div>
-    <div class="cell" data-value="5" data-operator="/"><span class="letter">E</span>/5</div>
-    <div class="cell" data-value="6" data-operator="*"><span class="letter">F</span>*6</div>
-  </div>
-  <div class="pyramid-row">
-    <div class="cell" data-value="11" data-operator="-"><span class="letter">G</span>-11</div>
-    <div class="cell" data-value="7" data-operator="+"><span class="letter">H</span>+7</div>
-    <div class="cell" data-value="9" data-operator="/"><span class="letter">I</span>/9</div>
-    <div class="cell" data-value="9" data-operator="+"><span class="letter">J</span>+9</div>
-  </div>
-  <div id="message"></div>
-  <div id="combinations">Combinaciones válidas: CAF, DEH, FAC, GDE</div>
+    <div id="indicators">
+        <div id="roundIndicator">Ronda: 1/3</div>
+        <div id="progressIndicator">Secuencias: 0/4</div>
+    </div>
+
+    <div id="objective">Objetivo: <span>9</span></div>
+
+    <div id="foundSequences">
+        <h3>Secuencias Encontradas</h3>
+        <ul class="sequence-list">
+        </ul>
+    </div>
+
+    <!-- Pirámide 1 -->
+    <div class="pyramid-container active" data-round="1">
+        <div class="pyramid-row">
+            <div class="cell" data-value="1" data-operator="+"><span class="letter">A</span>+1</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="4" data-operator="/"><span class="letter">B</span>/4</div>
+            <div class="cell" data-operator="*"><span class="letter">C</span>*3</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="10" data-operator="-"><span class="letter">D</span>-10</div>
+            <div class="cell" data-value="5" data-operator="/"><span class="letter">E</span>/5</div>
+            <div class="cell" data-operator="*"><span class="letter">F</span>*6</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="11" data-operator="-"><span class="letter">G</span>-11</div>
+            <div class="cell" data-value="7" data-operator="+"><span class="letter">H</span>+7</div>
+            <div class="cell" data-value="9" data-operator="/"><span class="letter">I</span>/9</div>
+            <div class="cell" data-value="9" data-operator="+"><span class="letter">J</span>+9</div>
+        </div>
+    </div>
+
+    <!-- Pirámide 2 -->
+    <div class="pyramid-container" data-round="2">
+        <div class="pyramid-row">
+            <div class="cell" data-value="7" data-operator="*"><span class="letter">A</span>*7</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="5" data-operator="/"><span class="letter">B</span>/5</div>
+            <div class="cell" data-operator="+"><span class="letter">C</span>*9</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="5" data-operator="-"><span class="letter">D</span>-5</div>
+            <div class="cell" data-operator="*"><span class="letter">E</span>*2</div>
+            <div class="cell" data-operator="+"><span class="letter">F</span>*2</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="8" data-operator="/"><span class="letter">G</span>/8</div>
+            <div class="cell" data-value="3" data-operator="/"><span class="letter">H</span>/3</div>
+            <div class="cell" data-operator="-"><span class="letter">I</span>-8</div>
+            <div class="cell" data-operator="*"><span class="letter">J</span>*3</div>
+        </div>
+    </div>
+
+    <!-- Pirámide 3 -->
+    <div class="pyramid-container" data-round="3">
+        <div class="pyramid-row">
+            <div class="cell" data-value="1" data-operator="-"><span class="letter">A</span>-1</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="2" data-operator="+"><span class="letter">B</span>*2</div>
+            <div class="cell" data-operator="*"><span class="letter">C</span>*3</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="4" data-operator="-"><span class="letter">D</span>-4</div>
+            <div class="cell" data-operator="*"><span class="letter">E</span>*5</div>
+            <div class="cell" data-operator="*"><span class="letter">F</span>*6</div>
+        </div>
+        <div class="pyramid-row">
+            <div class="cell" data-value="7" data-operator="*"><span class="letter">G</span>*7</div>
+            <div class="cell" data-value="8" data-operator="-"><span class="letter">H</span>-8</div>
+            <div class="cell" data-operator="*"><span class="letter">I</span>*9</div>
+            <div class="cell" data-value="10" data-operator="-"><span class="letter">J</span>-10</div>
+        </div>
+    </div>
+
+    <div id="message"></div>
+
+    <div id="gameInfo">
+        <h3>Reglas del Juego</h3>
+        <ul>
+            <li>Selecciona 3 números que al operar den el objetivo</li>
+            <li>Las operaciones se aplican en el orden seleccionado</li>
+            <li>Puedes reutilizar las letras en diferentes secuencias</li>
+            <li>Encuentra 4 secuencias diferentes para avanzar</li>
+            <li>No se pueden repetir secuencias ya encontradas</li>
+        </ul>
+    </div>
 </div>
 
 <script>
   const introScreen = document.getElementById('introScreen');
   const btnStart = document.getElementById('btnStart');
   const gameContainer = document.getElementById('gameContainer');
-  const cells = document.querySelectorAll('.cell');
   const messageEl = document.getElementById('message');
-  const objective = 9;
-
+  const roundIndicator = document.getElementById('roundIndicator');
+  const progressIndicator = document.getElementById('progressIndicator');
+  const sequenceList = document.querySelector('.sequence-list');
+  
+  let currentRound = 1;
   let selectedCells = [];
+  let solvedCombinations = new Set();
+  let roundSequences = {
+    1: [],
+    2: [],
+    3: []
+  };
+  let roundProgress = {
+    1: 0,
+    2: 0,
+    3: 0
+  };
+  
+  const roundData = {
+    1: {
+      objective: 9,
+      validCombinations: ['CAF', 'DEH', 'FAC', 'GDE']
+    },
+    2: {
+      objective: 10,
+      validCombinations: ['BJD', 'JHC', 'IGC', 'ACH', 'DBC']
+    },
+    3: {
+      objective: 19,
+      validCombinations: ['CIH', 'DEA', 'EBG', 'GBF', 'DCE']
+    }
+  };
 
-  btnStart.addEventListener('click', () => {
-    introScreen.style.display = 'none';
-    gameContainer.style.display = 'flex';
-  });
+  function updateFoundSequences() {
+    // Limpiar la lista actual
+    sequenceList.innerHTML = '';
+    
+    // Mostrar las secuencias de la ronda actual
+    roundSequences[currentRound].forEach(sequence => {
+      const li = document.createElement('li');
+      li.textContent = sequence;
+      sequenceList.appendChild(li);
+    });
+  }
 
-  cells.forEach(cell => {
-    cell.addEventListener('click', () => {
-      if (cell.classList.contains('selected')) {
-        cell.classList.remove('selected');
-        selectedCells = selectedCells.filter(c => c !== cell);
-      } else {
-        if (selectedCells.length < 3) {
-          cell.classList.add('selected');
-          selectedCells.push(cell);
-          
-          if (selectedCells.length === 3) {
-            checkCombination();
-          }
+  function updateRoundDisplay() {
+    roundIndicator.textContent = `Ronda: ${currentRound}/3`;
+    progressIndicator.textContent = `Secuencias: ${roundProgress[currentRound]}/4`;
+    document.querySelectorAll('.pyramid-container').forEach(pyramid => {
+      pyramid.classList.remove('active');
+      if (parseInt(pyramid.dataset.round) === currentRound) {
+        pyramid.classList.add('active');
+        const objective = pyramid.querySelector('#objective span');
+        if (objective) {
+          objective.style.animation = 'pulseGlow 2s infinite';
         }
       }
     });
-  });
+    updateFoundSequences(); // Actualizar la lista de secuencias al cambiar de ronda
+  }
+
+  function checkAndAdvanceRound() {
+    if (roundProgress[currentRound] === 4 && currentRound < 3) {
+      setTimeout(() => {
+        currentRound++;
+        updateRoundDisplay();
+        messageEl.textContent = '¡Ronda completada! Pasando al siguiente nivel...';
+        messageEl.style.color = '#00ffff';
+      }, 1500);
+    } else if (roundProgress[currentRound] === 4 && currentRound === 3) {
+      setTimeout(() => {
+        messageEl.textContent = '¡Felicitaciones! Has completado todos los niveles!';
+        messageEl.style.color = '#00ff00';
+      }, 1500);
+    }
+  }
 
   function checkCombination() {
     const letters = selectedCells.map(cell => 
       cell.querySelector('.letter').textContent
     ).join('');
 
-    const validCombinations = ['CAF', 'DEH', 'FAC', 'GDE'];
+    const validCombinations = roundData[currentRound].validCombinations;
     
     if (validCombinations.includes(letters)) {
-      messageEl.textContent = '¡Combinación correcta!';
-      messageEl.style.color = '#00ff00';
+      if (solvedCombinations.has(letters)) {
+        messageEl.textContent = '¡Secuencia repetida!';
+        messageEl.style.color = '#ff9900';
+      } else {
+        messageEl.textContent = '¡Combinación correcta!';
+        messageEl.style.color = '#00ff00';
+        solvedCombinations.add(letters);
+        roundProgress[currentRound]++;
+        roundSequences[currentRound].push(letters);
+        updateRoundDisplay();
+        checkAndAdvanceRound();
+      }
     } else {
       messageEl.textContent = 'Combinación incorrecta';
       messageEl.style.color = '#ff0000';
     }
 
     setTimeout(() => {
-      selectedCells.forEach(cell => cell.classList.remove('selected'));
+      selectedCells.forEach(cell => {
+        cell.classList.remove('selected');
+      });
       selectedCells = [];
-      messageEl.textContent = '';
+      if (messageEl.textContent === 'Combinación incorrecta' || messageEl.textContent === '¡Secuencia repetida!') {
+        messageEl.textContent = '';
+      }
     }, 2000);
   }
+
+  btnStart.addEventListener('click', () => {
+    introScreen.style.display = 'none';
+    gameContainer.style.display = 'flex';
+    updateRoundDisplay(); // Asegurarse de que la lista de secuencias esté vacía al inicio
+  });
+
+  document.querySelectorAll('.cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      if (cell.classList.contains('selected')) {
+        cell.classList.remove('selected');
+        selectedCells = selectedCells.filter(c => c !== cell);
+      } else if (selectedCells.length < 3) {
+        cell.classList.add('selected');
+        selectedCells.push(cell);
+        
+        if (selectedCells.length === 3) {
+          checkCombination();
+        }
+      }
+    });
+  });
+
+  updateRoundDisplay();
 </script>
