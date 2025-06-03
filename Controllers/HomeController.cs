@@ -17,6 +17,10 @@ public class HomeController : Controller
         {
             "Mercurio", "Venus", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno"
         };
+    public IActionResult SpaceGame()
+    {
+        return View();
+    }
     public IActionResult Index()
     {
         return View();

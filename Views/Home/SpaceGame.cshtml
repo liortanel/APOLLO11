@@ -1,0 +1,766 @@
+@{
+    ViewData["Title"] = "Space Game";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: monospace;
+            background: black;
+        }
+
+        #gameContainer {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #00ffff;
+            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #00ffff;
+            z-index: 100;
+        }
+
+        #instructions {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #00ffff;
+            font-size: 1.5em;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 20pxrgba(0, 255, 255, 0.5);
+            z-index: 100;
+        }
+
+        #instructions.hidden {
+            display: none;
+        }
+
+        #gameOver {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ff0000;
+            font-size: 2em;
+            background: rgba(0,0,0,0.9);
+            padding: 30px;
+            border-radius: 15px;
+            border: 3px solid #ff0000;
+            box-shadow: 0 0 30px rgba(255,0,0,0.5);
+            z-index: 200;
+        }
+
+        .button {
+            background: #000;
+            color: #00ffff;
+            border: 2px solid #00ffff;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+
+        .button:hover {
+            background: #00ffff;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="hud">
+            Puntuación: <span id="score">0</span><br>
+            Velocidad: <span id="speed">0</span> km/s<br>
+            Distancia: <span id="distance">0</span> km
+        </div>
+        <div id="instructions">
+            <h2>🚀 Space Navigator 3D 🚀</h2>
+            <p>Pilota tu nave espacial a través de un campo de asteroides</p>
+            <p>Usa W,A,S,D o las flechas para maniobrar</p>
+            <p>Mouse para mirar alrededor</p>
+            <p>SHIFT para acelerar</p>
+            <p>ESPACIO para frenar</p>
+            <button class="button" onclick="startGame()">INICIAR MISIÓN</button>
+        </div>
+        <div id="gameOver">
+            <h2>🔥 MISIÓN FALLIDA 🔥</h2>
+            <p>Tu nave ha sido destruida</p>
+            <p>Puntuación final: <span id="finalScore">0</span></p>
+            <button class="button" onclick="restartGame()">REINTENTAR MISIÓN</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script>
+        let camera, scene, renderer;
+        let spaceship, asteroids = [], moon;
+        let velocity = new THREE.Vector3();
+        let isGameActive = false;
+        let score = 0;
+        let speed = 0;
+        let distance = 0;
+        let modelLoaded = false;
+        let cameraOffset = new THREE.Vector3(0, 5, 15);
+        let gameWon = false;
+        let guidingLines = []; // Array para las líneas guía
+        let guideOpacity = 1; // Opacidad base de las líneas
+        let opacityDirection = -1; // Dirección del parpadeo
+        
+        const ASTEROID_COUNT = 5000;
+        const SPACE_SIZE = 6000;
+        const MAX_SPEED = 3;
+        const ACCELERATION = 0.05;
+        const BRAKE_POWER = 0.1;
+        const MOON_DISTANCE = 3000;
+        const CAMERA_LERP = 0.1;
+        const MOON_COLLISION_RADIUS = 60;
+        const ASTEROID_MIN_DISTANCE = 50;
+        const COLLISION_TOLERANCE = 3;
+        const DECELERATION_RATE = 0.98;
+        const MIN_SPEED = 0.01;
+        const GUIDE_COUNT = 4; // Número de líneas guía
+        const GUIDE_SPACING = 100; // Espacio entre líneas guía
+        const GUIDE_OPACITY_SPEED = 0.01; // Velocidad de parpadeo
+        const MIN_OPACITY = 0.2; // Opacidad mínima
+        const MAX_OPACITY = 0.6; // Opacidad máxima
+
+        function debugLog(message) {
+            console.log(message);
+            const debugElement = document.getElementById('debug');
+            if (debugElement) {
+                debugElement.textContent = message;
+            }
+        }
+
+        function createDefaultSpaceship() {
+            debugLog('Creando nave temporal...');
+            const geometry = new THREE.Group();
+            
+            // Cuerpo principal más grande y visible
+            const body = new THREE.Mesh(
+                new THREE.ConeGeometry(2, 8, 8),
+                new THREE.MeshPhongMaterial({ 
+                    color: 0xFFFFFF,
+                    emissive: 0xFFFFFF,
+                    emissiveIntensity: 0.2,
+                    shininess: 100 
+                })
+            );
+            body.rotation.x = -Math.PI / 2;
+            geometry.add(body);
+            
+            // Alas más grandes
+            const wingGeometry = new THREE.BoxGeometry(6, 0.4, 2);
+            const wingMaterial = new THREE.MeshPhongMaterial({ color: 0xcdcdcd });
+            const leftWing = new THREE.Mesh(wingGeometry, wingMaterial);
+            leftWing.position.set(-3, 0, 2);
+            geometry.add(leftWing);
+            
+            const rightWing = new THREE.Mesh(wingGeometry, wingMaterial);
+            rightWing.position.set(3, 0, 2);
+            geometry.add(rightWing);
+
+            // Añadir motores
+            const engineGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1);
+            const engineMaterial = new THREE.MeshPhongMaterial({ color: 0xcdcdcd });
+            const leftEngine = new THREE.Mesh(engineGeometry, engineMaterial);
+            leftEngine.position.set(-2, 0, 3);
+            geometry.add(leftEngine);
+
+            const rightEngine = new THREE.Mesh(engineGeometry, engineMaterial);
+            rightEngine.position.set(2, 0, 3);
+            geometry.add(rightEngine);
+            
+            return geometry;
+        }
+        
+        function loadModels() {
+            // Crear nave por defecto primero para asegurar que hay algo visible
+            spaceship = createDefaultSpaceship();
+            // Posicionar la nave en el origen
+            spaceship.position.set(0, 0, 0);
+            spaceship.rotation.set(0, 0, 0);
+            scene.add(spaceship);
+            
+            const loadingManager = new THREE.LoadingManager();
+            loadingManager.onProgress = function(url, itemsLoaded, itemsTotal) {
+                console.log(`Cargando recursos: ${itemsLoaded}/${itemsTotal} - ${url}`);
+            };
+            loadingManager.onError = function(url) {
+                console.log('Error cargando: ' + url);
+            };
+
+            const loader = new THREE.GLTFLoader(loadingManager);
+            
+            try {
+                loader.load(
+                    '/models/spaceship/scene.gltf',
+                    function (gltf) {
+                        try {
+                            const model = gltf.scene;
+                            
+                            model.scale.set(0.1, 0.1, 0.1);
+                            model.rotation.x = -Math.PI / 2;
+                            
+                            if (spaceship) {
+                                const oldPos = spaceship.position.clone();
+                                const oldRot = spaceship.rotation.clone();
+                                scene.remove(spaceship);
+                                spaceship = model;
+                                spaceship.position.copy(oldPos);
+                                spaceship.rotation.copy(oldRot);
+                            }
+                            
+                            model.traverse((child) => {
+                                if (child.isMesh) {
+                                    child.castShadow = true;
+                                    child.receiveShadow = true;
+                                    if (child.material) {
+                                        child.material.metalness = 0.5;
+                                        child.material.roughness = 0.5;
+                                    }
+                                }
+                            });
+                            
+                            scene.add(spaceship);
+                            modelLoaded = true;
+                        } catch (error) {
+                            console.error('Error configurando el modelo:', error);
+                        }
+                    },
+                    function (xhr) {
+                        if (xhr.lengthComputable) {
+                            const percent = (xhr.loaded / xhr.total * 100).toFixed(2);
+                            console.log(`Progreso de carga del modelo: ${percent}%`);
+                        }
+                    },
+                    function (error) {
+                        console.error('Error cargando modelo:', error);
+                    }
+                );
+            } catch (error) {
+                console.error('Error iniciando la carga:', error);
+            }
+
+            // Crear la Luna
+            const moonGeometry = new THREE.SphereGeometry(50, 32, 32);
+            const moonTexture = new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/moon_1024.jpg');
+            const moonMaterial = new THREE.MeshPhongMaterial({
+                map: moonTexture,
+                bumpMap: moonTexture,
+                bumpScale: 0.5
+            });
+            
+            moon = new THREE.Mesh(moonGeometry, moonMaterial);
+            moon.position.set(0, 0, -MOON_DISTANCE);
+            scene.add(moon);
+
+            const moonLight = new THREE.PointLight(0xffffff, 1, 2000);
+            moonLight.position.copy(moon.position);
+            scene.add(moonLight);
+        }
+        
+        function createGuidingLines() {
+            // Eliminar líneas anteriores si existen
+            guidingLines.forEach(line => scene.remove(line));
+            guidingLines = [];
+
+            // Crear material base para las líneas
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: guideOpacity
+            });
+
+            // Crear varias líneas paralelas
+            for (let i = 0; i < GUIDE_COUNT; i++) {
+                const offset = (i - (GUIDE_COUNT - 1) / 2) * GUIDE_SPACING;
+                
+                // Línea horizontal
+                const horizontalGeometry = new THREE.BufferGeometry();
+                const horizontalPoints = [
+                    new THREE.Vector3(offset, 0, 0),
+                    new THREE.Vector3(offset, 0, -MOON_DISTANCE)
+                ];
+                horizontalGeometry.setFromPoints(horizontalPoints);
+                const horizontalLine = new THREE.Line(horizontalGeometry, lineMaterial.clone());
+                scene.add(horizontalLine);
+                guidingLines.push(horizontalLine);
+
+                // Línea vertical
+                const verticalGeometry = new THREE.BufferGeometry();
+                const verticalPoints = [
+                    new THREE.Vector3(0, offset, 0),
+                    new THREE.Vector3(0, offset, -MOON_DISTANCE)
+                ];
+                verticalGeometry.setFromPoints(verticalPoints);
+                const verticalLine = new THREE.Line(verticalGeometry, lineMaterial.clone());
+                scene.add(verticalLine);
+                guidingLines.push(verticalLine);
+            }
+
+            // Línea central más brillante
+            const centerGeometry = new THREE.BufferGeometry();
+            const centerPoints = [
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, 0, -MOON_DISTANCE)
+            ];
+            centerGeometry.setFromPoints(centerPoints);
+            const centerMaterial = new THREE.LineBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: guideOpacity * 1.5
+            });
+            const centerLine = new THREE.Line(centerGeometry, centerMaterial);
+            scene.add(centerLine);
+            guidingLines.push(centerLine);
+        }
+
+        function updateGuidingLines() {
+            // Actualizar opacidad
+            guideOpacity += opacityDirection * GUIDE_OPACITY_SPEED;
+            
+            // Cambiar dirección cuando alcanza los límites
+            if (guideOpacity <= MIN_OPACITY) {
+                guideOpacity = MIN_OPACITY;
+                opacityDirection = 1;
+            } else if (guideOpacity >= MAX_OPACITY) {
+                guideOpacity = MAX_OPACITY;
+                opacityDirection = -1;
+            }
+
+            // Actualizar opacidad de todas las líneas
+            guidingLines.forEach((line, index) => {
+                if (index === guidingLines.length - 1) {
+                    // La última línea es la central, más brillante
+                    line.material.opacity = guideOpacity * 1.5;
+                } else {
+                    line.material.opacity = guideOpacity;
+                }
+            });
+        }
+
+        function init() {
+            try {
+                scene = new THREE.Scene();
+                scene.background = new THREE.Color(0x000000);
+                
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+                // Posicionar la cámara inicialmente en la misma posición que tendrá durante el juego
+                camera.position.set(0, 5, 15);
+                camera.lookAt(0, 0, 0);
+                
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                document.getElementById('gameContainer').appendChild(renderer.domElement);
+                
+                // Cargar modelos
+                loadModels();
+                
+                // Crear líneas guía
+                createGuidingLines();
+                
+                // Crear asteroides
+                createAsteroids();
+                
+                // Iluminación
+                const ambientLight = new THREE.AmbientLight(0x404040);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                // Estrellas de fondo
+                const starGeometry = new THREE.BufferGeometry();
+                const starVertices = [];
+                
+                for(let i = 0; i < 10000; i++) {
+                    starVertices.push(
+                        (Math.random() - 0.5) * 2000,
+                        (Math.random() - 0.5) * 2000,
+                        (Math.random() - 0.5) * 2000
+                    );
+                }
+                
+                starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+                const starMaterial = new THREE.PointsMaterial({
+                    color: 0xffffff,
+                    size: 0.1
+                });
+                
+                const stars = new THREE.Points(starGeometry, starMaterial);
+                scene.add(stars);
+                
+                // Eventos
+                window.addEventListener('resize', onWindowResize, false);
+                document.addEventListener('keydown', onKeyDown);
+                document.addEventListener('keyup', onKeyUp);
+                document.addEventListener('mousemove', onMouseMove);
+
+                debugLog('Inicialización completada');
+            } catch (error) {
+                debugLog('Error en init: ' + error.message);
+                console.error(error);
+            }
+        }
+        
+        function startGame() {
+            try {
+                document.getElementById('instructions').classList.add('hidden');
+                isGameActive = true;
+                gameWon = false;
+                score = 0;
+                speed = 0;
+                distance = 0;
+                updateHUD();
+                
+                if (spaceship) {
+                    spaceship.position.set(0, 0, 0);
+                    spaceship.rotation.set(0, 0, 0);
+                    velocity.set(0, 0, 0);
+                }
+                
+                document.body.requestPointerLock();
+                debugLog('Juego iniciado');
+            } catch (error) {
+                debugLog('Error en startGame: ' + error.message);
+                console.error(error);
+            }
+        }
+        
+        function gameOver() {
+            if (!gameWon) {
+                isGameActive = false;
+                document.getElementById('gameOver').innerHTML = `
+                    <h2>🔥 MISIÓN FALLIDA 🔥</h2>
+                    <p>Tu nave ha sido destruida</p>
+                    <p>Puntuación final: <span id="finalScore">${Math.floor(score)}</span></p>
+                    <p>Distancia recorrida: ${Math.floor(distance)} km</p>
+                    <button class="button" onclick="restartGame()">REINTENTAR MISIÓN</button>
+                `;
+                document.getElementById('gameOver').style.display = 'block';
+                document.exitPointerLock();
+            }
+        }
+        
+        function restartGame() {
+            gameWon = false;
+            document.getElementById('gameOver').style.display = 'none';
+            startGame();
+        }
+        
+        function updateHUD() {
+            document.getElementById('score').textContent = Math.floor(score);
+            document.getElementById('speed').textContent = speed.toFixed(1);
+            document.getElementById('distance').textContent = Math.floor(distance);
+            
+            // Actualizar distancia a la luna
+            if (spaceship && moon) {
+                const distanceToMoon = spaceship.position.distanceTo(moon.position);
+                document.getElementById('hud').innerHTML = `
+                    Puntuación: <span id="score">${Math.floor(score)}</span><br>
+                    Velocidad: <span id="speed">${speed.toFixed(1)}</span> km/s<br>
+                    Distancia recorrida: <span id="distance">${Math.floor(distance)}</span> km<br>
+                    Distancia a la Luna: <span id="moonDistance">${Math.floor(distanceToMoon)}</span> km
+                `;
+            }
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function onKeyDown(event) {
+            if (!isGameActive) return;
+            
+            switch(event.code) {
+                case 'Space':
+                    speed = Math.max(speed - BRAKE_POWER, 0);
+                    break;
+            }
+
+            if (event.shiftKey) {
+                speed = Math.min(speed + ACCELERATION, MAX_SPEED);
+            }
+        }
+        
+        function onKeyUp(event) {
+            if (!isGameActive) return;
+        }
+        
+        function onMouseMove(event) {
+            if (!isGameActive || !document.pointerLockElement || !spaceship) return;
+            
+            const movementX = event.movementX || 0;
+            const movementY = event.movementY || 0;
+            
+            // Rotación más suave y natural
+            spaceship.rotation.y -= movementX * 0.002;
+            const targetRotationX = spaceship.rotation.x - movementY * 0.002;
+            spaceship.rotation.x = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, targetRotationX));
+
+            // Actualizar la dirección del movimiento basado en la rotación
+            if (speed > 0) {
+                const direction = new THREE.Vector3(0, 0, -1);
+                direction.applyQuaternion(spaceship.quaternion);
+                velocity.copy(direction.multiplyScalar(speed));
+            }
+        }
+        
+        function checkCollisions() {
+            if (!spaceship) return false;
+            
+            const shipPosition = spaceship.position;
+            
+            // Comprobar colisión con la luna
+            const moonBoundingSphere = new THREE.Sphere(moon.position, MOON_COLLISION_RADIUS);
+            if (shipPosition.distanceTo(moon.position) < MOON_COLLISION_RADIUS) {
+                winGame();
+                return true;
+            }
+            
+            // Comprobar colisiones con asteroides de manera más precisa
+            for(let asteroid of asteroids) {
+                const distance = shipPosition.distanceTo(asteroid.position);
+                const collisionRadius = (asteroid.scale.x + COLLISION_TOLERANCE);
+                
+                if (distance < collisionRadius) {
+                    gameOver();
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        function winGame() {
+            if (!gameWon) {
+                gameWon = true;
+                isGameActive = false;
+                const finalScore = Math.floor(score);
+                document.getElementById('gameOver').innerHTML = `
+                    <h2>🚀 ¡MISIÓN CUMPLIDA! 🌙</h2>
+                    <p>¡Has llegado a la Luna!</p>
+                    <p>Puntuación final: <span id="finalScore">${finalScore}</span></p>
+                    <p>Distancia recorrida: ${Math.floor(distance)} km</p>
+                    <p>Tiempo: ${Math.floor(score / 10)} segundos</p>
+                    <button class="button" onclick="window.location.href = '/Home/ValidarMercurio'">NUEVA MISIÓN</button>
+                `;
+                document.getElementById('gameOver').style.display = 'block';
+                document.exitPointerLock();
+            }
+        }
+        
+        function updateCamera() {
+            if (!spaceship) return;
+
+            // Calcular la posición objetivo de la cámara en tercera persona
+            const targetPosition = spaceship.position.clone();
+            const cameraIdealOffset = cameraOffset.clone();
+            cameraIdealOffset.applyQuaternion(spaceship.quaternion);
+            targetPosition.add(cameraIdealOffset);
+
+            // Suavizar el movimiento de la cámara
+            camera.position.lerp(targetPosition, CAMERA_LERP);
+
+            // Hacer que la cámara mire siempre a la nave
+            camera.lookAt(spaceship.position);
+        }
+        
+        function createAsteroids() {
+            const asteroidGeometries = [
+                new THREE.IcosahedronGeometry(1),
+                new THREE.OctahedronGeometry(1),
+                new THREE.TetrahedronGeometry(1),
+                new THREE.DodecahedronGeometry(1)
+            ];
+            
+            const asteroidColors = [
+                0x808080, // Gris
+                0x696969, // Gris oscuro
+                0xA9A9A9  // Gris claro
+            ];
+
+            // Aumentamos dramáticamente el número de asteroides
+            const TOTAL_ASTEROIDS = ASTEROID_COUNT * 3;
+            
+            // Definir zona segura
+            const SAFE_ZONE_RADIUS = 100; // Radio de la zona segura
+            const SAFE_ZONE_LENGTH = 200; // Longitud de la zona segura en dirección Z
+            
+            for(let i = 0; i < TOTAL_ASTEROIDS; i++) {
+                const geometry = asteroidGeometries[Math.floor(Math.random() * asteroidGeometries.length)];
+                const material = new THREE.MeshPhongMaterial({
+                    color: asteroidColors[Math.floor(Math.random() * asteroidColors.length)],
+                    roughness: 0.8 + Math.random() * 0.2,
+                    metalness: 0.1 + Math.random() * 0.3
+                });
+                const asteroid = new THREE.Mesh(geometry, material);
+                
+                let x, y, z;
+                let isInSafeZone;
+                
+                do {
+                    // 70% de los asteroides en el camino directo entre las líneas guía
+                    if (Math.random() < 0.7) {
+                        // Área muy concentrada entre las líneas guía
+                        const guideWidth = GUIDE_SPACING * (GUIDE_COUNT - 1);
+                        x = (Math.random() - 0.5) * guideWidth * 1.2;
+                        y = (Math.random() - 0.5) * guideWidth * 1.2;
+                        z = -Math.random() * MOON_DISTANCE;
+                    } else if (Math.random() < 0.9) { // 20% cerca del camino
+                        // Área un poco más amplia pero aún cerca del camino
+                        x = (Math.random() - 0.5) * SPACE_SIZE * 0.4;
+                        y = (Math.random() - 0.5) * SPACE_SIZE * 0.4;
+                        z = -Math.random() * MOON_DISTANCE;
+                    } else { // 10% más dispersos
+                        x = (Math.random() - 0.5) * SPACE_SIZE * 0.7;
+                        y = (Math.random() - 0.5) * SPACE_SIZE * 0.7;
+                        z = -Math.random() * (MOON_DISTANCE * 1.2);
+                    }
+                    
+                    // Añadir variación en Z para crear "paredes" de asteroides
+                    if (Math.random() < 0.3) {
+                        const wallSpacing = MOON_DISTANCE / 10;
+                        z = -Math.floor(Math.random() * 10) * wallSpacing;
+                    }
+
+                    // Comprobar si el asteroide está en la zona segura
+                    const horizontalDist = Math.sqrt(x * x + y * y);
+                    isInSafeZone = horizontalDist < SAFE_ZONE_RADIUS && z > -SAFE_ZONE_LENGTH;
+                    
+                } while (isInSafeZone); // Repetir si está en la zona segura
+                
+                asteroid.position.set(x, y, z);
+                
+                // Asteroides más pequeños
+                const scale = 1 + Math.random() * 3; // Mínimo 1, máximo 4 unidades
+                asteroid.scale.set(scale, scale, scale);
+                
+                // Rotación inicial aleatoria
+                asteroid.rotation.set(
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI
+                );
+                
+                // Velocidad de rotación aleatoria
+                asteroid.userData.rotationSpeed = {
+                    x: (Math.random() - 0.5) * 0.02,
+                    y: (Math.random() - 0.5) * 0.02,
+                    z: (Math.random() - 0.5) * 0.02
+                };
+                
+                scene.add(asteroid);
+                asteroids.push(asteroid);
+            }
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (isGameActive && spaceship) {
+                // Actualizar posición de la nave basada en su rotación
+                if (speed > 0) {
+                    const direction = new THREE.Vector3(0, 0, -1);
+                    direction.applyQuaternion(spaceship.quaternion);
+                    spaceship.position.add(direction.multiplyScalar(speed));
+                }
+                
+                // Actualizar cámara en tercera persona
+                updateCamera();
+                
+                // Actualizar líneas guía
+                updateGuidingLines();
+                
+                // Rotar asteroides con velocidades individuales
+                asteroids.forEach(asteroid => {
+                    asteroid.rotation.x += asteroid.userData.rotationSpeed.x;
+                    asteroid.rotation.y += asteroid.userData.rotationSpeed.y;
+                    asteroid.rotation.z += asteroid.userData.rotationSpeed.z;
+                });
+                
+                // Actualizar puntuación y distancia
+                score += speed * 0.1;
+                distance += speed;
+                updateHUD();
+                
+                // Comprobar colisiones
+                checkCollisions();
+                
+                // Comprobar límites del espacio
+                if (Math.abs(spaceship.position.x) > SPACE_SIZE/2 ||
+                    Math.abs(spaceship.position.y) > SPACE_SIZE/2 ||
+                    Math.abs(spaceship.position.z) > SPACE_SIZE/2) {
+                    gameOver();
+                }
+
+                // Aplicar desaceleración natural más suave
+                if (!isKeyDown('ShiftLeft') && !isKeyDown('ShiftRight')) {
+                    speed *= DECELERATION_RATE;
+                    if (speed < MIN_SPEED) {
+                        speed = 0;
+                    }
+                }
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Agregar sistema de tracking de teclas
+        const keysPressed = new Set();
+
+        document.addEventListener('keydown', function(event) {
+            keysPressed.add(event.code);
+        });
+
+        document.addEventListener('keyup', function(event) {
+            keysPressed.delete(event.code);
+        });
+
+        function isKeyDown(keyCode) {
+            return keysPressed.has(keyCode);
+        }
+        
+        // Iniciar el juego
+        try {
+            init();
+            animate();
+            debugLog('Juego cargado correctamente');
+        } catch (error) {
+            debugLog('Error al iniciar el juego: ' + error.message);
+            console.error(error);
+        }
+    </script>
+</body>
+</html> 
