@@ -27,6 +27,7 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
+        ViewBag.ResetTimer = true;
         return View();
     }
     public IActionResult Mapa()

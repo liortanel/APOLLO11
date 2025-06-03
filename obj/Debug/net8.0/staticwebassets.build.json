@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "hHxpnEFDHzflybwOVKF60GztJ5MzM2TlDWaW9sKVbSc=",
+  "Hash": "XzHJrmBurKosmPY34u3JtzktVa8Pspvx0qbUrjVjCFQ=",
   "Source": "APOLLO11",
   "BasePath": "_content/APOLLO11",
   "Mode": "Default",
@@ -148,6 +148,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\despegueM.mp4"
+    },
+    {
+      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\final.png",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/final.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\final.png"
     },
     {
       "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\planetas.png",
