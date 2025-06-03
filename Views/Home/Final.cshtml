@@ -1,0 +1,130 @@
+@{
+    ViewData["Title"] = "Final";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Misión Completada</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: white;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #finalContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #finalImage {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 1;
+            transition: opacity 3s ease-in-out;
+        }
+
+        #messageContainer {
+            position: absolute;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            z-index: 2;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        #title {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            letter-spacing: 5px;
+        }
+
+        #congratulations {
+            font-size: 2em;
+            color: #ffffff;
+            text-shadow: 0 0 5px #ffffff;
+            margin-top: 20px;
+        }
+
+        .fade-in {
+            animation: fadeIn 2s ease-in forwards;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @@keyframes glow {
+            from {
+                text-shadow: 0 0 10px #00ffff;
+            }
+            to {
+                text-shadow: 0 0 20px #00ffff,
+                           0 0 30px #00ffff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="finalContainer">
+        <img id="finalImage" src="/img/final.png" alt="Imagen Final">
+        <div id="messageContainer">
+            <div id="title" class="glow">MISIÓN APOLLO 11</div>
+            <div id="congratulations">¡Felicitaciones!<br>Has completado la misión con éxito</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const image = document.getElementById('finalImage');
+            const messageContainer = document.getElementById('messageContainer');
+
+            function startSequence() {
+                // Iniciar secuencia después de 2 segundos
+                setTimeout(() => {
+                    // Desvanecer la imagen
+                    image.style.opacity = '0';
+                    
+                    // Mostrar el mensaje
+                    setTimeout(() => {
+                        messageContainer.style.opacity = '1';
+                    }, 1000);
+                }, 2000);
+            }
+
+            // Si la imagen ya está cargada
+            if (image.complete) {
+                startSequence();
+            } else {
+                // Si la imagen aún no está cargada, esperar a que cargue
+                image.onload = startSequence;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Bg8SIzmUO7c2RFz5qQFPjI2ZHBRKh+EUXqAoIyi/dFA=",
+  "Hash": "hHxpnEFDHzflybwOVKF60GztJ5MzM2TlDWaW9sKVbSc=",
   "Source": "APOLLO11",
   "BasePath": "_content/APOLLO11",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\alien.png"
+    },
+    {
+      "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\cinematicaLuna.mp4",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/cinematicaLuna.mp4",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\cinematicaLuna.mp4"
     },
     {
       "Identity": "C:\\Users\\usuario\\APOLLO11\\wwwroot\\img\\despegue.mp4",

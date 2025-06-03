@@ -21,6 +21,10 @@ public class HomeController : Controller
     {
         return View();
     }
+    public IActionResult Final()
+    {
+        return View();
+    }
     public IActionResult Index()
     {
         return View();
