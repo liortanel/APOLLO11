@@ -2,19 +2,10 @@ class Timer {
     constructor(duration) {
         this.duration = duration;
         this.startTime = localStorage.getItem('escapeStartTime');
+        this.pauseTime = localStorage.getItem('escapePauseTime');
         this.timerElement = null;
         this.interval = null;
-    }
-
-    start() {
-        if (!this.startTime) {
-            this.startTime = Date.now();
-            localStorage.setItem('escapeStartTime', this.startTime);
-        }
-
-        this.createTimerElement();
-        this.update();
-        this.interval = setInterval(() => this.update(), 1000);
+        this.initialDuration = duration;
     }
 
     createTimerElement() {
@@ -39,9 +30,70 @@ class Timer {
         }
     }
 
+    start() {
+        this.createTimerElement();
+        
+        // Si estaba pausado, ajustar el tiempo de inicio
+        if (this.pauseTime) {
+            const pauseDuration = Date.now() - parseInt(this.pauseTime);
+            this.startTime = (parseInt(this.startTime) + pauseDuration).toString();
+            localStorage.setItem('escapeStartTime', this.startTime);
+            localStorage.removeItem('escapePauseTime');
+            this.pauseTime = null;
+        } else if (!this.startTime) {
+            this.startTime = Date.now().toString();
+            localStorage.setItem('escapeStartTime', this.startTime);
+        }
+
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+        
+        this.timerElement.style.display = 'block';
+        this.update();
+        this.interval = setInterval(() => this.update(), 1000);
+    }
+
+    pause() {
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
+
+        // Guardar el momento en que se pausó
+        this.pauseTime = Date.now().toString();
+        localStorage.setItem('escapePauseTime', this.pauseTime);
+        
+        if (this.timerElement) {
+            this.timerElement.style.display = 'none';
+        }
+    }
+
+    reset() {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+        this.duration = this.initialDuration;
+        this.startTime = Date.now().toString();
+        localStorage.setItem('escapeStartTime', this.startTime);
+        localStorage.removeItem('escapePauseTime');
+        this.pauseTime = null;
+        this.update();
+        this.interval = setInterval(() => this.update(), 1000);
+    }
+
+    setDuration(newDuration) {
+        this.duration = newDuration;
+        this.startTime = Date.now().toString();
+        localStorage.setItem('escapeStartTime', this.startTime);
+        localStorage.removeItem('escapePauseTime');
+        this.pauseTime = null;
+        this.update();
+    }
+
     update() {
         const now = Date.now();
-        const elapsedTime = now - this.startTime;
+        const elapsedTime = now - parseInt(this.startTime);
         const remainingTime = this.duration - elapsedTime;
 
         if (remainingTime <= 0) {
@@ -71,6 +123,7 @@ class Timer {
 
     gameOver() {
         localStorage.removeItem('escapeStartTime');
+        localStorage.removeItem('escapePauseTime');
         const gameOverScreen = document.createElement('div');
         gameOverScreen.style.cssText = `
             position: fixed;
@@ -108,11 +161,42 @@ class Timer {
 
     static resetTimer() {
         localStorage.removeItem('escapeStartTime');
+        localStorage.removeItem('escapePauseTime');
     }
 }
 
-// Iniciar el temporizador cuando se carga la página
+// Variable global para el timer
+let globalTimer = null;
+
+// Función para manejar la visibilidad del timer
+function handleTimerVisibility() {
+    const path = window.location.pathname;
+    const isIndexPage = path === '/' || path === '/Home' || path === '/Home/Index';
+    
+    if (!globalTimer) {
+        globalTimer = new Timer(3600000); // 1 hora en milisegundos
+    }
+
+    if (isIndexPage) {
+        globalTimer.pause();
+    } else {
+        globalTimer.start();
+    }
+}
+
+// Inicializar el timer cuando se carga la página
 document.addEventListener('DOMContentLoaded', () => {
-    const timer = new Timer(3600000); // 1 hora en milisegundos
-    timer.start();
+    handleTimerVisibility();
+
+    // Agregar eventos de teclado globales
+    document.addEventListener('keydown', (event) => {
+        if (!globalTimer) return;
+        
+        const key = event.key.toLowerCase();
+        if (key === 't') {
+            globalTimer.setDuration(301000); // 5 minutos y 1 segundo en milisegundos
+        } else if (key === 'r') {
+            globalTimer.reset(); // Reiniciar el timer a su duración inicial
+        }
+    });
 }); 

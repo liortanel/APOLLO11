@@ -82,7 +82,7 @@
     user-select: none;
     transform: translate(-50%, -50%);
     top: 5%;
-    left: 5%;
+    left: 3%;
     z-index: 1000;
   }
 
@@ -110,10 +110,12 @@
     border-radius: 10px;
     border: 1px solid #00ffff;
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-    margin-left: 200%;
-    margin-top: -90%;
-    width: 80%;
-    max-width: 600px;
+    position: fixed;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 400px;
+    z-index: 100;
   }
 
   #gameInfo h3 {
@@ -157,6 +159,10 @@
     color: #00ffff;
     text-shadow: 0 0 8px #00ffff;
     margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  #indicators{
+    margin-top: 5%;
   }
 
   .pyramid-container {
@@ -453,7 +459,7 @@
       validCombinations: ['BJD', 'JHC', 'IGC', 'ACH', 'DBC']
     },
     3: {
-      objective: 19,
+      objective: 19,  
       validCombinations: ['CIH', 'DEA', 'EBG', 'GBF', 'DCE']
     }
   };
@@ -473,14 +479,15 @@
   function updateRoundDisplay() {
     roundIndicator.textContent = `Ronda: ${currentRound}/3`;
     progressIndicator.textContent = `Secuencias: ${roundProgress[currentRound]}/4`;
+    
+    // Actualizar el objetivo según la ronda actual
+    const objectiveSpan = document.querySelector('#objective span');
+    objectiveSpan.textContent = roundData[currentRound].objective;
+    
     document.querySelectorAll('.pyramid-container').forEach(pyramid => {
       pyramid.classList.remove('active');
       if (parseInt(pyramid.dataset.round) === currentRound) {
         pyramid.classList.add('active');
-        const objective = pyramid.querySelector('#objective span');
-        if (objective) {
-          objective.style.animation = 'pulseGlow 2s infinite';
-        }
       }
     });
     updateFoundSequences(); // Actualizar la lista de secuencias al cambiar de ronda
