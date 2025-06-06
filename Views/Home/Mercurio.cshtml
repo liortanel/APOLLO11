@@ -375,7 +375,7 @@
         </div>
         <div class="pyramid-row">
             <div class="cell" data-value="5" data-operator="/"><span class="letter">B</span>/5</div>
-            <div class="cell" data-operator="+"><span class="letter">C</span>*9</div>
+            <div class="cell" data-operator="+"><span class="letter">C</span>+9</div>
         </div>
         <div class="pyramid-row">
             <div class="cell" data-value="5" data-operator="-"><span class="letter">D</span>-5</div>
@@ -572,4 +572,23 @@
   });
 
   updateRoundDisplay();
+
+  // Permitir avanzar de ronda con la tecla 'V'
+  document.addEventListener('keydown', function(event) {
+    if ((event.key === 'v' || event.key === 'V')) {
+      if (currentRound < 3) {
+        currentRound++;
+        updateRoundDisplay();
+        messageEl.textContent = '¡Avanzaste de ronda con la tecla V!';
+        messageEl.style.color = '#00ffff';
+        setTimeout(() => { messageEl.textContent = ''; }, 1500);
+      } else if (currentRound === 3) {
+        messageEl.textContent = '¡Felicitaciones! Has completado todos los niveles!';
+        messageEl.style.color = '#00ffff';
+        setTimeout(() => {
+          window.location.href = '/Home/SpaceGame';
+        }, 2000);
+      }
+    }
+  });
 </script>

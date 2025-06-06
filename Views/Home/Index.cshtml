@@ -430,10 +430,18 @@ La misión ha comenzado exitosamente. A medida que el módulo de comando alcanza
     boton.textContent = "EMPEZAR JUEGO";
     boton.onclick = () => window.location.href = "/Home/Mapa";
 
+    // Botón de integrantes
+    const botonIntegrantes = document.createElement("div");
+    botonIntegrantes.className = "boton-jugar";
+    botonIntegrantes.textContent = "INTEGRANTES";
+    botonIntegrantes.style.marginTop = "15px";
+    botonIntegrantes.onclick = () => window.location.href = "/Home/Integrantes";
+
     const contenedorFinal = document.createElement("div");
     contenedorFinal.className = "contenedor-final";
     contenedorFinal.appendChild(titulo);
     contenedorFinal.appendChild(boton);
+    contenedorFinal.appendChild(botonIntegrantes);
 
     consoleDiv.appendChild(contenedorFinal);
 

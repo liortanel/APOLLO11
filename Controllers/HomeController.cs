@@ -27,7 +27,9 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
-        ViewBag.ResetTimer = true;
+        return View();
+    }
+    public IActionResult Integrantes(){
         return View();
     }
     public IActionResult Mapa()
@@ -46,7 +48,7 @@ public class HomeController : Controller
         var usados = HttpContext.Session.GetString("NivelesUsados")?.Split(',').ToList() ?? new List<string>();
         usados.Add("Luna");
         HttpContext.Session.SetString("NivelesUsados", string.Join(",", usados));
-        return View("Mapa");
+        return RedirectToAction("Final", "Home");
     }
     public IActionResult Mercurio(){
         return View();
