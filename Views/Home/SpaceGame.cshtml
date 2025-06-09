@@ -131,8 +131,8 @@
         let guideOpacity = 1; // Opacidad base de las líneas
         let opacityDirection = -1; // Dirección del parpadeo
         
-        const ASTEROID_COUNT = 5000;
-        const SPACE_SIZE = 6000;
+        const ASTEROID_COUNT = 4000;
+        const SPACE_SIZE = 350;
         const MAX_SPEED = 3;
         const ACCELERATION = 0.05;
         const BRAKE_POWER = 0.1;
@@ -721,7 +721,7 @@
                 // Comprobar límites del espacio
                 if (Math.abs(spaceship.position.x) > SPACE_SIZE/2 ||
                     Math.abs(spaceship.position.y) > SPACE_SIZE/2 ||
-                    Math.abs(spaceship.position.z) > SPACE_SIZE/2) {
+                    Math.abs(spaceship.position.z) > 3000) {
                     gameOver();
                 }
 

@@ -90,6 +90,26 @@
   color: #000;
   transform: scale(1.05);
         }
+            #pistasBtn {
+    position: fixed;
+    top: 100px;
+    right: 25px;
+    background: rgba(30, 30, 30, 0.85);
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    font-size: 16px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  #pistasBtn:hover {
+    background: #00ffff;
+    color: black;
+  }
+
 
         #resultado {
             margin-top: 20px;
@@ -145,14 +165,21 @@
         <div>
             <input id="claveInput" type="text" placeholder="Introduce la clave..." />
             <br />
-            <button onclick="verificarClave()">Enviar</button>
+            <button id= onclick="verificarClave()">Enviar</button>
             <div id="resultado"></div>
         </div>
     </div>
     <audio id="beep" src="/sounds/tecla_.mp3" preload="auto"></audio>
 </div>
 
+<!-- Botón de pistas y contenedor de imagen -->
+<div id= divPistas aria-hidden="true"><button id="pistasBtn" aria-hidden="true">Pistas</button></div>
+<div id="pistaImgContainer" style="display:none; position:fixed; top:160px; right:25px; z-index:1100; background:rgba(0,0,0,0.8); border-radius:12px; padding:10px;"><img id="pistaImg" src="/img/applemaps.png" alt="Pista" style="max-width:220px; max-height:220px;"></div>
+
 <script>
+    const pistasBtn = document.getElementById('pistasBtn');
+    const pistaImgContainer = document.getElementById('pistaImgContainer');
+
     document.addEventListener('DOMContentLoaded', function() {
         const videoIntro = document.getElementById('videoIntro');
         const introVideo = document.getElementById('introVideo');
@@ -182,7 +209,16 @@
         gameContainer.setAttribute('aria-hidden', 'false');
         gameActive = true;
         btnSubmit.disabled = false;
+        divPistas.setAttribute('aria-hidden', 'false');
+        pistasBtn.style.display = 'inline-block';
     });
+
+    pistasBtn.onclick = function() {
+        pistaImgContainer.style.display = 'block';
+        setTimeout(() => {
+            pistaImgContainer.style.display = 'none';
+        }, 2000);
+    };
 
     function verificarClave() {
         const input = document.getElementById("claveInput").value.trim();

@@ -118,6 +118,27 @@
     z-index: 100;
   }
 
+    #pistasBtn {
+    position: fixed;
+    top: 100px;
+    right: 25px;
+    background: rgba(30, 30, 30, 0.85);
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    font-size: 16px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s;
+    display: none; /* Oculto hasta iniciar */
+  }
+  #pistasBtn:hover {
+    background: #00ffff;
+    color: black;
+  }
+
   #gameInfo h3 {
     color: #ff6600;
     text-shadow: 0 0 5px #ff6600;
@@ -149,7 +170,7 @@
 
   #indicators {
     position: fixed;
-    top: 20px;
+    top: 60px;
     right: 20px;
     text-align: right;
   }
@@ -331,7 +352,8 @@
 </div>
 
 <a href="/Home/Mapa" class="botonMapa">🗺️</a>
-
+<button id="pistasBtn" onclick="mostrarPista()">Pistas</button>
+<div id="pistaTexto" style="margin-left:14%; margin-bottom: 7%; margin-top: 5%;"></div>
 <div id="gameContainer" style="display: none;">
     <div id="indicators">
         <div id="roundIndicator">Ronda: 1/3</div>
@@ -418,9 +440,9 @@
         <h3>Reglas del Juego</h3>
         <ul>
             <li>Selecciona 3 números que al operar den el objetivo</li>
-            <li>Las operaciones se aplican en el orden seleccionado</li>
+            <li>Se elimina el primer operador de la secuencia</li>
             <li>Puedes reutilizar las letras en diferentes secuencias</li>
-            <li>Encuentra 4 secuencias diferentes para avanzar</li>
+            <li>El N° final de la secuencia se calcula por términos, no por el orden en el que se seleccionan</li>
             <li>No se pueden repetir secuencias ya encontradas</li>
         </ul>
     </div>
@@ -434,6 +456,8 @@
   const roundIndicator = document.getElementById('roundIndicator');
   const progressIndicator = document.getElementById('progressIndicator');
   const sequenceList = document.querySelector('.sequence-list');
+  const pistasBtn = document.getElementById('pistasBtn');
+  const pistaTexto = document.getElementById('pistaTexto');
   
   let currentRound = 1;
   let selectedCells = [];
@@ -448,6 +472,7 @@
     2: 0,
     3: 0
   };
+  let pistaPaso = 0;
   
   const roundData = {
     1: {
@@ -549,10 +574,30 @@
     }, 2000);
   }
 
+  function mostrarPista() {
+    const combinaciones = roundData[currentRound].validCombinations;
+    // Filtrar las combinaciones ya usadas en la ronda actual
+    const usadas = new Set(roundSequences[currentRound]);
+    const disponibles = combinaciones.filter(c => !usadas.has(c));
+    if (disponibles.length > 0) {
+      const combinacion = disponibles[Math.floor(Math.random() * disponibles.length)];
+      pistaTexto.textContent = `💡 Una combinación posible: ${combinacion}`;
+    } else {
+      pistaTexto.textContent = "📘 Ya encontraste todas las combinaciones posibles.";
+    }
+    pistaTexto.style.display = "block";
+    setTimeout(() => {
+      pistaTexto.style.display = "none";
+    }, 2000);
+  }
+
   btnStart.addEventListener('click', () => {
     introScreen.style.display = 'none';
     gameContainer.style.display = 'flex';
-    updateRoundDisplay(); // Asegurarse de que la lista de secuencias esté vacía al inicio
+    pistasBtn.style.display = 'inline-block';
+    pistaTexto.style.display = 'none';
+    pistaPaso = 0;
+    updateRoundDisplay();
   });
 
   document.querySelectorAll('.cell').forEach(cell => {
