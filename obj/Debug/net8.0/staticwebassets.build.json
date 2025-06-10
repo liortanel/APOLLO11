@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "5fkXlfXAy/NN9J1DY61aSZ5YJe4/oZw8ZuElEn8cMUo=",
+  "Hash": "NgeOjwZoXKlaZLakhpAdrd3/vNaGatqLrEDt9xfD3Ag=",
   "Source": "APOLLO11",
   "BasePath": "_content/APOLLO11",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\alien.png"
+    },
+    {
+      "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\applemaps.png",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/applemaps.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\applemaps.png"
     },
     {
       "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\cinematicaLuna.mp4",

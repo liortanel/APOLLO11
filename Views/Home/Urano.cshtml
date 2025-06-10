@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<body class="ABRÍ EL MAIN">
   <meta charset="UTF-8" />
   <title>Urano</title>
   <style>
@@ -113,20 +113,7 @@
         color: #000;
     }
   </style>
-</head>
-<body>
-<div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
-  <h1 id="introTitle">Urano</h1>
-  <p id="introDesc">Frío y silencioso. El mensaje oculto solo se revela a quien observa con atención.</p>
-  <button id="btnStart" class="boton-inicio" aria-label="Aceptar e iniciar el juego">Aceptar</button>
-  <div id="gameContainer" aria-label="Área del juego" aria-hidden="true"></div>
-</div>
-<div id="distractor">
-    <p>Explorás una antigua estación abandonada en Urano. No parece haber mucho aquí...<br>
-    ¿Seguro que no hay nada útil en esta página?</p>
-</div>
-
-  <!--
+    <!--
     De que programa visto en Arte Digital será este codigo...?
 
     void setup() {
@@ -157,16 +144,25 @@
     line(410, 50, 410, 150);
     line(430, 50, 430, 150);
     }
-    
-    Descomentá esto para poder enviar tu respuesta.
     -->
+<div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
+  <h1 id="introTitle">Urano</h1>
+  <p id="introDesc">Frío y silencioso. El mensaje oculto solo se revela a quien observa con atención.</p>
+  <button id="btnStart" class="boton-inicio" aria-label="Aceptar e iniciar el juego">Aceptar</button>
+  <div id="gameContainer" aria-label="Área del juego" aria-hidden="true"></div>
+</div>
+<div id="distractor">
+    <p>Explorás una antigua estación abandonada en Urano. No parece haber mucho aquí...<br>
+    ¿Seguro que no hay nada útil en esta página?</p>
+</div>
+
     <form action="/Home/VerificarUrano" method="post" style="margin-top: 50px;">
     <input type="text" name="respuesta" placeholder="Ingresá la clave..." style="
       background: black; color: #00ffff; border: 2px solid #00ffff;
       font-size: 20px; padding: 10px; border-radius: 8px; margin-left: 36.5%;" >
     <button type="submit" class="boton-jugar">></button>
   </form>
-  
+
 <script>
 btnStart.addEventListener('click', () => {
     introScreen.style.display = 'none';
