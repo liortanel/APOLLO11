@@ -1,6 +1,8 @@
 class Timer {
     constructor(duration) {
-        this.duration = duration;
+        // Recuperar duración guardada si existe
+        const savedDuration = localStorage.getItem('escapeDuration');
+        this.duration = savedDuration && !isNaN(parseInt(savedDuration)) ? parseInt(savedDuration) : duration;
         this.startTime = localStorage.getItem('escapeStartTime');
         this.pauseTime = localStorage.getItem('escapePauseTime');
         this.timerElement = null;
@@ -32,7 +34,6 @@ class Timer {
 
     start() {
         this.createTimerElement();
-        
         // Si estaba pausado, ajustar el tiempo de inicio
         if (this.pauseTime) {
             const pauseDuration = Date.now() - parseInt(this.pauseTime);
@@ -41,14 +42,17 @@ class Timer {
             localStorage.removeItem('escapePauseTime');
             this.pauseTime = null;
         } else if (!this.startTime) {
-            this.startTime = Date.now().toString();
-            localStorage.setItem('escapeStartTime', this.startTime);
+            // Si no hay startTime en la instancia, revisa el localStorage
+            if (localStorage.getItem('escapeStartTime')) {
+                this.startTime = localStorage.getItem('escapeStartTime');
+            } else {
+                this.startTime = Date.now().toString();
+                localStorage.setItem('escapeStartTime', this.startTime);
+            }
         }
-
         if (this.interval) {
             clearInterval(this.interval);
         }
-        
         this.timerElement.style.display = 'block';
         this.update();
         this.interval = setInterval(() => this.update(), 1000);
@@ -74,6 +78,7 @@ class Timer {
             clearInterval(this.interval);
         }
         this.duration = this.initialDuration;
+        localStorage.setItem('escapeDuration', this.duration); // Guardar duración
         this.startTime = Date.now().toString();
         localStorage.setItem('escapeStartTime', this.startTime);
         localStorage.removeItem('escapePauseTime');
@@ -84,6 +89,7 @@ class Timer {
 
     setDuration(newDuration) {
         this.duration = newDuration;
+        localStorage.setItem('escapeDuration', this.duration); // Guardar duración
         this.startTime = Date.now().toString();
         localStorage.setItem('escapeStartTime', this.startTime);
         localStorage.removeItem('escapePauseTime');
@@ -92,6 +98,11 @@ class Timer {
     }
 
     update() {
+        // Validar que startTime y duration sean números válidos
+        if (!this.startTime || isNaN(parseInt(this.startTime)) || !this.duration || isNaN(this.duration)) {
+            this.reset();
+            return;
+        }
         const now = Date.now();
         const elapsedTime = now - parseInt(this.startTime);
         const remainingTime = this.duration - elapsedTime;
@@ -124,14 +135,40 @@ class Timer {
     gameOver() {
         localStorage.removeItem('escapeStartTime');
         localStorage.removeItem('escapePauseTime');
+        localStorage.removeItem('escapeDuration');
+        // Agregar el CSS de fadeIn y hover si no existe
+        if (!document.getElementById('timerFadeInStyle')) {
+            const style = document.createElement('style');
+            style.id = 'timerFadeInStyle';
+            style.innerHTML = `
+                @keyframes timerFadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                .timer-fade-in {
+                    animation: timerFadeIn 1.2s ease;
+                }
+                .timer-restart-btn {
+                    transition: transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s;
+                }
+                .timer-restart-btn:hover {
+                    transform: scale(1.12) rotate(-2deg);
+                    box-shadow: 0 0 18px 2px #ff0000cc;
+                    background: #fff;
+                    color: #ff0000;
+                }
+            `;
+            document.head.appendChild(style);
+        }
         const gameOverScreen = document.createElement('div');
+        gameOverScreen.className = 'timer-fade-in';
         gameOverScreen.style.cssText = `
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -140,11 +177,10 @@ class Timer {
             color: #ff0000;
             font-family: 'Courier New', monospace;
         `;
-
         gameOverScreen.innerHTML = `
             <h1 style="font-size: 48px; margin-bottom: 20px;">TIEMPO AGOTADO</h1>
             <p style="font-size: 24px;">La misión ha fallado.</p>
-            <button onclick="window.location.href='/'" style="
+            <button class="timer-restart-btn" onclick="window.location.href='/'" style="
                 margin-top: 30px;
                 padding: 15px 30px;
                 font-size: 20px;
@@ -155,13 +191,13 @@ class Timer {
                 cursor: pointer;
             ">Volver a intentar</button>
         `;
-
         document.body.appendChild(gameOverScreen);
     }
 
     static resetTimer() {
         localStorage.removeItem('escapeStartTime');
         localStorage.removeItem('escapePauseTime');
+        localStorage.removeItem('escapeDuration');
     }
 }
 
@@ -172,12 +208,13 @@ let globalTimer = null;
 function handleTimerVisibility() {
     const path = window.location.pathname;
     const isIndexPage = path === '/' || path === '/Home' || path === '/Home/Index';
+    const isIntegrantesPage = path === '/Home/Integrantes';
     
     if (!globalTimer) {
         globalTimer = new Timer(3600000); // 1 hora en milisegundos
     }
 
-    if (isIndexPage) {
+    if (isIndexPage || isIntegrantesPage) {
         globalTimer.pause();
     } else {
         globalTimer.start();
@@ -194,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const key = event.key.toLowerCase();
         if (key === 't') {
-            globalTimer.setDuration(301000); // 5 minutos y 1 segundo en milisegundos
+            globalTimer.setDuration(10000); // 5 minutos y 1 segundo en milisegundos
         } else if (key === 'r') {
             globalTimer.reset(); // Reiniciar el timer a su duración inicial
         }

@@ -90,9 +90,9 @@
   color: #000;
   transform: scale(1.05);
         }
-            #pistasBtn {
+    #pistasBtn {
     position: fixed;
-    top: 100px;
+    top: 70px;
     right: 25px;
     background: rgba(30, 30, 30, 0.85);
     border: 2px solid #00ffff;
@@ -104,6 +104,7 @@
     font-family: 'Courier New', monospace;
     z-index: 1000;
     transition: background-color 0.3s, color 0.3s;
+    display: none;
   }
   #pistasBtn:hover {
     background: #00ffff;
@@ -147,7 +148,7 @@
 <body>
 <div id="videoIntro">
     <video id="introVideo" muted>
-        <source src="/img/cinematicaLuna.mp4" type="video/mp4">
+        <source src="/img/1seg.mp4" type="video/mp4">
     </video>
 </div>
 
@@ -165,7 +166,7 @@
         <div>
             <input id="claveInput" type="text" placeholder="Introduce la clave..." />
             <br />
-            <button id= onclick="verificarClave()">Enviar</button>
+            <button id="btnSubmit" onclick="verificarClave()">Enviar</button>
             <div id="resultado"></div>
         </div>
     </div>
@@ -174,7 +175,7 @@
 
 <!-- Botón de pistas y contenedor de imagen -->
 <div id= divPistas aria-hidden="true"><button id="pistasBtn" aria-hidden="true">Pistas</button></div>
-<div id="pistaImgContainer" style="display:none; position:fixed; top:160px; right:25px; z-index:1100; background:rgba(0,0,0,0.8); border-radius:12px; padding:10px;"><img id="pistaImg" src="/img/applemaps.png" alt="Pista" style="max-width:220px; max-height:220px;"></div>
+<div id="pistaImgContainer" style="display:none; position:fixed; top:190px; right:25px; z-index:1100; background:rgba(0,0,0,0.8); border-radius:12px; padding:10px;"><img id="pistaImg" src="/img/applemaps.png" alt="Pista" style="max-width:220px; max-height:220px;"></div>
 
 <script>
     const pistasBtn = document.getElementById('pistasBtn');
@@ -184,6 +185,13 @@
         const videoIntro = document.getElementById('videoIntro');
         const introVideo = document.getElementById('introVideo');
         const gameContent = document.getElementById('gameContent');
+        const btnStart = document.getElementById('btnStart');
+        const introScreen = document.getElementById('introScreen');
+        const gameContainer = document.getElementById('gameContainer');
+        const divPistas = document.querySelector('[id*=divPistas]');
+        let gameActive = false;
+        // Ocultar el botón de pistas por defecto
+        pistasBtn.style.display = 'none';
 
         // Reproducir el video automáticamente
         introVideo.play();
@@ -202,23 +210,23 @@
                 videoIntro.remove();
             }, 1000);
         });
-    });
 
-    btnStart.addEventListener('click', () => {
-        introScreen.style.display = 'none';
-        gameContainer.setAttribute('aria-hidden', 'false');
-        gameActive = true;
-        btnSubmit.disabled = false;
-        divPistas.setAttribute('aria-hidden', 'false');
-        pistasBtn.style.display = 'inline-block';
-    });
+        btnStart.addEventListener('click', () => {
+            introScreen.style.display = 'none';
+            gameContainer.setAttribute('aria-hidden', 'false');
+            gameActive = true;
+            divPistas.setAttribute('aria-hidden', 'false');
+            pistasBtn.style.display = 'inline-block';
+            document.getElementById('btnSubmit').disabled = false;
+        });
 
-    pistasBtn.onclick = function() {
-        pistaImgContainer.style.display = 'block';
-        setTimeout(() => {
-            pistaImgContainer.style.display = 'none';
-        }, 2000);
-    };
+        pistasBtn.onclick = function() {
+            pistaImgContainer.style.display = 'block';
+            setTimeout(() => {
+                pistaImgContainer.style.display = 'none';
+            }, 2000);
+        };
+    });
 
     function verificarClave() {
         const input = document.getElementById("claveInput").value.trim();

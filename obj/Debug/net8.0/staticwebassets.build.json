@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "NgeOjwZoXKlaZLakhpAdrd3/vNaGatqLrEDt9xfD3Ag=",
+  "Hash": "Xfy+q+aw4l/nzdzvA10Vy0dzUwaBI6xq5PRyn1XF8Y8=",
   "Source": "APOLLO11",
   "BasePath": "_content/APOLLO11",
   "Mode": "Default",
@@ -188,6 +188,25 @@
       "OriginalItemSpec": "wwwroot\\img\\final.png"
     },
     {
+      "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\liortanel.jpg",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/liortanel.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\liortanel.jpg"
+    },
+    {
       "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\planetas.png",
       "SourceId": "APOLLO11",
       "SourceType": "Discovered",
@@ -224,6 +243,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\qr.png"
+    },
+    {
+      "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\santiagodobro.jpg",
+      "SourceId": "APOLLO11",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\",
+      "BasePath": "_content/APOLLO11",
+      "RelativePath": "img/santiagodobro.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\santiagodobro.jpg"
     },
     {
       "Identity": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\videoAlien.mp4",

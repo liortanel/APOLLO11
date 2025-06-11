@@ -343,6 +343,14 @@
       text-shadow: 0 0 20px #00ffff;
     }
   }
+
+  .fade-out {
+    animation: fadeOutMsg 0.7s ease forwards;
+  }
+  @@keyframes fadeOutMsg {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
 </style>
 
 <div id="introScreen">
@@ -357,7 +365,7 @@
 <div id="gameContainer" style="display: none;">
     <div id="indicators">
         <div id="roundIndicator">Ronda: 1/3</div>
-        <div id="progressIndicator">Secuencias: 0/4</div>
+        <div id="progressIndicator">Secuencias: 0/2</div>
     </div>
 
     <div id="objective">Objetivo: <span>9</span></div>
@@ -503,7 +511,7 @@
 
   function updateRoundDisplay() {
     roundIndicator.textContent = `Ronda: ${currentRound}/3`;
-    progressIndicator.textContent = `Secuencias: ${roundProgress[currentRound]}/4`;
+    progressIndicator.textContent = `Secuencias: ${roundProgress[currentRound]}/2`;
     
     // Actualizar el objetivo según la ronda actual
     const objectiveSpan = document.querySelector('#objective span');
@@ -519,18 +527,25 @@
   }
 
   function checkAndAdvanceRound() {
-    if (roundProgress[currentRound] === 4 && currentRound < 3) {
+    if (roundProgress[currentRound] === 2 && currentRound < 3) {
       setTimeout(() => {
         currentRound++;
         updateRoundDisplay();
         messageEl.textContent = '¡Ronda completada! Pasando al siguiente nivel...';
         messageEl.style.color = '#00ffff';
-      }, 1500);
-    } else if (roundProgress[currentRound] === 4 && currentRound === 3) {
+        messageEl.classList.remove('fade-out');
+        setTimeout(() => {
+          messageEl.classList.add('fade-out');
+          setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.classList.remove('fade-out');
+          }, 700);
+        }, 1500);
+      }, 0);
+    } else if (roundProgress[currentRound] === 2 && currentRound === 3) {
       setTimeout(() => {
         messageEl.textContent = '¡Felicitaciones! Has completado todos los niveles!';
         messageEl.style.color = '#00ffff';
-        // Redirigir al juego espacial después de un breve delay
         setTimeout(() => {
           window.location.href = '/Home/SpaceGame';
         }, 2000);

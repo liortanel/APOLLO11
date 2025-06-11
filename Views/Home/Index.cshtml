@@ -490,4 +490,42 @@ function capitalizarPrimeraLetra(texto) {
   return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
 
+  // Si la URL contiene #final, mostrar directamente los dos botones finales y ocultar el cartel de F11
+  if (window.location.hash === '#final') {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Ocultar el cartel de F11
+      var warning = document.getElementById('f11-warning');
+      if (warning) warning.style.display = 'none';
+      // Limpiar el contenido del consoleDiv
+      var consoleDiv = document.getElementById('console');
+      if (consoleDiv) {
+        consoleDiv.innerHTML = '';
+        // Crear los elementos finales
+        var titulo = document.createElement('div');
+        titulo.className = 'titulo-apollo';
+        titulo.textContent = 'MISIÓN APOLLO 11';
+
+        var boton = document.createElement('div');
+        boton.className = 'boton-jugar';
+        boton.textContent = 'EMPEZAR JUEGO';
+        boton.onclick = function() { window.location.href = '/Home/Mapa'; };
+
+        var botonIntegrantes = document.createElement('div');
+        botonIntegrantes.className = 'boton-jugar';
+        botonIntegrantes.textContent = 'INTEGRANTES';
+        botonIntegrantes.style.marginTop = '15px';
+        botonIntegrantes.onclick = function() { window.location.href = '/Home/Integrantes'; };
+
+        var contenedorFinal = document.createElement('div');
+        contenedorFinal.className = 'contenedor-final';
+        contenedorFinal.appendChild(titulo);
+        contenedorFinal.appendChild(boton);
+        contenedorFinal.appendChild(botonIntegrantes);
+
+        consoleDiv.appendChild(contenedorFinal);
+      }
+      // Evitar que se ejecute la intro normal
+      if (typeof typeIntro === 'function') window.typeIntro = function(){};
+    });
+  }
   </script> </body> </html>

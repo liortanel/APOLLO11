@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("APOLLO11")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2a9fd94c82176aa583a47a145c4e08805afe2494")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13cdd73146472886644ae344e1df479743f30baa")]
 [assembly: System.Reflection.AssemblyProductAttribute("APOLLO11")]
 [assembly: System.Reflection.AssemblyTitleAttribute("APOLLO11")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -37,12 +37,20 @@
       "PackagePath": "staticwebassets\\img\\final.png"
     },
     {
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\liortanel.jpg",
+      "PackagePath": "staticwebassets\\img\\liortanel.jpg"
+    },
+    {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\planetas.png",
       "PackagePath": "staticwebassets\\img\\planetas.png"
     },
     {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\qr.png",
       "PackagePath": "staticwebassets\\img\\qr.png"
+    },
+    {
+      "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\santiagodobro.jpg",
+      "PackagePath": "staticwebassets\\img\\santiagodobro.jpg"
     },
     {
       "Id": "C:\\Users\\49123993\\APOLLO11\\wwwroot\\img\\videoAlien.mp4",

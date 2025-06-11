@@ -76,7 +76,7 @@
         transition: background 0.3s, transform 0.2s;
         text-decoration: none;
         margin-top: 30px;
-        margin-left: 180px;
+        margin-left: 33%;
     }
     .boton-volver:hover {
         background-color: #00ffff;
@@ -96,4 +96,14 @@
         <div class="integrante-nombre">Lior Tanel</div>
     </div>
 </div>
-<a href="/Home/Index" class="boton-volver">Volver al inicio</a> 
+<a href="/Home/Index#final" class="boton-volver">Volver al inicio</a>
+
+<script>
+  // Pausar y ocultar el timer global al entrar a Integrantes
+  if (window.globalTimer) {
+    window.globalTimer.pause();
+  }
+  // Además, si el elemento existe, lo oculto por si acaso
+  var timerEl = document.getElementById('globalTimer');
+  if (timerEl) timerEl.style.display = 'none';
+</script> 
