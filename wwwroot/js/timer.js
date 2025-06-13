@@ -230,10 +230,5 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!globalTimer) return;
         
         const key = event.key.toLowerCase();
-        if (key === 't') {
-            globalTimer.setDuration(10000); // 5 minutos y 1 segundo en milisegundos
-        } else if (key === 'r') {
-            globalTimer.reset(); // Reiniciar el timer a su duración inicial
-        }
     });
 }); 

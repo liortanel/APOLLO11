@@ -9,83 +9,83 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = APOLLO11
 build_property.RootNamespace = APOLLO11
-build_property.ProjectDir = C:\Users\49317356\APOLLO11\
+build_property.ProjectDir = C:\Users\49123993\APOLLO11\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\49317356\APOLLO11
+build_property.MSBuildProjectDirectory = C:\Users\49123993\APOLLO11
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Final.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Final.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGaW5hbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Index.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Integrantes.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Integrantes.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbnRlZ3JhbnRlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Jupiter.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Jupiter.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxKdXBpdGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Luna.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Luna.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMdW5hLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Mapa.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Mapa.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNYXBhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Marte.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Marte.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNYXJ0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Mercurio.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Mercurio.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNZXJjdXJpby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Neptuno.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Neptuno.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxOZXB0dW5vLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Saturno.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Saturno.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTYXR1cm5vLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/SpaceGame.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/SpaceGame.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTcGFjZUdhbWUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/TierraF.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/TierraF.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUaWVycmFGLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Urano.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Urano.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxVcmFuby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Home/Venus.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Home/Venus.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxWZW51cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Shared/_Layout.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/49123993/APOLLO11/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/_ViewImports.cshtml]
+[C:/Users/49123993/APOLLO11/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/49317356/APOLLO11/Views/_ViewStart.cshtml]
+[C:/Users/49123993/APOLLO11/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

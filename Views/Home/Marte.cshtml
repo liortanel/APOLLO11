@@ -231,9 +231,6 @@
         if (e.key === 'ArrowUp') keys.up = true;
         if (e.key === 'ArrowDown') keys.down = true;
         // Teclas para ganar inmediatamente
-        if (e.key === 'v' || e.key === 'c') {
-            gameOver(true);
-        }
     });
 
     document.addEventListener('keyup', (e) => {
@@ -590,11 +587,4 @@
         }
         window.location.href = "/Home/VerificarMarte";
     }
-
-    // Event listener para la tecla 'c'
-    document.addEventListener('keydown', (e) => {
-        if (e.key.toLowerCase() === 'c' && videoContainer.style.display === 'block') {
-            completarNivel();
-        }
-    });
 </script>

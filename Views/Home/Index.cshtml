@@ -373,7 +373,7 @@ Preparándose para iniciar la cuenta regresiva...
         consoleDiv.innerHTML += text.charAt(i);
         typeSound.currentTime = 0;
         typeSound.play();
-        setTimeout(() => typeText(text, i + 1, callback), 1);//1000
+        setTimeout(() => typeText(text, i + 1, callback), 30);//1000
       } else if (callback) {
         callback();
       }
@@ -445,7 +445,7 @@ La misión ha comenzado exitosamente. A medida que el módulo de comando alcanza
 
     consoleDiv.appendChild(contenedorFinal);
 
-  }, 10000);
+  }, 30000);
 }
 
 function iniciarError() {

@@ -83,6 +83,21 @@
             font-size: 1.2em;
             transition: all 0.3s;
         }
+        .buttonLoss{
+            background: #000;
+            color: #ff0000;
+            border: 2px solid #ff0000;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+        .buttonLoss:hover{
+            background: #ff0000;
+            color: black;
+        }
 
         .button:hover {
             background: #00ffff;
@@ -110,7 +125,7 @@
             <h2>🔥 MISIÓN FALLIDA 🔥</h2>
             <p>Tu nave ha sido destruida</p>
             <p>Puntuación final: <span id="finalScore">0</span></p>
-            <button class="button" onclick="restartGame()">REINTENTAR MISIÓN</button>
+            <button class="buttonLoss" onclick="restartGame()">REINTENTAR MISIÓN</button>
         </div>
     </div>
 
@@ -464,7 +479,7 @@
                     <p>Tu nave ha sido destruida</p>
                     <p>Puntuación final: <span id="finalScore">${Math.floor(score)}</span></p>
                     <p>Distancia recorrida: ${Math.floor(distance)} km</p>
-                    <button class="button" onclick="restartGame()">REINTENTAR MISIÓN</button>
+                    <button class="buttonLoss" onclick="restartGame()">REINTENTAR MISIÓN</button>
                 `;
                 document.getElementById('gameOver').style.display = 'block';
                 document.exitPointerLock();
