@@ -329,10 +329,4 @@ function resetGame() {
 }
 setInterval(createFlyingLetter, 400);
 
-document.addEventListener('keydown', function(e) {
-  if (e.key.toLowerCase() === 'v') {
-    selectedLetters = clave.split('');
-    updateSelectedLetters();
-  }
-});
 </script>
