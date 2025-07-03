@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CIGA7FBS0JttNXK/oEgUenmlokyZuCq/u7kEoAm2oSrQ0/3Y+ZAUriEaiGxCgIYXdaZ5r98oCeYk3CJaGrMJ9A==",
+  "dgSpecHash": "GIwBQmuqT733m2xU1ksyvXhI653YoebiPrWrUZq2DCsANjB5ax0KYi9jOoraww80hXjGD7/U84/Q4z9D/gmwzA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\49123993\\APOLLO11\\APOLLO11.csproj",
+  "projectFilePath": "C:\\Users\\49123993\\Apollo11\\APOLLO11.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\49123993\\.nuget\\packages\\bouncycastle.cryptography\\2.5.1\\bouncycastle.cryptography.2.5.1.nupkg.sha512",
     "C:\\Users\\49123993\\.nuget\\packages\\mailkit\\4.12.1\\mailkit.4.12.1.nupkg.sha512",
